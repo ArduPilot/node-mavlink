@@ -1,0 +1,25 @@
+{
+  "name": "node-mavlink",
+  "version": "0.0.1-alpha.1",
+  "description": "MavLink definitions and parsing library",
+  "main": "index.ts",
+  "scripts": {
+    "start": "ts-node test.ts",
+    "code-generator": "ts-node code-generator.ts",
+    "get:minimal": "nwget https://raw.githubusercontent.com/mavlink/mavlink/master/message_definitions/v1.0/minimal.xml -O minimal.xml",
+    "get:common": "nwget https://raw.githubusercontent.com/mavlink/mavlink/master/message_definitions/v1.0/common.xml -O common.xml",
+    "get:ardupilotmega": "nwget https://raw.githubusercontent.com/mavlink/mavlink/master/message_definitions/v1.0/ardupilotmega.xml -O ardupilotmega.xml"
+  },
+  "keywords": [ "mavlink" ],
+  "author": "Matthias Hryniszak",
+  "license": "LGPL",
+  "devDependencies": {
+    "@types/node": "^15.0.1",
+    "@types/serialport": "^8.0.1",
+    "@types/xml2js": "^0.4.8",
+    "serialport": "^9.0.7",
+    "ts-node": "^9.1.1",
+    "wget-improved": "^3.2.1",
+    "xml2js": "^0.4.23"
+  }
+}
