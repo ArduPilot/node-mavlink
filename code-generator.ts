@@ -319,12 +319,6 @@ function generate(obj: any, output: Writter) {
     const fields = [...message.fields]
     fields.sort((f1, f2) => f2.fieldSize - f1.fieldSize)
 
-    
-    if (message.id == 27) {
-      console.log(message.fields)
-    }
-    
-
     let offset = 0
     fields
       .filter(field => !field.extension)
