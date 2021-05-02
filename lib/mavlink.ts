@@ -1,4 +1,42 @@
 import { Transform, TransformCallback } from 'stream'
+import { MSG_ID_MAGIC_NUMBER } from './magic-numbers'
+
+export function x25crc(buffer: Buffer, start = 0, trim = 0, magic = null) {
+  let crc = 0xffff;
+  
+  for (let i = start; i < buffer.length - trim; i++) {
+    const byte = buffer[i]
+    let tmp = (byte & 0xff) ^ (crc & 0xff);
+    tmp ^= tmp << 4;
+    tmp &= 0xff;
+    crc = (crc >> 8) ^ (tmp << 8) ^ (tmp << 3) ^ (tmp >> 4);
+    crc &= 0xffff;
+  }
+
+  if (magic !== null) {
+    let tmp = (magic & 0xff) ^ (crc & 0xff);
+    tmp ^= tmp << 4;
+    tmp &= 0xff;
+    crc = (crc >> 8) ^ (tmp << 8) ^ (tmp << 3) ^ (tmp >> 4);
+    crc &= 0xffff;
+  }
+
+  return crc;
+}
+
+export function dump(buffer: Buffer, lineWidth = 10) {
+  const line = []
+  for (let i = 0; i < buffer.length; i++) {
+    line.push(buffer[i].toString(16).padStart(2, '0') + ' ')
+    if (line.length === lineWidth) {
+      console.error(line.join(' '))
+      line.length = 0
+    }
+  }
+  if (line.length > 0) {
+    console.error(line.join(' '))
+  }
+}
 
 export const MAVLINK_MAGIC_NUMBER    = 0xFD
 export const MAVLINK_PAYLOAD_OFFSET  = 0x0A
@@ -39,12 +77,14 @@ export class MavLinkPacketField {
   readonly type: string
   readonly length: number
   readonly offset: number
+  readonly extension: boolean
 
-  constructor(name, offset, type, length = 0) {
+  constructor(name, offset, extension, type, length = 0) {
     this.name = name
     this.offset = offset
     this.type = type
     this.length = length
+    this.extension = extension
   }
 }
 
@@ -193,9 +233,27 @@ export class MavLinkPacket {
       } else {
         this.buffer = this.buffer.slice(magicNumberFirstOffset)
         const payloadLength = this.buffer.readUInt8(1)
-        if (this.buffer.length >= payloadLength + 12) {
-          this.push(this.buffer.slice(0, payloadLength + MAVLINK_PAYLOAD_OFFSET + MAVLINK_CHECKSUM_LENGTH))
-          this.buffer = this.buffer.slice(payloadLength + 10 + 2)
+        const expectedBufferLength = MAVLINK_PAYLOAD_OFFSET + payloadLength + MAVLINK_CHECKSUM_LENGTH
+        if (this.buffer.length >= expectedBufferLength) {
+          const buffer = this.buffer.slice(0, expectedBufferLength)
+          const msgid = buffer.readUIntLE(7, 3)
+          const magic = MSG_ID_MAGIC_NUMBER[msgid]
+          if (magic) {
+            const crc = buffer.readUInt16LE(MAVLINK_PAYLOAD_OFFSET + payloadLength)
+            const crc2 = x25crc(buffer, 1, 2, magic)
+            if (crc === crc2) {
+              this.push(buffer)
+            } else {
+              console.error(
+                'CRC error; expected', crc2, `(0x${crc2.toString(16).padStart(4, '0')})`,
+                'got', crc, `(0x${crc.toString(16).padStart(4, '0')})`,
+                '; msgid:', msgid, ', magic:', magic
+              )
+              dump(buffer, 28)
+              process.exit(0)
+            }
+          }
+          this.buffer = this.buffer.slice(expectedBufferLength)
         } else {
           break
         }

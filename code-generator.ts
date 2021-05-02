@@ -2,6 +2,7 @@
 
 import * as fs from 'fs'
 import * as parser from 'xml2js'
+import { x25crc, dump } from './lib/mavlink'
 
 const snakeToCamel = s => s.replace(/([-_]\w)/g, g => g[1].toUpperCase());
 const snakeToPascal = s => {
@@ -16,6 +17,14 @@ function makeClassName(message: string) {
 function extractArrayType(type: string) {
   if (type.indexOf('[') > -1) {
     return type.replace(/(.*)\[(\d+)\]/, (x, t, size) => `${t}[]`)
+  } else {
+    return type
+  }
+}
+
+function extractArrayItemType(type: string) {
+  if (type.indexOf('[') > -1) {
+    return type.replace(/(.*)\[(\d+)\]/, (x, t, size) => `${t}`)
   } else {
     return type
   }
@@ -65,6 +74,8 @@ class Writter {
     this.lines.push(s)
   }
 }
+
+const magicNumbers = {}
 
 function generate(obj: any, output: Writter) {
   // ------------------------------------------------------------------------
@@ -189,8 +200,10 @@ function generate(obj: any, output: Writter) {
   // ------------------------------------------------------------------------
 
   // parse XML data
+  
   const messages = obj.mavlink.messages[0].message.map(message => ({
     source: {
+      xml: message,
       name: message.$.name,
     },
     id: message.$.id,
@@ -201,22 +214,44 @@ function generate(obj: any, output: Writter) {
       replacedBy: message.deprecated[0].$.replaced_by,
       description: message.deprecated[0]._,
     },
-    fields: message.field.map(field => ({
-      source: {
-        name: field.$.name,
-        type: field.$.type,
-        enum: field.$.enum,
-      },
-      name: snakeToCamel(field.$.name),
-      description: field._ || '',
-      type: field.$.enum ? makeClassName(field.$.enum) : extractArrayType(field.$.type),
-      arrayLength: extractArraySize(field.$.type),
-      size: getTypeSize(field.$.type) * (extractArraySize(field.$.type) || 1),
-      fieldType: extractArrayType(field.$.type),
-      fieldSize: getTypeSize(field.$.type),
-    }))
+    workInProgress: false,
+    fields: [],
   }))
 
+  // gather message fields
+  messages.forEach(message => {
+    let isExtensionField = false
+
+    message.source.xml.$$.forEach(item => {
+      if (item['#name'] === 'wip') {
+        message.workInProgress = true
+      }
+      if (item['#name'] === 'extensions') {
+        isExtensionField = true
+      }
+      if (item['#name'] === 'field') {
+        const field = item
+        const entry = {
+          source: {
+            name: field.$.name,
+            type: field.$.type,
+            enum: field.$.enum,
+          },
+          name: snakeToCamel(field.$.name),
+          extension: isExtensionField,
+          description: field._ || '',
+          type: field.$.enum ? makeClassName(field.$.enum) : extractArrayType(field.$.type),
+          arrayLength: extractArraySize(field.$.type),
+          size: getTypeSize(field.$.type) * (extractArraySize(field.$.type) || 1),
+          fieldType: extractArrayType(field.$.type),
+          fieldSize: getTypeSize(field.$.type),
+          itemType: extractArrayItemType(field.$.type),
+        }
+        message.fields.push(entry)
+      }
+    })
+  })
+  
   // preprocess description to match 100 characters per line
   messages.forEach((message) => {
     message.description = message.description
@@ -240,6 +275,25 @@ function generate(obj: any, output: Writter) {
       if (field.description[field.description.length - 1] === '')
         field.description.pop()
     })
+    
+    // calculate CRC_EXTRA
+    const fields = [...message.fields]
+      .filter(field => !field.extension)
+      .sort((f1, f2) => f2.fieldSize - f1.fieldSize)
+    
+    let buffer = Buffer.from(message.source.name + ' ')
+    for (let i = 0; i < fields.length; i++) {
+      const field = fields[i]
+      const fieldType = field.source.type === 'uint8_t_mavlink_version' ? 'uint8_t' : field.itemType
+      const fieldName = field.source.name
+      buffer = Buffer.concat([ buffer, Buffer.from(`${fieldType} ${fieldName} `) ])
+      if (field.arrayLength) {
+        buffer = Buffer.concat([ buffer, Buffer.from([ field.arrayLength ])])
+      }
+    }
+    const crc = x25crc(buffer)
+    message.magic = (crc & 0xff) ^ (crc >> 8)
+    magicNumbers[message.id] = message.magic
   })
   
   // generate message classes
@@ -259,19 +313,39 @@ function generate(obj: any, output: Writter) {
     output.write(' */')
     output.write(`export class ${message.name} extends MavLinkData {`)
     output.write(`  static MSG_ID = ${message.id}`)
+    output.write(`  static MAGIC_NUMBER = ${message.magic}`)
     output.write(``)
     output.write('  static FIELDS = [')
     const fields = [...message.fields]
     fields.sort((f1, f2) => f2.fieldSize - f1.fieldSize)
+
+    
+    if (message.id == 27) {
+      console.log(message.fields)
+    }
+    
+
     let offset = 0
-    fields.forEach(field => {
-      if (field.arrayLength) {
-        output.write(`    new MavLinkPacketField('${field.name}', ${offset}, '${field.fieldType}', ${field.arrayLength}),`)
-      } else {
-        output.write(`    new MavLinkPacketField('${field.name}', ${offset}, '${field.fieldType}'),`)
-      }
-      offset += field.size
-    })
+    fields
+      .filter(field => !field.extension)
+      .forEach(field => {
+        if (field.arrayLength) {
+          output.write(`    new MavLinkPacketField('${field.name}', ${offset}, false, '${field.fieldType}', ${field.arrayLength}),`)
+        } else {
+          output.write(`    new MavLinkPacketField('${field.name}', ${offset}, false, '${field.fieldType}'),`)
+        }
+        offset += field.size
+      })
+    message.fields
+      .filter(field => field.extension)
+      .forEach(field => {
+        if (field.arrayLength) {
+          output.write(`    new MavLinkPacketField('${field.name}', ${offset}, true, '${field.fieldType}', ${field.arrayLength}),`)
+        } else {
+          output.write(`    new MavLinkPacketField('${field.name}', ${offset}, true, '${field.fieldType}'),`)
+        }
+        offset += field.size
+      })
     output.write('  ]')
     output.write('')
     message.fields.forEach(field => {
@@ -296,18 +370,27 @@ function generate(obj: any, output: Writter) {
 }
 
 const parts = [ 'minimal', 'common', 'ardupilotmega' ]
+// const parts = [ 'minimal' ]
 
 async function main() {
   for (let i = 0; i < parts.length; i++) {
     const part = parts[i]
     const imports = fs.readFileSync(`lib/${part}.imports.ts`)
     const xml = fs.readFileSync(`${part}.xml`)
-    const data = await parser.parseStringPromise(xml.toString())
+    const data = await parser.parseStringPromise(xml.toString(), { explicitChildren: true, preserveChildrenOrder: true })
     const output = new Writter()
     output.write(imports.toString())
     generate(data, output)
     fs.writeFileSync(`./lib/${part}.ts`, output.lines.join('\n'))
   }
+
+  const magic = [
+    `export const MSG_ID_MAGIC_NUMBER = {`,
+    ...Object.entries(magicNumbers).map(([msgid, magic]) => `  '${msgid}': ${magic},`, ''),
+    `}`
+  ].join('\n') + '\n'
+
+  fs.writeFileSync('./lib/magic-numbers.ts', magic)
 }
 
 main()
