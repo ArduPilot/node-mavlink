@@ -9,8 +9,8 @@ import {
 } from '.'
 
 import { Heartbeat, MavAutopilot } from './lib/minimal'
-import { ParamRequestList, ParamRequestRead } from './lib/common'
-import { MavLinkData, MavLinkProtocolV1, uint8_t } from './lib/mavlink'
+import { CommandInt, MavCmd, ParamRequestList, ParamRequestRead } from './lib/common'
+import { MavLinkData, MavLinkProtocolV1, MavLinkProtocolV2 } from './lib/mavlink'
 
 const REGISTRY = {
   ...minimal,
@@ -34,7 +34,7 @@ reader.on('data', (packet: MavLinkPacket) => {
   const clazz = REGISTRY[packet.header.msgid]
   if (clazz) {
     console.log('Received package sent with protocol', packet.protocol.constructor['NAME'], `(buffer length: ${packet.buffer.length})`)
-    dump(packet.buffer)
+    // dump(packet.buffer)
     const data = packet.protocol.data(packet.payload, clazz)
     // if (packet.header.msgid == 253) {
       const name = REGISTRY[packet.header.msgid].MSG_NAME
@@ -51,7 +51,7 @@ let seq = 0
 function send(msg: MavLinkData) {
   console.log('Sending', msg.constructor['MSG_NAME'], `(seq: ${seq}, magic: ${msg.constructor['MAGIC_NUMBER']})`, '...')
   return new Promise((resolve, reject) => {
-    const buffer = new MavLinkProtocolV1().serialize(msg, seq++)
+    const buffer = new MavLinkProtocolV2().serialize(msg, seq++)
     seq &= seq
 
     dump(buffer)
@@ -63,21 +63,19 @@ function send(msg: MavLinkData) {
   })
 }
 
-// function sendHeartbeat() {
-//   const msg = new Heartbeat()
-//   msg.autopilot = MavAutopilot.INVALID
-
-//   return send(msg)
-// }
-
 // const sleep = ms => new Promise(resolve => setTimeout(resolve, ms))
 
 port.on('open', async () => {
   // await sleep(5000)
   // await sendHeartbeat()
   
-  const msg = new ParamRequestList()
-  msg.targetSystem = 1
-  msg.targetComponent = 1
-  await send(msg)
+  // const msg = new ParamRequestList()
+  // msg.targetSystem = 1
+  // msg.targetComponent = 1
+  // await send(msg)
+  
+  const msg = new CommandInt()
+  msg.command = MavCmd.REQUEST_PROTOCOL_VERSION
+  msg.param1 = 1
+  await send(msg)  
 })

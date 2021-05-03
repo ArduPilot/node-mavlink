@@ -2,7 +2,7 @@
 
 import * as fs from 'fs'
 import * as parser from 'xml2js'
-import { x25crc, dump } from './lib/mavlink'
+import { x25crc, dump } from './lib/utils'
 
 const snakeToCamel = s => s.replace(/([-_]\w)/g, g => g[1].toUpperCase());
 

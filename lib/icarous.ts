@@ -1,6 +1,9 @@
 import {
   int8_t,
   float,
+} from './types'
+
+import {
   MavLinkPacketField,
   MavLinkData,
 } from './mavlink'
@@ -32,8 +35,8 @@ export enum IcarousFmsState {
 export class IcarousHeartbeat extends MavLinkData {
   static MSG_ID = 42000
   static MSG_NAME = 'ICAROUS_HEARTBEAT'
-  static MAGIC_NUMBER = 227
   static PAYLOAD_LENGTH = 1
+  static MAGIC_NUMBER = 227
 
   static FIELDS = [
     new MavLinkPacketField('status', 0, false, 1, 'uint8_t'),
@@ -51,8 +54,8 @@ export class IcarousHeartbeat extends MavLinkData {
 export class IcarousKinematicBands extends MavLinkData {
   static MSG_ID = 42001
   static MSG_NAME = 'ICAROUS_KINEMATIC_BANDS'
-  static MAGIC_NUMBER = 239
   static PAYLOAD_LENGTH = 46
+  static MAGIC_NUMBER = 239
 
   static FIELDS = [
     new MavLinkPacketField('min1', 0, false, 4, 'float'),

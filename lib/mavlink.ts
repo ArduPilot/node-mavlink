@@ -1,65 +1,28 @@
 import { Transform, TransformCallback } from 'stream'
 import { MSG_ID_MAGIC_NUMBER } from './magic-numbers'
 
-export function x25crc(buffer: Buffer, start = 0, trim = 0, magic = null) {
-  let crc = 0xffff;
+import {
+  int8_t,
+  uint8_t,
+  uint16_t,
+  uint32_t,
+  uint64_t,
+  float,
+  double,
+} from './types'
 
-  for (let i = start; i < buffer.length - trim; i++) {
-    const byte = buffer[i]
-    let tmp = (byte & 0xff) ^ (crc & 0xff);
-    tmp ^= tmp << 4;
-    tmp &= 0xff;
-    crc = (crc >> 8) ^ (tmp << 8) ^ (tmp << 3) ^ (tmp >> 4);
-    crc &= 0xffff;
-  }
+import {
+  x25crc,
+  dump,
+} from './utils'
 
-  if (magic !== null) {
-    let tmp = (magic & 0xff) ^ (crc & 0xff);
-    tmp ^= tmp << 4;
-    tmp &= 0xff;
-    crc = (crc >> 8) ^ (tmp << 8) ^ (tmp << 3) ^ (tmp >> 4);
-    crc &= 0xffff;
-  }
-
-  return crc;
-}
-
-export function dump(buffer: Buffer, lineWidth = 28) {
-  const line = []
-  for (let i = 0; i < buffer.length; i++) {
-    line.push(buffer[i].toString(16).padStart(2, '0') + ' ')
-    if (line.length === lineWidth) {
-      console.error(line.join(' '))
-      line.length = 0
-    }
-  }
-  if (line.length > 0) {
-    console.error(line.join(' '))
-  }
-}
-
-export const MAVLINK_START_BYTE    = 0xFD
-export const MAVLINK_PAYLOAD_OFFSET  = 0x0A
 export const MAVLINK_CHECKSUM_LENGTH = 0x02
-
-export type char = number
-export type uint8_t = number
-export type int8_t = number
-export type uint16_t = number
-export type int16_t = number
-export type uint32_t = number
-export type int32_t = number
-export type uint8_t_mavlink_version = number
-export type float = number
-export type int64_t = bigint
-export type uint64_t = bigint
-export type double = number
 
 /**
  * Header definition of the MavLink packet
  */
  export class MavLinkPacketHeader {
-  magic: number = MAVLINK_START_BYTE
+  magic: number = 0
   payloadLength: uint8_t = 0
   incompatibilityFlags: uint8_t = 0
   compatibilityFlags: uint8_t = 0
@@ -96,6 +59,82 @@ export class MavLinkPacketField {
     this.extension = extension
     this.size = size
   }
+}
+
+const SERIALIZERS = {
+  // special types
+  'uint8_t_mavlink_version': (value: uint8_t, buffer: Buffer, offset: number) => buffer.writeUInt8(value, offset),
+
+  // singular types
+  'char'    : (value: int8_t, buffer: Buffer, offset: number) => buffer.writeUInt8(value, offset),
+  'int8_t'  : (value: int8_t, buffer: Buffer, offset: number) => buffer.writeUInt8(value, offset),
+  'uint8_t' : (value: uint8_t, buffer: Buffer, offset: number) => buffer.writeUInt8(value, offset),
+  'int16_t' : (value: uint16_t, buffer: Buffer, offset: number) => buffer.writeUInt16LE(value, offset),
+  'uint16_t': (value: uint16_t, buffer: Buffer, offset: number) => buffer.writeUInt16LE(value, offset),
+  'int32_t' : (value: uint32_t, buffer: Buffer, offset: number) => buffer.writeUInt32LE(value, offset),
+  'uint32_t': (value: uint32_t, buffer: Buffer, offset: number) => buffer.writeUInt32LE(value, offset),
+  'int64_t' : (value: uint64_t, buffer: Buffer, offset: number) => buffer.writeBigInt64LE(value, offset),
+  'uint64_t': (value: uint64_t, buffer: Buffer, offset: number) => buffer.writeBigUInt64LE(value, offset),
+  'float'   : (value: float, buffer: Buffer, offset: number) => buffer.writeFloatLE(value, offset),
+  'double'  : (value: double, buffer: Buffer, offset: number) => buffer.writeDoubleLE(value, offset),
+  
+  // array types
+  'char[]': (value: string, buffer: Buffer, offset: number, maxLen: number) => {
+    for (let i = 0; i < value.length && i < maxLen; i++) {
+      const code = value.charCodeAt(i)
+      buffer.writeUInt8(code, offset + i)
+    }
+  },
+  'int8[]': (value: uint8_t[], buffer: Buffer, offset: number, maxLen: number) => {
+    for (let i = 0; i < value.length && i < maxLen; i++) {
+      buffer.writeInt8(value[i], offset + i)
+    }
+  },
+  'uint8[]': (value: uint8_t[], buffer: Buffer, offset: number, maxLen: number) => {
+    for (let i = 0; i < value.length && i < maxLen; i++) {
+      buffer.writeUInt8(value[i], offset + i)
+    }
+  },
+  'int16[]': (value: uint16_t[], buffer: Buffer, offset: number, maxLen: number) => {
+    for (let i = 0; i < value.length && i < maxLen; i++) {
+      buffer.writeInt16LE(value[i], offset + i * 2)
+    }
+  },
+  'uint16[]': (value: uint16_t[], buffer: Buffer, offset: number, maxLen: number) => {
+    for (let i = 0; i < value.length && i < maxLen; i++) {
+      buffer.writeUInt16LE(value[i], offset + i * 2)
+    }
+  },
+  'int32[]': (value: uint32_t[], buffer: Buffer, offset: number, maxLen: number) => {
+    for (let i = 0; i < value.length && i < maxLen; i++) {
+      buffer.writeInt32LE(value[i], offset + i * 4)
+    }
+  },
+  'uint32[]': (value: uint32_t[], buffer: Buffer, offset: number, maxLen: number) => {
+    for (let i = 0; i < value.length && i < maxLen; i++) {
+      buffer.writeUInt32LE(value[i], offset + i * 4)
+    }
+  },
+  'int64[]': (value: uint64_t[], buffer: Buffer, offset: number, maxLen: number) => {
+    for (let i = 0; i < value.length && i < maxLen; i++) {
+      buffer.writeBigInt64LE(value[i], offset + i * 8)
+    }
+  },
+  'uint64[]': (value: uint64_t[], buffer: Buffer, offset: number, maxLen: number) => {
+    for (let i = 0; i < value.length && i < maxLen; i++) {
+      buffer.writeBigUInt64LE(value[i], offset + i * 8)
+    }
+  },
+  'float[]': (value: float[], buffer: Buffer, offset: number, maxLen: number) => {
+    for (let i = 0; i < value.length && i < maxLen; i++) {
+      buffer.writeFloatLE(value[i], offset + i * 4)
+    }
+  },
+  'double[]': (value: double[], buffer: Buffer, offset: number, maxLen: number) => {
+    for (let i = 0; i < value.length && i < maxLen; i++) {
+      buffer.writeDoubleLE(value[i], offset + i * 8)
+    }
+  },
 }
 
 /**
@@ -180,82 +219,6 @@ export const DESERIALIZERS = {
     const result = new Array<number>(length)
     for (let i = 0; i < length; i++) result[i] = buffer.readFloatLE(offset + i * 8)
     return result
-  },
-}
-
-const SERIALIZERS = {
-  // special types
-  'uint8_t_mavlink_version': (value: uint8_t, buffer: Buffer, offset: number) => buffer.writeUInt8(value, offset),
-
-  // singular types
-  'char'    : (value: int8_t, buffer: Buffer, offset: number) => buffer.writeUInt8(value, offset),
-  'int8_t'  : (value: int8_t, buffer: Buffer, offset: number) => buffer.writeUInt8(value, offset),
-  'uint8_t' : (value: uint8_t, buffer: Buffer, offset: number) => buffer.writeUInt8(value, offset),
-  'int16_t' : (value: uint16_t, buffer: Buffer, offset: number) => buffer.writeUInt16LE(value, offset),
-  'uint16_t': (value: uint16_t, buffer: Buffer, offset: number) => buffer.writeUInt16LE(value, offset),
-  'int32_t' : (value: uint32_t, buffer: Buffer, offset: number) => buffer.writeUInt32LE(value, offset),
-  'uint32_t': (value: uint32_t, buffer: Buffer, offset: number) => buffer.writeUInt32LE(value, offset),
-  'int64_t' : (value: uint64_t, buffer: Buffer, offset: number) => buffer.writeBigInt64LE(value, offset),
-  'uint64_t': (value: uint64_t, buffer: Buffer, offset: number) => buffer.writeBigUInt64LE(value, offset),
-  'float'   : (value: float, buffer: Buffer, offset: number) => buffer.writeFloatLE(value, offset),
-  'double'  : (value: double, buffer: Buffer, offset: number) => buffer.writeDoubleLE(value, offset),
-  
-  // array types
-  'char[]': (value: string, buffer: Buffer, offset: number, maxLen: number) => {
-    for (let i = 0; i < value.length && i < maxLen; i++) {
-      const code = value.charCodeAt(i)
-      buffer.writeUInt8(code, offset + i)
-    }
-  },
-  'int8[]': (value: uint8_t[], buffer: Buffer, offset: number, maxLen: number) => {
-    for (let i = 0; i < value.length && i < maxLen; i++) {
-      buffer.writeInt8(value[i], offset + i)
-    }
-  },
-  'uint8[]': (value: uint8_t[], buffer: Buffer, offset: number, maxLen: number) => {
-    for (let i = 0; i < value.length && i < maxLen; i++) {
-      buffer.writeUInt8(value[i], offset + i)
-    }
-  },
-  'int16[]': (value: uint16_t[], buffer: Buffer, offset: number, maxLen: number) => {
-    for (let i = 0; i < value.length && i < maxLen; i++) {
-      buffer.writeInt16LE(value[i], offset + i * 2)
-    }
-  },
-  'uint16[]': (value: uint16_t[], buffer: Buffer, offset: number, maxLen: number) => {
-    for (let i = 0; i < value.length && i < maxLen; i++) {
-      buffer.writeUInt16LE(value[i], offset + i * 2)
-    }
-  },
-  'int32[]': (value: uint32_t[], buffer: Buffer, offset: number, maxLen: number) => {
-    for (let i = 0; i < value.length && i < maxLen; i++) {
-      buffer.writeInt32LE(value[i], offset + i * 4)
-    }
-  },
-  'uint32[]': (value: uint32_t[], buffer: Buffer, offset: number, maxLen: number) => {
-    for (let i = 0; i < value.length && i < maxLen; i++) {
-      buffer.writeUInt32LE(value[i], offset + i * 4)
-    }
-  },
-  'int64[]': (value: uint64_t[], buffer: Buffer, offset: number, maxLen: number) => {
-    for (let i = 0; i < value.length && i < maxLen; i++) {
-      buffer.writeBigInt64LE(value[i], offset + i * 8)
-    }
-  },
-  'uint64[]': (value: uint64_t[], buffer: Buffer, offset: number, maxLen: number) => {
-    for (let i = 0; i < value.length && i < maxLen; i++) {
-      buffer.writeBigUInt64LE(value[i], offset + i * 8)
-    }
-  },
-  'float[]': (value: float[], buffer: Buffer, offset: number, maxLen: number) => {
-    for (let i = 0; i < value.length && i < maxLen; i++) {
-      buffer.writeFloatLE(value[i], offset + i * 4)
-    }
-  },
-  'double[]': (value: double[], buffer: Buffer, offset: number, maxLen: number) => {
-    for (let i = 0; i < value.length && i < maxLen; i++) {
-      buffer.writeDoubleLE(value[i], offset + i * 8)
-    }
   },
 }
 
@@ -408,7 +371,7 @@ export class MavLinkProtocolV1 extends MavLinkProtocol {
  * MavLink Protocol V2
  */
 export class MavLinkProtocolV2 extends MavLinkProtocol {
-  static NAME = 'MAV_V1'
+  static NAME = 'MAV_V2'
   static START_BYTE = 0xFD
   static PAYLOAD_OFFSET = 10
 
@@ -436,7 +399,7 @@ export class MavLinkProtocolV2 extends MavLinkProtocol {
     definition.FIELDS.forEach(field => {
       const serialize = SERIALIZERS[field.type]
       if (!serialize) throw new Error(`Unknown field type ${field.type}: serializer not found`)
-      serialize(message[field.name], buffer, field.offset + MAVLINK_PAYLOAD_OFFSET, field.length)
+      serialize(message[field.name], buffer, field.offset + MavLinkProtocolV2.PAYLOAD_OFFSET, field.length)
     })
 
     // calculate actual truncated payload length
@@ -444,7 +407,7 @@ export class MavLinkProtocolV2 extends MavLinkProtocol {
     buffer.writeUInt8(payloadLength, 1)
 
     // slice out the message buffer
-    const result = buffer.slice(0, MAVLINK_PAYLOAD_OFFSET + payloadLength + MAVLINK_CHECKSUM_LENGTH)    
+    const result = buffer.slice(0, MavLinkProtocolV2.PAYLOAD_OFFSET + payloadLength + MAVLINK_CHECKSUM_LENGTH)    
     
     const crc = x25crc(result, 1, 2, definition.MAGIC_NUMBER)
     result.writeUInt16LE(crc, result.length - 2)

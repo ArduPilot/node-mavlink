@@ -3,6 +3,9 @@ import {
   uint16_t,
   uint32_t,
   uint8_t_mavlink_version,
+} from './types'
+
+import {
   MavLinkPacketField,
   MavLinkData
 } from './mavlink'
@@ -618,8 +621,8 @@ export enum MavComponent {
 export class Heartbeat extends MavLinkData {
   static MSG_ID = 0
   static MSG_NAME = 'HEARTBEAT'
-  static MAGIC_NUMBER = 50
   static PAYLOAD_LENGTH = 9
+  static MAGIC_NUMBER = 50
 
   static FIELDS = [
     new MavLinkPacketField('customMode', 0, false, 4, 'uint32_t'),
@@ -669,8 +672,8 @@ export class Heartbeat extends MavLinkData {
 export class ProtocolVersion extends MavLinkData {
   static MSG_ID = 300
   static MSG_NAME = 'PROTOCOL_VERSION'
-  static MAGIC_NUMBER = 217
   static PAYLOAD_LENGTH = 22
+  static MAGIC_NUMBER = 217
 
   static FIELDS = [
     new MavLinkPacketField('version', 0, false, 2, 'uint16_t'),

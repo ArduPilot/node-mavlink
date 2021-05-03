@@ -4,6 +4,9 @@ import {
   int32_t,
   uint16_t,
   uint32_t,
+} from './types'
+
+import {
   MavLinkPacketField,
   MavLinkData
 } from './mavlink'
@@ -119,8 +122,8 @@ export enum UavionixAdsbEmergencyStatus {
 export class UavionixAdsbOutCfg extends MavLinkData {
   static MSG_ID = 10001
   static MSG_NAME = 'UAVIONIX_ADSB_OUT_CFG'
-  static MAGIC_NUMBER = 209
   static PAYLOAD_LENGTH = 20
+  static MAGIC_NUMBER = 209
 
   static FIELDS = [
     new MavLinkPacketField('ICAO', 0, false, 4, 'uint32_t'),
@@ -174,8 +177,8 @@ export class UavionixAdsbOutCfg extends MavLinkData {
 export class UavionixAdsbOutDynamic extends MavLinkData {
   static MSG_ID = 10002
   static MSG_NAME = 'UAVIONIX_ADSB_OUT_DYNAMIC'
-  static MAGIC_NUMBER = 186
   static PAYLOAD_LENGTH = 41
+  static MAGIC_NUMBER = 186
 
   static FIELDS = [
     new MavLinkPacketField('utcTime', 0, false, 4, 'uint32_t'),
@@ -269,8 +272,8 @@ export class UavionixAdsbOutDynamic extends MavLinkData {
 export class UavionixAdsbTransceiverHealthReport extends MavLinkData {
   static MSG_ID = 10003
   static MSG_NAME = 'UAVIONIX_ADSB_TRANSCEIVER_HEALTH_REPORT'
-  static MAGIC_NUMBER = 4
   static PAYLOAD_LENGTH = 1
+  static MAGIC_NUMBER = 4
 
   static FIELDS = [
     new MavLinkPacketField('rfHealth', 0, false, 1, 'uint8_t'),

@@ -8,6 +8,9 @@ import {
   uint32_t,
   uint64_t,
   float,
+} from './types'
+
+import {
   MavLinkPacketField,
   MavLinkData
 } from './mavlink'
@@ -671,8 +674,8 @@ export enum OsdParamConfigError {
 export class SensorOffsets extends MavLinkData {
   static MSG_ID = 150
   static MSG_NAME = 'SENSOR_OFFSETS'
-  static MAGIC_NUMBER = 134
   static PAYLOAD_LENGTH = 42
+  static MAGIC_NUMBER = 134
 
   static FIELDS = [
     new MavLinkPacketField('magDeclination', 0, false, 4, 'float'),
@@ -747,8 +750,8 @@ export class SensorOffsets extends MavLinkData {
 export class SetMagOffsets extends MavLinkData {
   static MSG_ID = 151
   static MSG_NAME = 'SET_MAG_OFFSETS'
-  static MAGIC_NUMBER = 219
   static PAYLOAD_LENGTH = 8
+  static MAGIC_NUMBER = 219
 
   static FIELDS = [
     new MavLinkPacketField('magOfsX', 0, false, 2, 'int16_t'),
@@ -786,8 +789,8 @@ export class SetMagOffsets extends MavLinkData {
 export class MemInfo extends MavLinkData {
   static MSG_ID = 152
   static MSG_NAME = 'MEMINFO'
-  static MAGIC_NUMBER = 208
   static PAYLOAD_LENGTH = 8
+  static MAGIC_NUMBER = 208
 
   static FIELDS = [
     new MavLinkPacketField('brkval', 0, false, 2, 'uint16_t'),
@@ -815,8 +818,8 @@ export class MemInfo extends MavLinkData {
 export class ApAdc extends MavLinkData {
   static MSG_ID = 153
   static MSG_NAME = 'AP_ADC'
-  static MAGIC_NUMBER = 188
   static PAYLOAD_LENGTH = 12
+  static MAGIC_NUMBER = 188
 
   static FIELDS = [
     new MavLinkPacketField('adc1', 0, false, 2, 'uint16_t'),
@@ -859,8 +862,8 @@ export class ApAdc extends MavLinkData {
 export class DigicamConfigure extends MavLinkData {
   static MSG_ID = 154
   static MSG_NAME = 'DIGICAM_CONFIGURE'
-  static MAGIC_NUMBER = 84
   static PAYLOAD_LENGTH = 15
+  static MAGIC_NUMBER = 84
 
   static FIELDS = [
     new MavLinkPacketField('extraValue', 0, false, 4, 'float'),
@@ -929,8 +932,8 @@ export class DigicamConfigure extends MavLinkData {
 export class DigicamControl extends MavLinkData {
   static MSG_ID = 155
   static MSG_NAME = 'DIGICAM_CONTROL'
-  static MAGIC_NUMBER = 22
   static PAYLOAD_LENGTH = 13
+  static MAGIC_NUMBER = 22
 
   static FIELDS = [
     new MavLinkPacketField('extraValue', 0, false, 4, 'float'),
@@ -994,8 +997,8 @@ export class DigicamControl extends MavLinkData {
 export class MountConfigure extends MavLinkData {
   static MSG_ID = 156
   static MSG_NAME = 'MOUNT_CONFIGURE'
-  static MAGIC_NUMBER = 19
   static PAYLOAD_LENGTH = 6
+  static MAGIC_NUMBER = 19
 
   static FIELDS = [
     new MavLinkPacketField('targetSystem', 0, false, 1, 'uint8_t'),
@@ -1038,8 +1041,8 @@ export class MountConfigure extends MavLinkData {
 export class MountControl extends MavLinkData {
   static MSG_ID = 157
   static MSG_NAME = 'MOUNT_CONTROL'
-  static MAGIC_NUMBER = 21
   static PAYLOAD_LENGTH = 15
+  static MAGIC_NUMBER = 21
 
   static FIELDS = [
     new MavLinkPacketField('inputA', 0, false, 4, 'int32_t'),
@@ -1082,8 +1085,8 @@ export class MountControl extends MavLinkData {
 export class MountStatus extends MavLinkData {
   static MSG_ID = 158
   static MSG_NAME = 'MOUNT_STATUS'
-  static MAGIC_NUMBER = 134
   static PAYLOAD_LENGTH = 14
+  static MAGIC_NUMBER = 134
 
   static FIELDS = [
     new MavLinkPacketField('pointingA', 0, false, 4, 'int32_t'),
@@ -1122,8 +1125,8 @@ export class MountStatus extends MavLinkData {
 export class FencePoint extends MavLinkData {
   static MSG_ID = 160
   static MSG_NAME = 'FENCE_POINT'
-  static MAGIC_NUMBER = 78
   static PAYLOAD_LENGTH = 12
+  static MAGIC_NUMBER = 78
 
   static FIELDS = [
     new MavLinkPacketField('lat', 0, false, 4, 'float'),
@@ -1166,8 +1169,8 @@ export class FencePoint extends MavLinkData {
 export class FenceFetchPoint extends MavLinkData {
   static MSG_ID = 161
   static MSG_NAME = 'FENCE_FETCH_POINT'
-  static MAGIC_NUMBER = 68
   static PAYLOAD_LENGTH = 3
+  static MAGIC_NUMBER = 68
 
   static FIELDS = [
     new MavLinkPacketField('targetSystem', 0, false, 1, 'uint8_t'),
@@ -1195,8 +1198,8 @@ export class FenceFetchPoint extends MavLinkData {
 export class Ahrs extends MavLinkData {
   static MSG_ID = 163
   static MSG_NAME = 'AHRS'
-  static MAGIC_NUMBER = 127
   static PAYLOAD_LENGTH = 28
+  static MAGIC_NUMBER = 127
 
   static FIELDS = [
     new MavLinkPacketField('omegaIx', 0, false, 4, 'float'),
@@ -1244,8 +1247,8 @@ export class Ahrs extends MavLinkData {
 export class SimState extends MavLinkData {
   static MSG_ID = 164
   static MSG_NAME = 'SIMSTATE'
-  static MAGIC_NUMBER = 154
   static PAYLOAD_LENGTH = 44
+  static MAGIC_NUMBER = 154
 
   static FIELDS = [
     new MavLinkPacketField('roll', 0, false, 4, 'float'),
@@ -1313,8 +1316,8 @@ export class SimState extends MavLinkData {
 export class HwStatus extends MavLinkData {
   static MSG_ID = 165
   static MSG_NAME = 'HWSTATUS'
-  static MAGIC_NUMBER = 21
   static PAYLOAD_LENGTH = 3
+  static MAGIC_NUMBER = 21
 
   static FIELDS = [
     new MavLinkPacketField('Vcc', 0, false, 2, 'uint16_t'),
@@ -1337,8 +1340,8 @@ export class HwStatus extends MavLinkData {
 export class Radio extends MavLinkData {
   static MSG_ID = 166
   static MSG_NAME = 'RADIO'
-  static MAGIC_NUMBER = 21
   static PAYLOAD_LENGTH = 9
+  static MAGIC_NUMBER = 21
 
   static FIELDS = [
     new MavLinkPacketField('rxerrors', 0, false, 2, 'uint16_t'),
@@ -1386,8 +1389,8 @@ export class Radio extends MavLinkData {
 export class LimitsStatus extends MavLinkData {
   static MSG_ID = 167
   static MSG_NAME = 'LIMITS_STATUS'
-  static MAGIC_NUMBER = 144
   static PAYLOAD_LENGTH = 22
+  static MAGIC_NUMBER = 144
 
   static FIELDS = [
     new MavLinkPacketField('lastTrigger', 0, false, 4, 'uint32_t'),
@@ -1445,8 +1448,8 @@ export class LimitsStatus extends MavLinkData {
 export class Wind extends MavLinkData {
   static MSG_ID = 168
   static MSG_NAME = 'WIND'
-  static MAGIC_NUMBER = 1
   static PAYLOAD_LENGTH = 12
+  static MAGIC_NUMBER = 1
 
   static FIELDS = [
     new MavLinkPacketField('direction', 0, false, 4, 'float'),
@@ -1474,8 +1477,8 @@ export class Wind extends MavLinkData {
 export class Data16 extends MavLinkData {
   static MSG_ID = 169
   static MSG_NAME = 'DATA16'
-  static MAGIC_NUMBER = 234
   static PAYLOAD_LENGTH = 18
+  static MAGIC_NUMBER = 234
 
   static FIELDS = [
     new MavLinkPacketField('type', 0, false, 1, 'uint8_t'),
@@ -1503,8 +1506,8 @@ export class Data16 extends MavLinkData {
 export class Data32 extends MavLinkData {
   static MSG_ID = 170
   static MSG_NAME = 'DATA32'
-  static MAGIC_NUMBER = 73
   static PAYLOAD_LENGTH = 34
+  static MAGIC_NUMBER = 73
 
   static FIELDS = [
     new MavLinkPacketField('type', 0, false, 1, 'uint8_t'),
@@ -1532,8 +1535,8 @@ export class Data32 extends MavLinkData {
 export class Data64 extends MavLinkData {
   static MSG_ID = 171
   static MSG_NAME = 'DATA64'
-  static MAGIC_NUMBER = 181
   static PAYLOAD_LENGTH = 66
+  static MAGIC_NUMBER = 181
 
   static FIELDS = [
     new MavLinkPacketField('type', 0, false, 1, 'uint8_t'),
@@ -1561,8 +1564,8 @@ export class Data64 extends MavLinkData {
 export class Data96 extends MavLinkData {
   static MSG_ID = 172
   static MSG_NAME = 'DATA96'
-  static MAGIC_NUMBER = 22
   static PAYLOAD_LENGTH = 98
+  static MAGIC_NUMBER = 22
 
   static FIELDS = [
     new MavLinkPacketField('type', 0, false, 1, 'uint8_t'),
@@ -1590,8 +1593,8 @@ export class Data96 extends MavLinkData {
 export class RangeFinder extends MavLinkData {
   static MSG_ID = 173
   static MSG_NAME = 'RANGEFINDER'
-  static MAGIC_NUMBER = 83
   static PAYLOAD_LENGTH = 8
+  static MAGIC_NUMBER = 83
 
   static FIELDS = [
     new MavLinkPacketField('distance', 0, false, 4, 'float'),
@@ -1614,8 +1617,8 @@ export class RangeFinder extends MavLinkData {
 export class AirspeedAutocal extends MavLinkData {
   static MSG_ID = 174
   static MSG_NAME = 'AIRSPEED_AUTOCAL'
-  static MAGIC_NUMBER = 167
   static PAYLOAD_LENGTH = 48
+  static MAGIC_NUMBER = 167
 
   static FIELDS = [
     new MavLinkPacketField('vx', 0, false, 4, 'float'),
@@ -1689,8 +1692,8 @@ export class AirspeedAutocal extends MavLinkData {
 export class RallyPoint extends MavLinkData {
   static MSG_ID = 175
   static MSG_NAME = 'RALLY_POINT'
-  static MAGIC_NUMBER = 138
   static PAYLOAD_LENGTH = 19
+  static MAGIC_NUMBER = 138
 
   static FIELDS = [
     new MavLinkPacketField('lat', 0, false, 4, 'int32_t'),
@@ -1754,8 +1757,8 @@ export class RallyPoint extends MavLinkData {
 export class RallyFetchPoint extends MavLinkData {
   static MSG_ID = 176
   static MSG_NAME = 'RALLY_FETCH_POINT'
-  static MAGIC_NUMBER = 234
   static PAYLOAD_LENGTH = 3
+  static MAGIC_NUMBER = 234
 
   static FIELDS = [
     new MavLinkPacketField('targetSystem', 0, false, 1, 'uint8_t'),
@@ -1783,8 +1786,8 @@ export class RallyFetchPoint extends MavLinkData {
 export class CompassMotStatus extends MavLinkData {
   static MSG_ID = 177
   static MSG_NAME = 'COMPASSMOT_STATUS'
-  static MAGIC_NUMBER = 240
   static PAYLOAD_LENGTH = 20
+  static MAGIC_NUMBER = 240
 
   static FIELDS = [
     new MavLinkPacketField('current', 0, false, 4, 'float'),
@@ -1827,8 +1830,8 @@ export class CompassMotStatus extends MavLinkData {
 export class Ahrs2 extends MavLinkData {
   static MSG_ID = 178
   static MSG_NAME = 'AHRS2'
-  static MAGIC_NUMBER = 47
   static PAYLOAD_LENGTH = 24
+  static MAGIC_NUMBER = 47
 
   static FIELDS = [
     new MavLinkPacketField('roll', 0, false, 4, 'float'),
@@ -1871,8 +1874,8 @@ export class Ahrs2 extends MavLinkData {
 export class CameraStatus extends MavLinkData {
   static MSG_ID = 179
   static MSG_NAME = 'CAMERA_STATUS'
-  static MAGIC_NUMBER = 189
   static PAYLOAD_LENGTH = 29
+  static MAGIC_NUMBER = 189
 
   static FIELDS = [
     new MavLinkPacketField('timeUsec', 0, false, 8, 'uint64_t'),
@@ -1930,8 +1933,8 @@ export class CameraStatus extends MavLinkData {
 export class CameraFeedback extends MavLinkData {
   static MSG_ID = 180
   static MSG_NAME = 'CAMERA_FEEDBACK'
-  static MAGIC_NUMBER = 52
   static PAYLOAD_LENGTH = 47
+  static MAGIC_NUMBER = 52
 
   static FIELDS = [
     new MavLinkPacketField('timeUsec', 0, false, 8, 'uint64_t'),
@@ -2016,8 +2019,8 @@ export class CameraFeedback extends MavLinkData {
 export class Battery2 extends MavLinkData {
   static MSG_ID = 181
   static MSG_NAME = 'BATTERY2'
-  static MAGIC_NUMBER = 174
   static PAYLOAD_LENGTH = 4
+  static MAGIC_NUMBER = 174
 
   static FIELDS = [
     new MavLinkPacketField('voltage', 0, false, 2, 'uint16_t'),
@@ -2040,8 +2043,8 @@ export class Battery2 extends MavLinkData {
 export class Ahrs3 extends MavLinkData {
   static MSG_ID = 182
   static MSG_NAME = 'AHRS3'
-  static MAGIC_NUMBER = 229
   static PAYLOAD_LENGTH = 40
+  static MAGIC_NUMBER = 229
 
   static FIELDS = [
     new MavLinkPacketField('roll', 0, false, 4, 'float'),
@@ -2104,8 +2107,8 @@ export class Ahrs3 extends MavLinkData {
 export class AutopilotVersionRequest extends MavLinkData {
   static MSG_ID = 183
   static MSG_NAME = 'AUTOPILOT_VERSION_REQUEST'
-  static MAGIC_NUMBER = 85
   static PAYLOAD_LENGTH = 2
+  static MAGIC_NUMBER = 85
 
   static FIELDS = [
     new MavLinkPacketField('targetSystem', 0, false, 1, 'uint8_t'),
@@ -2128,8 +2131,8 @@ export class AutopilotVersionRequest extends MavLinkData {
 export class RemoteLogDataBlock extends MavLinkData {
   static MSG_ID = 184
   static MSG_NAME = 'REMOTE_LOG_DATA_BLOCK'
-  static MAGIC_NUMBER = 159
   static PAYLOAD_LENGTH = 206
+  static MAGIC_NUMBER = 159
 
   static FIELDS = [
     new MavLinkPacketField('seqno', 0, false, 4, 'uint32_t'),
@@ -2162,8 +2165,8 @@ export class RemoteLogDataBlock extends MavLinkData {
 export class RemoteLogBlockStatus extends MavLinkData {
   static MSG_ID = 185
   static MSG_NAME = 'REMOTE_LOG_BLOCK_STATUS'
-  static MAGIC_NUMBER = 186
   static PAYLOAD_LENGTH = 7
+  static MAGIC_NUMBER = 186
 
   static FIELDS = [
     new MavLinkPacketField('seqno', 0, false, 4, 'uint32_t'),
@@ -2196,8 +2199,8 @@ export class RemoteLogBlockStatus extends MavLinkData {
 export class LedControl extends MavLinkData {
   static MSG_ID = 186
   static MSG_NAME = 'LED_CONTROL'
-  static MAGIC_NUMBER = 72
   static PAYLOAD_LENGTH = 29
+  static MAGIC_NUMBER = 72
 
   static FIELDS = [
     new MavLinkPacketField('targetSystem', 0, false, 1, 'uint8_t'),
@@ -2240,8 +2243,8 @@ export class LedControl extends MavLinkData {
 export class MagCalProgress extends MavLinkData {
   static MSG_ID = 191
   static MSG_NAME = 'MAG_CAL_PROGRESS'
-  static MAGIC_NUMBER = 92
   static PAYLOAD_LENGTH = 27
+  static MAGIC_NUMBER = 92
 
   static FIELDS = [
     new MavLinkPacketField('directionX', 0, false, 4, 'float'),
@@ -2299,8 +2302,8 @@ export class MagCalProgress extends MavLinkData {
 export class EkfStatusReport extends MavLinkData {
   static MSG_ID = 193
   static MSG_NAME = 'EKF_STATUS_REPORT'
-  static MAGIC_NUMBER = 71
   static PAYLOAD_LENGTH = 26
+  static MAGIC_NUMBER = 71
 
   static FIELDS = [
     new MavLinkPacketField('velocityVariance', 0, false, 4, 'float'),
@@ -2348,8 +2351,8 @@ export class EkfStatusReport extends MavLinkData {
 export class PidTuning extends MavLinkData {
   static MSG_ID = 194
   static MSG_NAME = 'PID_TUNING'
-  static MAGIC_NUMBER = 98
   static PAYLOAD_LENGTH = 25
+  static MAGIC_NUMBER = 98
 
   static FIELDS = [
     new MavLinkPacketField('desired', 0, false, 4, 'float'),
@@ -2397,8 +2400,8 @@ export class PidTuning extends MavLinkData {
 export class Deepstall extends MavLinkData {
   static MSG_ID = 195
   static MSG_NAME = 'DEEPSTALL'
-  static MAGIC_NUMBER = 120
   static PAYLOAD_LENGTH = 37
+  static MAGIC_NUMBER = 120
 
   static FIELDS = [
     new MavLinkPacketField('landingLat', 0, false, 4, 'int32_t'),
@@ -2461,8 +2464,8 @@ export class Deepstall extends MavLinkData {
 export class GimbalReport extends MavLinkData {
   static MSG_ID = 200
   static MSG_NAME = 'GIMBAL_REPORT'
-  static MAGIC_NUMBER = 134
   static PAYLOAD_LENGTH = 42
+  static MAGIC_NUMBER = 134
 
   static FIELDS = [
     new MavLinkPacketField('deltaTime', 0, false, 4, 'float'),
@@ -2535,8 +2538,8 @@ export class GimbalReport extends MavLinkData {
 export class GimbalControl extends MavLinkData {
   static MSG_ID = 201
   static MSG_NAME = 'GIMBAL_CONTROL'
-  static MAGIC_NUMBER = 205
   static PAYLOAD_LENGTH = 14
+  static MAGIC_NUMBER = 205
 
   static FIELDS = [
     new MavLinkPacketField('demandedRateX', 0, false, 4, 'float'),
@@ -2574,8 +2577,8 @@ export class GimbalControl extends MavLinkData {
 export class GimbalTorqueCmdReport extends MavLinkData {
   static MSG_ID = 214
   static MSG_NAME = 'GIMBAL_TORQUE_CMD_REPORT'
-  static MAGIC_NUMBER = 69
   static PAYLOAD_LENGTH = 8
+  static MAGIC_NUMBER = 69
 
   static FIELDS = [
     new MavLinkPacketField('rlTorqueCmd', 0, false, 2, 'int16_t'),
@@ -2613,8 +2616,8 @@ export class GimbalTorqueCmdReport extends MavLinkData {
 export class GoproHeartbeat extends MavLinkData {
   static MSG_ID = 215
   static MSG_NAME = 'GOPRO_HEARTBEAT'
-  static MAGIC_NUMBER = 101
   static PAYLOAD_LENGTH = 3
+  static MAGIC_NUMBER = 101
 
   static FIELDS = [
     new MavLinkPacketField('status', 0, false, 1, 'uint8_t'),
@@ -2642,8 +2645,8 @@ export class GoproHeartbeat extends MavLinkData {
 export class GoproGetRequest extends MavLinkData {
   static MSG_ID = 216
   static MSG_NAME = 'GOPRO_GET_REQUEST'
-  static MAGIC_NUMBER = 50
   static PAYLOAD_LENGTH = 3
+  static MAGIC_NUMBER = 50
 
   static FIELDS = [
     new MavLinkPacketField('targetSystem', 0, false, 1, 'uint8_t'),
@@ -2671,8 +2674,8 @@ export class GoproGetRequest extends MavLinkData {
 export class GoproGetResponse extends MavLinkData {
   static MSG_ID = 217
   static MSG_NAME = 'GOPRO_GET_RESPONSE'
-  static MAGIC_NUMBER = 202
   static PAYLOAD_LENGTH = 6
+  static MAGIC_NUMBER = 202
 
   static FIELDS = [
     new MavLinkPacketField('cmdId', 0, false, 1, 'uint8_t'),
@@ -2700,8 +2703,8 @@ export class GoproGetResponse extends MavLinkData {
 export class GoproSetRequest extends MavLinkData {
   static MSG_ID = 218
   static MSG_NAME = 'GOPRO_SET_REQUEST'
-  static MAGIC_NUMBER = 17
   static PAYLOAD_LENGTH = 7
+  static MAGIC_NUMBER = 17
 
   static FIELDS = [
     new MavLinkPacketField('targetSystem', 0, false, 1, 'uint8_t'),
@@ -2734,8 +2737,8 @@ export class GoproSetRequest extends MavLinkData {
 export class GoproSetResponse extends MavLinkData {
   static MSG_ID = 219
   static MSG_NAME = 'GOPRO_SET_RESPONSE'
-  static MAGIC_NUMBER = 162
   static PAYLOAD_LENGTH = 2
+  static MAGIC_NUMBER = 162
 
   static FIELDS = [
     new MavLinkPacketField('cmdId', 0, false, 1, 'uint8_t'),
@@ -2758,8 +2761,8 @@ export class GoproSetResponse extends MavLinkData {
 export class Rpm extends MavLinkData {
   static MSG_ID = 226
   static MSG_NAME = 'RPM'
-  static MAGIC_NUMBER = 207
   static PAYLOAD_LENGTH = 8
+  static MAGIC_NUMBER = 207
 
   static FIELDS = [
     new MavLinkPacketField('rpm1', 0, false, 4, 'float'),
@@ -2782,8 +2785,8 @@ export class Rpm extends MavLinkData {
 export class DeviceOpRead extends MavLinkData {
   static MSG_ID = 11000
   static MSG_NAME = 'DEVICE_OP_READ'
-  static MAGIC_NUMBER = 134
   static PAYLOAD_LENGTH = 52
+  static MAGIC_NUMBER = 134
 
   static FIELDS = [
     new MavLinkPacketField('requestId', 0, false, 4, 'uint32_t'),
@@ -2846,8 +2849,8 @@ export class DeviceOpRead extends MavLinkData {
 export class DeviceOpReadReply extends MavLinkData {
   static MSG_ID = 11001
   static MSG_NAME = 'DEVICE_OP_READ_REPLY'
-  static MAGIC_NUMBER = 15
   static PAYLOAD_LENGTH = 136
+  static MAGIC_NUMBER = 15
 
   static FIELDS = [
     new MavLinkPacketField('requestId', 0, false, 4, 'uint32_t'),
@@ -2890,8 +2893,8 @@ export class DeviceOpReadReply extends MavLinkData {
 export class DeviceOpWrite extends MavLinkData {
   static MSG_ID = 11002
   static MSG_NAME = 'DEVICE_OP_WRITE'
-  static MAGIC_NUMBER = 234
   static PAYLOAD_LENGTH = 180
+  static MAGIC_NUMBER = 234
 
   static FIELDS = [
     new MavLinkPacketField('requestId', 0, false, 4, 'uint32_t'),
@@ -2959,8 +2962,8 @@ export class DeviceOpWrite extends MavLinkData {
 export class DeviceOpWriteReply extends MavLinkData {
   static MSG_ID = 11003
   static MSG_NAME = 'DEVICE_OP_WRITE_REPLY'
-  static MAGIC_NUMBER = 64
   static PAYLOAD_LENGTH = 5
+  static MAGIC_NUMBER = 64
 
   static FIELDS = [
     new MavLinkPacketField('requestId', 0, false, 4, 'uint32_t'),
@@ -2983,8 +2986,8 @@ export class DeviceOpWriteReply extends MavLinkData {
 export class AdapTuning extends MavLinkData {
   static MSG_ID = 11010
   static MSG_NAME = 'ADAP_TUNING'
-  static MAGIC_NUMBER = 46
   static PAYLOAD_LENGTH = 49
+  static MAGIC_NUMBER = 46
 
   static FIELDS = [
     new MavLinkPacketField('desired', 0, false, 4, 'float'),
@@ -3062,8 +3065,8 @@ export class AdapTuning extends MavLinkData {
 export class VisionPositionDelta extends MavLinkData {
   static MSG_ID = 11011
   static MSG_NAME = 'VISION_POSITION_DELTA'
-  static MAGIC_NUMBER = 106
   static PAYLOAD_LENGTH = 44
+  static MAGIC_NUMBER = 106
 
   static FIELDS = [
     new MavLinkPacketField('timeUsec', 0, false, 8, 'uint64_t'),
@@ -3103,8 +3106,8 @@ export class VisionPositionDelta extends MavLinkData {
 export class AoaSsa extends MavLinkData {
   static MSG_ID = 11020
   static MSG_NAME = 'AOA_SSA'
-  static MAGIC_NUMBER = 205
   static PAYLOAD_LENGTH = 16
+  static MAGIC_NUMBER = 205
 
   static FIELDS = [
     new MavLinkPacketField('timeUsec', 0, false, 8, 'uint64_t'),
@@ -3132,8 +3135,8 @@ export class AoaSsa extends MavLinkData {
 export class EscTelemetry1To4 extends MavLinkData {
   static MSG_ID = 11030
   static MSG_NAME = 'ESC_TELEMETRY_1_TO_4'
-  static MAGIC_NUMBER = 144
   static PAYLOAD_LENGTH = 44
+  static MAGIC_NUMBER = 144
 
   static FIELDS = [
     new MavLinkPacketField('voltage', 0, false, 2, 'uint16_t[]', 4),
@@ -3176,8 +3179,8 @@ export class EscTelemetry1To4 extends MavLinkData {
 export class EscTelemetry5To8 extends MavLinkData {
   static MSG_ID = 11031
   static MSG_NAME = 'ESC_TELEMETRY_5_TO_8'
-  static MAGIC_NUMBER = 133
   static PAYLOAD_LENGTH = 44
+  static MAGIC_NUMBER = 133
 
   static FIELDS = [
     new MavLinkPacketField('voltage', 0, false, 2, 'uint16_t[]', 4),
@@ -3220,8 +3223,8 @@ export class EscTelemetry5To8 extends MavLinkData {
 export class EscTelemetry9To12 extends MavLinkData {
   static MSG_ID = 11032
   static MSG_NAME = 'ESC_TELEMETRY_9_TO_12'
-  static MAGIC_NUMBER = 85
   static PAYLOAD_LENGTH = 44
+  static MAGIC_NUMBER = 85
 
   static FIELDS = [
     new MavLinkPacketField('voltage', 0, false, 2, 'uint16_t[]', 4),
@@ -3264,8 +3267,8 @@ export class EscTelemetry9To12 extends MavLinkData {
 export class OsdParamConfig extends MavLinkData {
   static MSG_ID = 11033
   static MSG_NAME = 'OSD_PARAM_CONFIG'
-  static MAGIC_NUMBER = 195
   static PAYLOAD_LENGTH = 37
+  static MAGIC_NUMBER = 195
 
   static FIELDS = [
     new MavLinkPacketField('requestId', 0, false, 4, 'uint32_t'),
@@ -3330,8 +3333,8 @@ export class OsdParamConfig extends MavLinkData {
 export class OsdParamConfigReply extends MavLinkData {
   static MSG_ID = 11034
   static MSG_NAME = 'OSD_PARAM_CONFIG_REPLY'
-  static MAGIC_NUMBER = 79
   static PAYLOAD_LENGTH = 5
+  static MAGIC_NUMBER = 79
 
   static FIELDS = [
     new MavLinkPacketField('requestId', 0, false, 4, 'uint32_t'),
@@ -3354,8 +3357,8 @@ export class OsdParamConfigReply extends MavLinkData {
 export class OsdParamShowConfig extends MavLinkData {
   static MSG_ID = 11035
   static MSG_NAME = 'OSD_PARAM_SHOW_CONFIG'
-  static MAGIC_NUMBER = 128
   static PAYLOAD_LENGTH = 8
+  static MAGIC_NUMBER = 128
 
   static FIELDS = [
     new MavLinkPacketField('requestId', 0, false, 4, 'uint32_t'),
@@ -3393,8 +3396,8 @@ export class OsdParamShowConfig extends MavLinkData {
 export class OsdParamShowConfigReply extends MavLinkData {
   static MSG_ID = 11036
   static MSG_NAME = 'OSD_PARAM_SHOW_CONFIG_REPLY'
-  static MAGIC_NUMBER = 177
   static PAYLOAD_LENGTH = 34
+  static MAGIC_NUMBER = 177
 
   static FIELDS = [
     new MavLinkPacketField('requestId', 0, false, 4, 'uint32_t'),
@@ -3444,8 +3447,8 @@ export class OsdParamShowConfigReply extends MavLinkData {
 export class ObstacleDistance3d extends MavLinkData {
   static MSG_ID = 11037
   static MSG_NAME = 'OBSTACLE_DISTANCE_3D'
-  static MAGIC_NUMBER = 130
   static PAYLOAD_LENGTH = 28
+  static MAGIC_NUMBER = 130
 
   static FIELDS = [
     new MavLinkPacketField('timeBootMs', 0, false, 4, 'uint32_t'),

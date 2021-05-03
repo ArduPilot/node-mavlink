@@ -10,6 +10,9 @@ import {
   uint64_t,
   float,
   double,
+} from './types'
+
+import {
   MavLinkPacketField,
   MavLinkData
 } from './mavlink'
