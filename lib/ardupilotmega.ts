@@ -229,7 +229,7 @@ export enum GoproHeartbeatStatus {
  * GOPRO_HEARTBEAT_FLAGS
  */
 export enum GoproHeartbeatFlags {
-  ''                                  = 1,
+  'RECORDING'                         = 1,
 }
 /**
  * GOPRO_REQUEST_STATUS
@@ -323,7 +323,7 @@ export enum GoproFieldOfView {
  * GOPRO_VIDEO_SETTINGS_FLAGS
  */
 export enum GoproVideoSettingsFlags {
-  ''                                  = 1,
+  'MODE'                              = 1,
 }
 /**
  * GOPRO_PHOTO_RESOLUTION
@@ -466,8 +466,8 @@ export enum PidTuningAxis {
  * Special ACK block numbers control activation of dataflash log streaming.
  */
 export enum MavRemoteLogDataBlockCommands {
-  'OP'                                = 2147483645,
-  'ART'                               = 2147483646,
+  'STOP'                              = 2147483645,
+  'START'                             = 2147483646,
 }
 /**
  * Possible remote log data block statuses.

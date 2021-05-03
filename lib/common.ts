@@ -388,9 +388,9 @@ export enum GripperActions {
  * Winch actions.
  */
 export enum WinchActions {
-  'ELAXED'                                         = 0,
-  'ELATIVE_LENGTH_CONTROL'                         = 1,
-  'ATE_CONTROL'                                    = 2,
+  'RELAXED'                                        = 0,
+  'RELATIVE_LENGTH_CONTROL'                        = 1,
+  'RATE_CONTROL'                                   = 2,
 }
 /**
  * Generalized UAVCAN node health

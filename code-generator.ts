@@ -142,15 +142,27 @@ function generate(obj: any, output: Writter) {
     entry.source.commonPrefix = entry.values
       .map(entry => entry.source.name)
       .reduce((acc, name) => {
-        if (acc === '') return name
-        else for (let i = 0; i < Math.min(acc.length, name.length); i++) {
-          if (acc[i] !== name[i]) return acc.substr(0, i)
+        if (acc === '') {
+          return name
+        } else {
+          for (let i = 0; i < Math.min(acc.length, name.length); i++) {
+            if (acc[i] !== name[i]) return acc.substr(0, i)
+         }
         }
         return acc
       }, '')
+
+    // trim the common prefix so that it ends with an underscore
+    while (!entry.source.commonPrefix.endsWith('_') && entry.source.commonPrefix.length > 0) {
+      entry.source.commonPrefix = entry.source.commonPrefix.substr(0, entry.source.commonPrefix.length - 1)
+    }
+
+    // if the common prefix is contains parts of the value revert to source enum name
     if (entry.source.commonPrefix.startsWith(entry.source.name) && entry.source.commonPrefix.length > entry.source.name.length + 1) {
       entry.source.commonPrefix = entry.source.name + '_'
     }
+
+    // if the common prefix is empty revert to source enum name
     if (entry.source.commonPrefix === '') {
       entry.source.commonPrefix = entry.source.name + '_'
     }
