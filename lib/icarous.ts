@@ -33,9 +33,10 @@ export class IcarousHeartbeat extends MavLinkData {
   static MSG_ID = 42000
   static MSG_NAME = 'ICAROUS_HEARTBEAT'
   static MAGIC_NUMBER = 227
+  static PAYLOAD_LENGTH = 1
 
   static FIELDS = [
-    new MavLinkPacketField('status', 0, false, 'uint8_t'),
+    new MavLinkPacketField('status', 0, false, 1, 'uint8_t'),
   ]
 
   /**
@@ -51,24 +52,25 @@ export class IcarousKinematicBands extends MavLinkData {
   static MSG_ID = 42001
   static MSG_NAME = 'ICAROUS_KINEMATIC_BANDS'
   static MAGIC_NUMBER = 239
+  static PAYLOAD_LENGTH = 46
 
   static FIELDS = [
-    new MavLinkPacketField('min1', 0, false, 'float'),
-    new MavLinkPacketField('max1', 4, false, 'float'),
-    new MavLinkPacketField('min2', 8, false, 'float'),
-    new MavLinkPacketField('max2', 12, false, 'float'),
-    new MavLinkPacketField('min3', 16, false, 'float'),
-    new MavLinkPacketField('max3', 20, false, 'float'),
-    new MavLinkPacketField('min4', 24, false, 'float'),
-    new MavLinkPacketField('max4', 28, false, 'float'),
-    new MavLinkPacketField('min5', 32, false, 'float'),
-    new MavLinkPacketField('max5', 36, false, 'float'),
-    new MavLinkPacketField('numBands', 40, false, 'int8_t'),
-    new MavLinkPacketField('type1', 41, false, 'uint8_t'),
-    new MavLinkPacketField('type2', 42, false, 'uint8_t'),
-    new MavLinkPacketField('type3', 43, false, 'uint8_t'),
-    new MavLinkPacketField('type4', 44, false, 'uint8_t'),
-    new MavLinkPacketField('type5', 45, false, 'uint8_t'),
+    new MavLinkPacketField('min1', 0, false, 4, 'float'),
+    new MavLinkPacketField('max1', 4, false, 4, 'float'),
+    new MavLinkPacketField('min2', 8, false, 4, 'float'),
+    new MavLinkPacketField('max2', 12, false, 4, 'float'),
+    new MavLinkPacketField('min3', 16, false, 4, 'float'),
+    new MavLinkPacketField('max3', 20, false, 4, 'float'),
+    new MavLinkPacketField('min4', 24, false, 4, 'float'),
+    new MavLinkPacketField('max4', 28, false, 4, 'float'),
+    new MavLinkPacketField('min5', 32, false, 4, 'float'),
+    new MavLinkPacketField('max5', 36, false, 4, 'float'),
+    new MavLinkPacketField('numBands', 40, false, 1, 'int8_t'),
+    new MavLinkPacketField('type1', 41, false, 1, 'uint8_t'),
+    new MavLinkPacketField('type2', 42, false, 1, 'uint8_t'),
+    new MavLinkPacketField('type3', 43, false, 1, 'uint8_t'),
+    new MavLinkPacketField('type4', 44, false, 1, 'uint8_t'),
+    new MavLinkPacketField('type5', 45, false, 1, 'uint8_t'),
   ]
 
   /**

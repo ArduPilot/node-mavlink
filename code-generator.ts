@@ -327,6 +327,11 @@ function generate(obj: any, output: Writter) {
     })
   })
 
+  // calculate total payload length
+  messages.forEach(message => {
+    message.payloadLength = message.fields.reduce((acc, field) => acc + field.size, 0)
+  })
+  
   // calculate CRC_EXTRA
   messages.forEach((message) => {
     // CRC is generated from the definition of base fields in network order (big fields first, then the small ones)
@@ -381,6 +386,7 @@ function generate(obj: any, output: Writter) {
     // generate static fields
     output.write(`  static MSG_ID = ${message.id}`)
     output.write(`  static MSG_NAME = '${message.source.name}'`)
+    output.write(`  static PAYLOAD_LENGTH = ${message.payloadLength}`)
     output.write(`  static MAGIC_NUMBER = ${message.magic}`)
     output.write(``)
 
@@ -398,9 +404,9 @@ function generate(obj: any, output: Writter) {
       .filter(field => !field.extension)
       .forEach(field => {
         if (field.arrayLength) {
-          output.write(`    new MavLinkPacketField('${field.name}', ${offset}, false, '${field.fieldType}', ${field.arrayLength}),`)
+          output.write(`    new MavLinkPacketField('${field.name}', ${offset}, false, ${field.fieldSize}, '${field.fieldType}', ${field.arrayLength}),`)
         } else {
-          output.write(`    new MavLinkPacketField('${field.name}', ${offset}, false, '${field.fieldType}'),`)
+          output.write(`    new MavLinkPacketField('${field.name}', ${offset}, false, ${field.fieldSize}, '${field.fieldType}'),`)
         }
         offset += field.size
       })
@@ -410,9 +416,9 @@ function generate(obj: any, output: Writter) {
       .filter(field => field.extension)
       .forEach(field => {
         if (field.arrayLength) {
-          output.write(`    new MavLinkPacketField('${field.name}', ${offset}, true, '${field.fieldType}', ${field.arrayLength}),`)
+          output.write(`    new MavLinkPacketField('${field.name}', ${offset}, true, ${field.fieldSize}, '${field.fieldType}', ${field.arrayLength}),`)
         } else {
-          output.write(`    new MavLinkPacketField('${field.name}', ${offset}, true, '${field.fieldType}'),`)
+          output.write(`    new MavLinkPacketField('${field.name}', ${offset}, true, ${field.fieldSize}, '${field.fieldType}'),`)
         }
         offset += field.size
       })

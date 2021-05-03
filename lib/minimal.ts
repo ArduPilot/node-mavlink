@@ -619,14 +619,15 @@ export class Heartbeat extends MavLinkData {
   static MSG_ID = 0
   static MSG_NAME = 'HEARTBEAT'
   static MAGIC_NUMBER = 50
+  static PAYLOAD_LENGTH = 9
 
   static FIELDS = [
-    new MavLinkPacketField('customMode', 0, false, 'uint32_t'),
-    new MavLinkPacketField('type', 4, false, 'uint8_t'),
-    new MavLinkPacketField('autopilot', 5, false, 'uint8_t'),
-    new MavLinkPacketField('baseMode', 6, false, 'uint8_t'),
-    new MavLinkPacketField('systemStatus', 7, false, 'uint8_t'),
-    new MavLinkPacketField('mavlinkVersion', 8, false, 'uint8_t_mavlink_version'),
+    new MavLinkPacketField('customMode', 0, false, 4, 'uint32_t'),
+    new MavLinkPacketField('type', 4, false, 1, 'uint8_t'),
+    new MavLinkPacketField('autopilot', 5, false, 1, 'uint8_t'),
+    new MavLinkPacketField('baseMode', 6, false, 1, 'uint8_t'),
+    new MavLinkPacketField('systemStatus', 7, false, 1, 'uint8_t'),
+    new MavLinkPacketField('mavlinkVersion', 8, false, 1, 'uint8_t_mavlink_version'),
   ]
 
   /**
@@ -669,13 +670,14 @@ export class ProtocolVersion extends MavLinkData {
   static MSG_ID = 300
   static MSG_NAME = 'PROTOCOL_VERSION'
   static MAGIC_NUMBER = 217
+  static PAYLOAD_LENGTH = 22
 
   static FIELDS = [
-    new MavLinkPacketField('version', 0, false, 'uint16_t'),
-    new MavLinkPacketField('minVersion', 2, false, 'uint16_t'),
-    new MavLinkPacketField('maxVersion', 4, false, 'uint16_t'),
-    new MavLinkPacketField('specVersionHash', 6, false, 'uint8_t[]', 8),
-    new MavLinkPacketField('libraryVersionHash', 14, false, 'uint8_t[]', 8),
+    new MavLinkPacketField('version', 0, false, 2, 'uint16_t'),
+    new MavLinkPacketField('minVersion', 2, false, 2, 'uint16_t'),
+    new MavLinkPacketField('maxVersion', 4, false, 2, 'uint16_t'),
+    new MavLinkPacketField('specVersionHash', 6, false, 1, 'uint8_t[]', 8),
+    new MavLinkPacketField('libraryVersionHash', 14, false, 1, 'uint8_t[]', 8),
   ]
 
   /**
