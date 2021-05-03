@@ -24,7 +24,7 @@ export function x25crc(buffer: Buffer, start = 0, trim = 0, magic = null) {
   return crc;
 }
 
-export function dump(buffer: Buffer, lineWidth = 10) {
+export function dump(buffer: Buffer, lineWidth = 28) {
   const line = []
   for (let i = 0; i < buffer.length; i++) {
     line.push(buffer[i].toString(16).padStart(2, '0') + ' ')
@@ -218,9 +218,9 @@ export class MavLinkPacket {
 }
 
 /**
- * A transform stream that splits the incomming data stream into MavLink packages
+ * A transform stream that splits the incomming data stream into chunks containing full MavLink messages
  */
- export class MavLinkPacketSplitter extends Transform {
+export class MavLinkPacketSplitter extends Transform {
   private buffer = Buffer.from([])
   
   _transform(chunk: Buffer, encoding, callback: TransformCallback) {
@@ -235,7 +235,9 @@ export class MavLinkPacket {
       }
 
       // fast-forward the buffer to the first start byte
-      this.buffer = this.buffer.slice(startByteFirstOffset)
+      if (startByteFirstOffset > 0) {
+        this.buffer = this.buffer.slice(startByteFirstOffset)
+      }
 
       // check if the buffer contains at least the minumum size of data
       if (this.buffer.length < MAVLINK_PAYLOAD_OFFSET + MAVLINK_CHECKSUM_LENGTH) {
@@ -273,7 +275,7 @@ export class MavLinkPacket {
             'got', crc, `(0x${crc.toString(16).padStart(4, '0')})`,
             '; msgid:', msgid, ', magic:', magic
           )
-          dump(buffer, 28)
+          dump(buffer)
         }
       } else {
         // this meessage has not been generated - ignoring
@@ -292,7 +294,7 @@ export class MavLinkPacket {
  * What this Transform does it reads all the common values and takes the buffer up to a length
  * that will allow reading values without checking the length of the buffer.
  */
- export class MavLinkPacketParser extends Transform {
+export class MavLinkPacketParser extends Transform {
   constructor(opts = {}) {
     super({ ...opts, objectMode: true })
   }
