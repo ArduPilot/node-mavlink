@@ -1,4 +1,4 @@
-# Node.js MavLink mappings
+# Node.js MavLink library
 
 This package is the implementation of serialization and parsing of MavLink messages for v1 and v2 protocols.
 
@@ -14,7 +14,7 @@ It is extremely easy to get started using this library. First you need to instal
 $ npm install --save node-mavlink serialport
 ```
 
-Once you've done it you can start using it. First you'll need a serial port that can parse messages one by one:
+Once you've done it you can start using it. First you'll need a serial port that can parse messages one by one. Please note that since we're using ECMAScript modules the file name should end with `.mjs` extension (e.g. `test.mjs`)
 
 ```
 import * as SerialPort from 'serialport'
@@ -40,14 +40,14 @@ Each message consists of multiple fields that contain specific data. Parsing the
 ```
 import { minimal, common, ardupilotmega, uavionix, icarous } from 'node-mavlink'
 
-// create a registry containing a mapping between a message id and a data class
-const REGISTRY = [
+// create a registry of mappings between a message id and a data class
+const REGISTRY = {
   ...minimal.REGISTRY,
   ...common.REGISTRY,
   ...ardupilotmega.REGISTRY,
   ...uavionix.REGISTRY,
   ...icarous.REGISTRY,
-]
+}
 
 reader.on('data', packet => {
   const clazz = REGISTRY[packet.header.msgid]
@@ -63,15 +63,15 @@ reader.on('data', packet => {
 Sending messages is also very easy. One example that is very useful is to send the `REQUEST_PROTOCOL_VERSION` to switch to protocol version 2.
 
 ```
-import { CommandInt, MavCmd, MavLinkProtocolV2 } from 'node-mavlink'
+import { MavLinkProtocolV2 } from 'node-mavlink'
 
 // MavLink requires that the messages are indexed
 let seq = 0
 
 // Create an instance of of the `CommandInt` class that will be the vessel
 // for containing the command data
-const msg = new CommandInt()
-msg.command = MavCmd.REQUEST_PROTOCOL_VERSION
+const msg = new common.CommandInt()
+msg.command = common.MavCmd.REQUEST_PROTOCOL_VERSION
 msg.param1 = 1
 
 // Serialize the message using the v2 protocol
@@ -82,6 +82,12 @@ seq &= 255
 
 port.write(buffer)
 ```
+
+## Interacting with other communication mediums
+
+The splitter and parser work with generic streams. Of course the obvious choice for many use cases will be a serial port but the support doesn't end there.
+
+There are options for streams working over network (TCP or UDP), GSM network - pretty much anything that sends and receives data over Node.js `Stream`s.
 
 ## Closing thoughts
 

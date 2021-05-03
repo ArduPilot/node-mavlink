@@ -2,8 +2,13 @@
   "compilerOptions": {
     "module": "commonjs",
     "lib": ["ES2020", "DOM"],
-    "target": "ESNext"
+    "target": "es2015",
+    "declaration": true,
+    "outDir": "./dist"
   },
+  "include": [
+    "index.ts",
+  ],
   "exclude": [
     "node_modules"
   ]

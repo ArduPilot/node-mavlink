@@ -19,15 +19,18 @@
     "type": "patreon",
     "url": "https://www.patreon.com/padcom"
   },
-  "main": "index.ts",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "scripts": {
     "start": "ts-node test.ts",
+    "transpile": "tsc",
     "code-generator": "ts-node code-generator.ts",
     "get:minimal": "nwget https://raw.githubusercontent.com/mavlink/mavlink/master/message_definitions/v1.0/minimal.xml -O minimal.xml",
     "get:common": "nwget https://raw.githubusercontent.com/mavlink/mavlink/master/message_definitions/v1.0/common.xml -O common.xml",
     "get:ardupilotmega": "nwget https://raw.githubusercontent.com/mavlink/mavlink/master/message_definitions/v1.0/ardupilotmega.xml -O ardupilotmega.xml",
     "get:uavionix": "nwget https://raw.githubusercontent.com/mavlink/mavlink/master/message_definitions/v1.0/uAvionix.xml -O uavionix.xml",
-    "get:icarous": "nwget https://raw.githubusercontent.com/mavlink/mavlink/master/message_definitions/v1.0/icarous.xml -O icarous.xml"
+    "get:icarous": "nwget https://raw.githubusercontent.com/mavlink/mavlink/master/message_definitions/v1.0/icarous.xml -O icarous.xml",
+    "postinstall": "npm run get:minimal && npm run get:common && npm run get:ardupilotmega && npm run get:uavionix && npm run get:icarous && npm run code-generator"
   },
   "devDependencies": {
     "@types/node": "^15.0.1",
