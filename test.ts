@@ -3,7 +3,7 @@
 import * as SerialPort from 'serialport'
 import {
   MavLinkPacket, MavLinkPacketSplitter, MavLinkPacketParser,
-  minimal, common, ardupilotmega,
+  minimal, common, ardupilotmega, uavionix, icarous,
   dump,
 } from '.'
 
@@ -11,6 +11,8 @@ const REGISTRY = {
   ...minimal,
   ...common,
   ...ardupilotmega,
+  ...uavionix,
+  ...icarous,
 }
 
 const port = new SerialPort('/dev/ttyACM0', { autoOpen: true })

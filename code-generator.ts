@@ -437,7 +437,7 @@ function generate(obj: any, output: Writter) {
   output.write()
 }
 
-const parts = [ 'minimal', 'common', 'ardupilotmega' ]
+const parts = [ 'minimal', 'common', 'ardupilotmega', 'uavionix', 'icarous' ]
 
 async function main() {
   for (let i = 0; i < parts.length; i++) {

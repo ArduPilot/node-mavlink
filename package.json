@@ -25,7 +25,9 @@
     "code-generator": "ts-node code-generator.ts",
     "get:minimal": "nwget https://raw.githubusercontent.com/mavlink/mavlink/master/message_definitions/v1.0/minimal.xml -O minimal.xml",
     "get:common": "nwget https://raw.githubusercontent.com/mavlink/mavlink/master/message_definitions/v1.0/common.xml -O common.xml",
-    "get:ardupilotmega": "nwget https://raw.githubusercontent.com/mavlink/mavlink/master/message_definitions/v1.0/ardupilotmega.xml -O ardupilotmega.xml"
+    "get:ardupilotmega": "nwget https://raw.githubusercontent.com/mavlink/mavlink/master/message_definitions/v1.0/ardupilotmega.xml -O ardupilotmega.xml",
+    "get:uavionix": "nwget https://raw.githubusercontent.com/mavlink/mavlink/master/message_definitions/v1.0/uAvionix.xml -O uavionix.xml",
+    "get:icarous": "nwget https://raw.githubusercontent.com/mavlink/mavlink/master/message_definitions/v1.0/icarous.xml -O icarous.xml"
   },
   "devDependencies": {
     "@types/node": "^15.0.1",
