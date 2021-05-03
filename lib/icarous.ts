@@ -31,6 +31,7 @@ export enum IcarousFmsState {
  */
 export class IcarousHeartbeat extends MavLinkData {
   static MSG_ID = 42000
+  static MSG_NAME = 'ICAROUS_HEARTBEAT'
   static MAGIC_NUMBER = 227
 
   static FIELDS = [
@@ -48,6 +49,7 @@ export class IcarousHeartbeat extends MavLinkData {
  */
 export class IcarousKinematicBands extends MavLinkData {
   static MSG_ID = 42001
+  static MSG_NAME = 'ICAROUS_KINEMATIC_BANDS'
   static MAGIC_NUMBER = 239
 
   static FIELDS = [

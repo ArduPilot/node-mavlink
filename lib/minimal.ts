@@ -617,6 +617,7 @@ export enum MavComponent {
  */
 export class Heartbeat extends MavLinkData {
   static MSG_ID = 0
+  static MSG_NAME = 'HEARTBEAT'
   static MAGIC_NUMBER = 50
 
   static FIELDS = [
@@ -666,6 +667,7 @@ export class Heartbeat extends MavLinkData {
  */
 export class ProtocolVersion extends MavLinkData {
   static MSG_ID = 300
+  static MSG_NAME = 'PROTOCOL_VERSION'
   static MAGIC_NUMBER = 217
 
   static FIELDS = [

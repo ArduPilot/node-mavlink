@@ -380,6 +380,7 @@ function generate(obj: any, output: Writter) {
 
     // generate static fields
     output.write(`  static MSG_ID = ${message.id}`)
+    output.write(`  static MSG_NAME = '${message.source.name}'`)
     output.write(`  static MAGIC_NUMBER = ${message.magic}`)
     output.write(``)
 

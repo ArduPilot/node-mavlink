@@ -118,6 +118,7 @@ export enum UavionixAdsbEmergencyStatus {
  */
 export class UavionixAdsbOutCfg extends MavLinkData {
   static MSG_ID = 10001
+  static MSG_NAME = 'UAVIONIX_ADSB_OUT_CFG'
   static MAGIC_NUMBER = 209
 
   static FIELDS = [
@@ -171,6 +172,7 @@ export class UavionixAdsbOutCfg extends MavLinkData {
  */
 export class UavionixAdsbOutDynamic extends MavLinkData {
   static MSG_ID = 10002
+  static MSG_NAME = 'UAVIONIX_ADSB_OUT_DYNAMIC'
   static MAGIC_NUMBER = 186
 
   static FIELDS = [
@@ -264,6 +266,7 @@ export class UavionixAdsbOutDynamic extends MavLinkData {
  */
 export class UavionixAdsbTransceiverHealthReport extends MavLinkData {
   static MSG_ID = 10003
+  static MSG_NAME = 'UAVIONIX_ADSB_TRANSCEIVER_HEALTH_REPORT'
   static MAGIC_NUMBER = 4
 
   static FIELDS = [

@@ -24,8 +24,11 @@ port.on('data', (packet: MavLinkPacket) => {
   const clazz = REGISTRY[packet.header.msgid]
   if (clazz) {
     const data = packet.deserialize(clazz)
-    // if (packet.header.msgid == 253)
+    // if (packet.header.msgid == 253) {
+      const name = REGISTRY[packet.header.msgid].MSG_NAME
+      console.log(`${name} (sysid: ${packet.header.sysid}, compid: ${packet.header.compid}, seq: ${packet.header.seq}, plen: ${packet.header.payloadLength}) `)
       console.log(data)
+    // }
   } else {
     console.log('UNKNOWN MESSAGE', packet.header.msgid)
   }

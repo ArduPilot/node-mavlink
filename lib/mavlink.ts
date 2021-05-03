@@ -178,12 +178,14 @@ export const DESERIALIZERS = {
  */
 export abstract class MavLinkData {
   static MSG_ID: number = -1
+  static MSG_NAME: string = ''
   static FIELDS: MavLinkPacketField[] = []
 }
 
 interface MavLinkDataConstructor<T extends MavLinkData> {
   // static fields overriden by descendants of MavLinkData
   MSG_ID: number
+  MSG_NAME: string
   FIELDS: MavLinkPacketField[]
 
   new (): T
