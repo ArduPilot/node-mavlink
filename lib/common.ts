@@ -7111,7 +7111,7 @@ export class FileTransferProtocol extends MavLinkData {
 /**
  * Time synchronization message.
  */
-export class Timesync extends MavLinkData {
+export class TimeSync extends MavLinkData {
   static MSG_ID = 111
   static MAGIC_NUMBER = 34
 
@@ -8435,7 +8435,7 @@ export class ScaledPressure2 extends MavLinkData {
 /**
  * Motion capture attitude and position
  */
-export class AttPosMocap extends MavLinkData {
+export class MotionCaptureAttPos extends MavLinkData {
   static MSG_ID = 138
   static MAGIC_NUMBER = 109
 
@@ -14416,7 +14416,7 @@ export const REGISTRY = {
   108: SimState,
   109: RadioStatus,
   110: FileTransferProtocol,
-  111: Timesync,
+  111: TimeSync,
   112: CameraTrigger,
   113: HilGps,
   114: HilOpticalFlow,
@@ -14443,7 +14443,7 @@ export const REGISTRY = {
   135: TerrainCheck,
   136: TerrainReport,
   137: ScaledPressure2,
-  138: AttPosMocap,
+  138: MotionCaptureAttPos,
   139: SetActuatorControlTarget,
   140: ActuatorControlTarget,
   141: Altitude,

@@ -779,7 +779,7 @@ export class SetMagOffsets extends MavLinkData {
 /**
  * State of APM memory.
  */
-export class Meminfo extends MavLinkData {
+export class MemInfo extends MavLinkData {
   static MSG_ID = 152
   static MAGIC_NUMBER = 208
 
@@ -1217,7 +1217,7 @@ export class Ahrs extends MavLinkData {
 /**
  * Status of simulation environment, if used.
  */
-export class Simstate extends MavLinkData {
+export class SimState extends MavLinkData {
   static MSG_ID = 164
   static MAGIC_NUMBER = 154
 
@@ -1284,7 +1284,7 @@ export class Simstate extends MavLinkData {
 /**
  * Status of key hardware.
  */
-export class Hwstatus extends MavLinkData {
+export class HwStatus extends MavLinkData {
   static MSG_ID = 165
   static MAGIC_NUMBER = 21
 
@@ -1545,7 +1545,7 @@ export class Data96 extends MavLinkData {
 /**
  * Rangefinder reporting.
  */
-export class Rangefinder extends MavLinkData {
+export class RangeFinder extends MavLinkData {
   static MSG_ID = 173
   static MAGIC_NUMBER = 83
 
@@ -1730,7 +1730,7 @@ export class RallyFetchPoint extends MavLinkData {
 /**
  * Status of compassmot calibration.
  */
-export class CompassmotStatus extends MavLinkData {
+export class CompassMotStatus extends MavLinkData {
   static MSG_ID = 177
   static MAGIC_NUMBER = 240
 
@@ -3375,7 +3375,7 @@ export class ObstacleDistance3d extends MavLinkData {
 export const REGISTRY = {
   150: SensorOffsets,
   151: SetMagOffsets,
-  152: Meminfo,
+  152: MemInfo,
   153: ApAdc,
   154: DigicamConfigure,
   155: DigicamControl,
@@ -3385,8 +3385,8 @@ export const REGISTRY = {
   160: FencePoint,
   161: FenceFetchPoint,
   163: Ahrs,
-  164: Simstate,
-  165: Hwstatus,
+  164: SimState,
+  165: HwStatus,
   166: Radio,
   167: LimitsStatus,
   168: Wind,
@@ -3394,11 +3394,11 @@ export const REGISTRY = {
   170: Data32,
   171: Data64,
   172: Data96,
-  173: Rangefinder,
+  173: RangeFinder,
   174: AirspeedAutocal,
   175: RallyPoint,
   176: RallyFetchPoint,
-  177: CompassmotStatus,
+  177: CompassMotStatus,
   178: Ahrs2,
   179: CameraStatus,
   180: CameraFeedback,

@@ -258,6 +258,13 @@ function generate(obj: any, output: Writter) {
 
   // fix some messages because they lack underscore in the original name
   const FIXED_MESSAGE_NAMES = {
+    '111': 'TimeSync',
+    '138': 'MotionCaptureAttPos',
+    '152': 'MemInfo',
+    '164': 'SimState',
+    '165': 'HwStatus',
+    '173': 'RangeFinder',
+    '177': 'CompassMotStatus',
     '253': 'StatusText',
   }
 
