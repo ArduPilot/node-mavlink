@@ -83,6 +83,9 @@ export abstract class MavLinkProtocol {
   static START_BYTE = 0
   static PAYLOAD_OFFSET = 0
 
+  static SYS_ID: uint8_t = 254
+  static COMP_ID: uint8_t = 1
+  
   /**
    * Serialize a message to a buffer
    */
@@ -134,6 +137,9 @@ interface MavLinkProtocolConstructor {
   START_BYTE: number
   PAYLOAD_OFFSET: number
 
+  SYS_ID: uint8_t
+  COMP_ID: uint8_t
+
   new (): MavLinkProtocol
 }
 
@@ -146,8 +152,8 @@ export class MavLinkProtocolV1 extends MavLinkProtocol {
   static PAYLOAD_OFFSET = 6
 
   constructor(
-    private sysid: uint8_t = 254,
-    private compid: uint8_t = 1,
+    public sysid: uint8_t = MavLinkProtocol.SYS_ID,
+    public compid: uint8_t = MavLinkProtocol.COMP_ID,
   ) {
     super()
   }
@@ -210,11 +216,12 @@ export class MavLinkProtocolV2 extends MavLinkProtocol {
   static START_BYTE = 0xFD
   static PAYLOAD_OFFSET = 10
 
+  static INCOMPATIBILITY_FLAGS: uint8_t = 0
+  static COMPATIBILITY_FLAGS: uint8_t = 0
+  
   constructor(
-    private sysid: uint8_t = 254,
-    private compid: uint8_t = 1,
-    private incompatibilityFlags: uint8_t = 0,
-    private compatibilityFlags: uint8_t = 0,
+    public sysid: uint8_t = MavLinkProtocol.SYS_ID,
+    public compid: uint8_t = MavLinkProtocol.COMP_ID,
   ) {
     super()
   }
@@ -224,8 +231,8 @@ export class MavLinkProtocolV2 extends MavLinkProtocol {
     const buffer = Buffer.from(new Uint8Array(MavLinkProtocolV2.PAYLOAD_OFFSET + definition.PAYLOAD_LENGTH + MAVLINK_CHECKSUM_LENGTH))
     
     buffer.writeUInt8(MavLinkProtocolV2.START_BYTE, 0)
-    buffer.writeUInt8(this.incompatibilityFlags, 2)
-    buffer.writeUInt8(this.compatibilityFlags, 3)
+    buffer.writeUInt8(MavLinkProtocolV2.INCOMPATIBILITY_FLAGS, 2)
+    buffer.writeUInt8(MavLinkProtocolV2.COMPATIBILITY_FLAGS, 3)
     buffer.writeUInt8(seq, 4)
     buffer.writeUInt8(this.sysid, 5)
     buffer.writeUInt8(this.compid, 6)
