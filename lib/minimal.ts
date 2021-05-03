@@ -32,6 +32,7 @@ export enum MavAutopilot {
   'SMARTAP'                                      = 18,
   'AIRRAILS'                                     = 19,
 }
+
 /**
  * MAVLINK component type reported in HEARTBEAT message. Flight controllers must report the type of the
  * vehicle on which they are mounted (e.g. MAV_TYPE_OCTOROTOR). All other components must report a
@@ -76,6 +77,7 @@ export enum MavType {
   'DECAROTOR'                                    = 35,
   'BATTERY'                                      = 36,
 }
+
 /**
  * These flags encode the MAV mode.
  */
@@ -111,6 +113,7 @@ export enum MavModeFlag {
   'TEST_ENABLED'                                 = 2,
   'CUSTOM_MODE_ENABLED'                          = 1,
 }
+
 /**
  * These values encode the bit positions of the decode position. These values can be used to read the
  * value of a flag bit by combining the base_mode variable with AND with the flag position value. The
@@ -126,6 +129,7 @@ export enum MavModeFlagDecodePosition {
   'TEST'                                         = 2,
   'CUSTOM_MODE'                                  = 1,
 }
+
 /**
  * MAV_STATE
  */
@@ -144,6 +148,7 @@ export enum MavState {
   'POWEROFF'                                     = 7,
   'FLIGHT_TERMINATION'                           = 8,
 }
+
 /**
  * Component ids (values) for the different types and instances of onboard hardware/software that might
  * make up a MAVLink system (autopilot, cameras, servos, GPS systems, avoidance systems etc.).

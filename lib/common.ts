@@ -32,6 +32,7 @@ export enum FirmwareVersionType {
   'RC'                                             = 192,
   'OFFICIAL'                                       = 255,
 }
+
 /**
  * Flags to report failure cases over the high latency telemtry.
  */
@@ -51,6 +52,7 @@ export enum HlFailureFlag {
   'ESTIMATOR'                                      = 4096,
   'MISSION'                                        = 8192,
 }
+
 /**
  * Actions that may be specified in MAV_CMD_OVERRIDE_GOTO to override mission execution.
  */
@@ -60,6 +62,7 @@ export enum MavGoto {
   'HOLD_AT_CURRENT_POSITION'                       = 2,
   'HOLD_AT_SPECIFIED_POSITION'                     = 3,
 }
+
 /**
  * These defines are predefined OR-combined mode flags. There is no need to use values from this enum,
  * but it simplifies the use of the mode flags. Note that manual input is enabled in all modes as a
@@ -94,6 +97,7 @@ export enum MavMode {
    */
   'TEST_ARMED'                                     = 194,
 }
+
 /**
  * These encode the sensors whose status is sent as part of the SYS_STATUS message.
  */
@@ -130,6 +134,7 @@ export enum MavSysStatusSensor {
   'OBSTACLE_AVOIDANCE'                             = 536870912,
   'SENSOR_PROPULSION'                              = 1073741824,
 }
+
 /**
  * MAV_FRAME
  */
@@ -230,6 +235,7 @@ export enum MavFrame {
    */
   'LOCAL_FLU'                                      = 21,
 }
+
 /**
  * MAVLINK_DATA_STREAM_TYPE
  */
@@ -241,6 +247,7 @@ export enum MavlinkDataStreamType {
   'PGM'                                            = 4,
   'PNG'                                            = 5,
 }
+
 /**
  * FENCE_ACTION
  */
@@ -251,6 +258,7 @@ export enum FenceAction {
   'GUIDED_THR_PASS'                                = 3,
   'RTL'                                            = 4,
 }
+
 /**
  * FENCE_BREACH
  */
@@ -260,6 +268,7 @@ export enum FenceBreach {
   'MAXALT'                                         = 2,
   'BOUNDARY'                                       = 3,
 }
+
 /**
  * Actions being taken to mitigate/prevent fence breach
  */
@@ -268,6 +277,7 @@ export enum FenceMitigate {
   'NONE'                                           = 1,
   'VEL_LIMIT'                                      = 2,
 }
+
 /**
  * Enumeration of possible mount operation modes. This message is used by obsolete/deprecated gimbal
  * messages.
@@ -281,6 +291,7 @@ export enum MavMountMode {
   'SYSID_TARGET'                                   = 5,
   'HOME_LOCATION'                                  = 6,
 }
+
 /**
  * Gimbal device (low level) capability flags (bitmap)
  */
@@ -302,6 +313,7 @@ export enum GimbalDeviceCapFlags {
   'HAS_YAW_LOCK'                                   = 1024,
   'SUPPORTS_INFINITE_YAW'                          = 2048,
 }
+
 /**
  * Gimbal manager high level capability flags (bitmap). The first 16 bits are identical to the
  * GIMBAL_DEVICE_CAP_FLAGS which are identical with GIMBAL_DEVICE_FLAGS. However, the gimbal manager
@@ -324,6 +336,7 @@ export enum GimbalManagerCapFlags {
   'CAN_POINT_LOCATION_LOCAL'                       = 65536,
   'CAN_POINT_LOCATION_GLOBAL'                      = 131072,
 }
+
 /**
  * Flags for gimbal device (lower level) operation.
  */
@@ -352,6 +365,7 @@ export enum GimbalDeviceFlags {
    */
   'YAW_LOCK'                                       = 16,
 }
+
 /**
  * Flags for high level gimbal manager operation The first 16 bytes are identical to the
  * GIMBAL_DEVICE_FLAGS.
@@ -363,6 +377,7 @@ export enum GimbalManagerFlags {
   'PITCH_LOCK'                                     = 8,
   'YAW_LOCK'                                       = 16,
 }
+
 /**
  * Gimbal device (low level) error flags (bitmap, 0 means no error)
  */
@@ -377,6 +392,7 @@ export enum GimbalDeviceErrorFlags {
   'COMMS_ERROR'                                    = 128,
   'CALIBRATION_RUNNING'                            = 256,
 }
+
 /**
  * Gripper actions.
  */
@@ -384,6 +400,7 @@ export enum GripperActions {
   'RELEASE'                                        = 0,
   'GRAB'                                           = 1,
 }
+
 /**
  * Winch actions.
  */
@@ -392,6 +409,7 @@ export enum WinchActions {
   'RELATIVE_LENGTH_CONTROL'                        = 1,
   'RATE_CONTROL'                                   = 2,
 }
+
 /**
  * Generalized UAVCAN node health
  */
@@ -401,6 +419,7 @@ export enum UavcanNodeHealth {
   'ERROR'                                          = 2,
   'CRITICAL'                                       = 3,
 }
+
 /**
  * Generalized UAVCAN node mode
  */
@@ -411,6 +430,7 @@ export enum UavcanNodeMode {
   'SOFTWARE_UPDATE'                                = 3,
   'OFFLINE'                                        = 7,
 }
+
 /**
  * Indicates the ESC connection type.
  */
@@ -422,6 +442,7 @@ export enum EscConnectionType {
   'CAN'                                            = 4,
   'DSHOT'                                          = 5,
 }
+
 /**
  * Flags to report ESC failures.
  */
@@ -435,6 +456,7 @@ export enum EscFailureFlags {
   'MOTOR_STUCK'                                    = 32,
   'GENERIC'                                        = 64,
 }
+
 /**
  * Flags to indicate the status of camera storage.
  */
@@ -448,6 +470,7 @@ export enum StorageStatus {
    */
   'NOT_SUPPORTED'                                  = 3,
 }
+
 /**
  * Flags to indicate the type of storage.
  */
@@ -462,6 +485,7 @@ export enum StorageType {
   'HD'                                             = 7,
   'OTHER'                                          = 254,
 }
+
 /**
  * Yaw behaviour during orbit flight.
  */
@@ -472,6 +496,7 @@ export enum OrbitYawBehaviour {
   'HOLD_FRONT_TANGENT_TO_CIRCLE'                   = 3,
   'RC_CONTROLLED'                                  = 4,
 }
+
 /**
  * Possible responses from a WIFI_CONFIG_AP message.
  */
@@ -483,6 +508,7 @@ export enum WifiConfigApResponse {
   'SSID_ERROR'                                     = 4,
   'PASSWORD_ERROR'                                 = 5,
 }
+
 /**
  * Possible responses from a CELLULAR_CONFIG message.
  */
@@ -493,6 +519,7 @@ export enum CellularConfigResponse {
   'RESPONSE_REJECTED'                              = 3,
   'BLOCKED_PUK_REQUIRED'                           = 4,
 }
+
 /**
  * WiFi Mode.
  */
@@ -502,6 +529,7 @@ export enum WifiConfigApMode {
   'STATION'                                        = 2,
   'DISABLED'                                       = 3,
 }
+
 /**
  * Possible values for COMPONENT_INFORMATION.comp_metadata_type.
  */
@@ -516,6 +544,7 @@ export enum CompMetadataType {
   'PERIPHERALS'                                    = 3,
   'EVENTS'                                         = 4,
 }
+
 /**
  * Possible transport layers to set and get parameters via mavlink during a parameter transaction.
  */
@@ -523,6 +552,7 @@ export enum ParamTransactionTransport {
   'PARAM'                                          = 0,
   'PARAM_EXT'                                      = 1,
 }
+
 /**
  * Possible parameter transaction actions.
  */
@@ -531,6 +561,7 @@ export enum ParamTransactionAction {
   'COMMIT'                                         = 1,
   'CANCEL'                                         = 2,
 }
+
 /**
  * Commands to be executed by the MAV. They can be executed on user request, or as part of a mission
  * script. If the action is used in a mission, the parameter mapping to the waypoint/mission message is
@@ -1018,6 +1049,7 @@ export enum MavCmd {
    */
   'USER_5'                                         = 31014,
 }
+
 /**
  * A data stream is not a fixed set of messages, but rather a recommendation to the autopilot software.
  * Individual autopilots may or may not obey the recommended messages.
@@ -1033,6 +1065,7 @@ export enum MavDataStream {
   'EXTRA2'                                         = 11,
   'EXTRA3'                                         = 12,
 }
+
 /**
  * The ROI (region of interest) for the vehicle. This can be be used by the vehicle for camera/vehicle
  * attitude alignment (see MAV_CMD_NAV_ROI).
@@ -1044,6 +1077,7 @@ export enum MavRoi {
   'LOCATION'                                       = 3,
   'TARGET'                                         = 4,
 }
+
 /**
  * ACK / NACK / ERROR values as a result of MAV_CMDs and for mission item transmission.
  */
@@ -1066,6 +1100,7 @@ export enum MavCmdAck {
   'ERR_Y_LON_OUT_OF_RANGE'                         = 7,
   'ERR_Z_ALT_OUT_OF_RANGE'                         = 8,
 }
+
 /**
  * Specifies the datatype of a MAVLink parameter.
  */
@@ -1081,6 +1116,7 @@ export enum MavParamType {
   'REAL32'                                         = 9,
   'REAL64'                                         = 10,
 }
+
 /**
  * Specifies the datatype of a MAVLink extended parameter.
  */
@@ -1097,6 +1133,7 @@ export enum MavParamExtType {
   'REAL64'                                         = 10,
   'CUSTOM'                                         = 11,
 }
+
 /**
  * Result from a MAVLink command (MAV_CMD)
  */
@@ -1131,6 +1168,7 @@ export enum MavResult {
   'IN_PROGRESS'                                    = 5,
   'CANCELLED'                                      = 6,
 }
+
 /**
  * Result of mission operation (in a MISSION_ACK message).
  */
@@ -1152,6 +1190,7 @@ export enum MavMissionResult {
   'DENIED'                                         = 14,
   'OPERATION_CANCELLED'                            = 15,
 }
+
 /**
  * Indicates the severity level, generally used for status messages to indicate their relative urgency.
  * Based on RFC-5424 using expanded definitions at:
@@ -1179,6 +1218,7 @@ export enum MavSeverity {
    */
   'DEBUG'                                          = 7,
 }
+
 /**
  * Power supply status flags (bitmask)
  */
@@ -1190,6 +1230,7 @@ export enum MavPowerStatus {
   'PERIPH_HIPOWER_OVERCURRENT'                     = 16,
   'CHANGED'                                        = 32,
 }
+
 /**
  * SERIAL_CONTROL device types
  */
@@ -1210,6 +1251,7 @@ export enum SerialControlDev {
   'SERIAL8'                                        = 108,
   'SERIAL9'                                        = 109,
 }
+
 /**
  * SERIAL_CONTROL flags (bitmask)
  */
@@ -1225,6 +1267,7 @@ export enum SerialControlFlag {
   'BLOCKING'                                       = 8,
   'MULTI'                                          = 16,
 }
+
 /**
  * Enumeration of distance sensor types
  */
@@ -1235,6 +1278,7 @@ export enum MavDistanceSensor {
   'RADAR'                                          = 3,
   'UNKNOWN'                                        = 4,
 }
+
 /**
  * Enumeration of sensor orientation, according to its rotations
  */
@@ -1282,6 +1326,7 @@ export enum MavSensorOrientation {
   'ROLL_90_PITCH_315'                              = 40,
   'CUSTOM'                                         = 100,
 }
+
 /**
  * Bitmask of (optional) autopilot capabilities (64 bit). If a bit is set, the autopilot supports this
  * capability.
@@ -1305,6 +1350,7 @@ export enum MavProtocolCapability {
   'MISSION_RALLY'                                  = 32768,
   'FLIGHT_INFORMATION'                             = 65536,
 }
+
 /**
  * Type of mission items being requested/sent in mission protocol.
  */
@@ -1318,6 +1364,7 @@ export enum MavMissionType {
   'RALLY'                                          = 2,
   'ALL'                                            = 255,
 }
+
 /**
  * Enumeration of estimator types
  */
@@ -1332,6 +1379,7 @@ export enum MavEstimatorType {
   'LIDAR'                                          = 7,
   'AUTOPILOT'                                      = 8,
 }
+
 /**
  * Enumeration of battery types
  */
@@ -1342,6 +1390,7 @@ export enum MavBatteryType {
   'LION'                                           = 3,
   'NIMH'                                           = 4,
 }
+
 /**
  * Enumeration of battery functions
  */
@@ -1352,6 +1401,7 @@ export enum MavBatteryFunction {
   'FUNCTION_AVIONICS'                              = 3,
   'TYPE_PAYLOAD'                                   = 4,
 }
+
 /**
  * Enumeration for battery charge states.
  */
@@ -1373,6 +1423,7 @@ export enum MavBatteryChargeState {
   'UNHEALTHY'                                      = 6,
   'CHARGING'                                       = 7,
 }
+
 /**
  * Battery mode. Note, the normal operation mode (i.e. when flying) should be reported as
  * MAV_BATTERY_MODE_UNKNOWN to allow message trimming in normal flight.
@@ -1386,6 +1437,7 @@ export enum MavBatteryMode {
    */
   'HOT_SWAP'                                       = 2,
 }
+
 /**
  * Smart battery supply status/fault flags (bitmask) for health indication. The battery must also
  * report either MAV_BATTERY_CHARGE_STATE_FAILED or MAV_BATTERY_CHARGE_STATE_UNHEALTHY if any of these
@@ -1410,6 +1462,7 @@ export enum MavBatteryFault {
   'INCOMPATIBLE_FIRMWARE'                          = 128,
   'BATTERY_FAULT_INCOMPATIBLE_CELLS_CONFIGURATION' = 256,
 }
+
 /**
  * Flags to report status/failure cases for a power generator (used in GENERATOR_STATUS). Note that
  * FAULTS are conditions that cause the generator to fail. Warnings are conditions that require
@@ -1452,6 +1505,7 @@ export enum MavGeneratorStatusFlag {
   'WARMING_UP'                                     = 2097152,
   'IDLE'                                           = 4194304,
 }
+
 /**
  * Enumeration of VTOL states
  */
@@ -1462,6 +1516,7 @@ export enum MavVtolState {
   'MC'                                             = 3,
   'FW'                                             = 4,
 }
+
 /**
  * Enumeration of landed detector states
  */
@@ -1472,6 +1527,7 @@ export enum MavLandedState {
   'TAKEOFF'                                        = 3,
   'LANDING'                                        = 4,
 }
+
 /**
  * Enumeration of the ADSB altimeter types
  */
@@ -1479,6 +1535,7 @@ export enum AdsbAltitudeType {
   'PRESSURE_QNH'                                   = 0,
   'GEOMETRIC'                                      = 1,
 }
+
 /**
  * ADSB classification for the type of vehicle emitting the transponder signal
  */
@@ -1504,6 +1561,7 @@ export enum AdsbEmitterType {
   'SERVICE_SURFACE'                                = 18,
   'POINT_OBSTACLE'                                 = 19,
 }
+
 /**
  * These flags indicate status such as data validity of each data source. Set = data valid
  */
@@ -1519,6 +1577,7 @@ export enum AdsbFlags {
   'BARO_VALID'                                     = 256,
   'SOURCE_UAT'                                     = 32768,
 }
+
 /**
  * Bitmap of options for the MAV_CMD_DO_REPOSITION
  */
@@ -1529,6 +1588,7 @@ export enum MavDoRepositionFlags {
    */
   'CHANGE_MODE'                                    = 1,
 }
+
 /**
  * Flags in ESTIMATOR_STATUS message
  */
@@ -1550,6 +1610,7 @@ export enum EstimatorStatusFlags {
   'GPS_GLITCH'                                     = 1024,
   'ACCEL_ERROR'                                    = 2048,
 }
+
 /**
  * Sequence that motors are tested when using MAV_CMD_DO_MOTOR_TEST.
  */
@@ -1558,6 +1619,7 @@ export enum MotorTestOrder {
   'SEQUENCE'                                       = 1,
   'BOARD'                                          = 2,
 }
+
 /**
  * Defines how throttle value is represented in MAV_CMD_DO_MOTOR_TEST.
  */
@@ -1567,6 +1629,7 @@ export enum MotorTestThrottleType {
   'THROTTLE_PILOT'                                 = 2,
   'COMPASS_CAL'                                    = 3,
 }
+
 /**
  * GPS_INPUT_IGNORE_FLAGS
  */
@@ -1580,6 +1643,7 @@ export enum GpsInputIgnoreFlags {
   'HORIZONTAL_ACCURACY'                            = 64,
   'VERTICAL_ACCURACY'                              = 128,
 }
+
 /**
  * Possible actions an aircraft can take to avoid a collision.
  */
@@ -1592,6 +1656,7 @@ export enum MavCollisionAction {
   'RTL'                                            = 5,
   'HOVER'                                          = 6,
 }
+
 /**
  * Aircraft-rated danger from this threat.
  */
@@ -1600,6 +1665,7 @@ export enum MavCollisionThreatLevel {
   'LOW'                                            = 1,
   'HIGH'                                           = 2,
 }
+
 /**
  * Source of information about this collision.
  */
@@ -1607,6 +1673,7 @@ export enum MavCollisionSrc {
   'ADSB'                                           = 0,
   'MAVLINK_GPS_GLOBAL_INT'                         = 1,
 }
+
 /**
  * Type of GPS fix
  */
@@ -1621,6 +1688,7 @@ export enum GpsFixType {
   'STATIC'                                         = 7,
   'PPP'                                            = 8,
 }
+
 /**
  * RTK GPS baseline coordinate system, used for RTK corrections
  */
@@ -1628,6 +1696,7 @@ export enum RtkBaselineCoordinateSystem {
   'ECEF'                                           = 0,
   'NED'                                            = 1,
 }
+
 /**
  * Type of landing target
  */
@@ -1637,6 +1706,7 @@ export enum LandingTargetType {
   'VISION_FIDUCIAL'                                = 2,
   'VISION_OTHER'                                   = 3,
 }
+
 /**
  * Direction of VTOL transition
  */
@@ -1651,6 +1721,7 @@ export enum VtolTransitionHeading {
    */
   'ANY'                                            = 4,
 }
+
 /**
  * Camera capability flags (Bitmap)
  */
@@ -1672,6 +1743,7 @@ export enum CameraCapFlags {
   'HAS_TRACKING_RECTANGLE'                         = 1024,
   'HAS_TRACKING_GEO_STATUS'                        = 2048,
 }
+
 /**
  * Stream status flags (Bitmap)
  */
@@ -1679,6 +1751,7 @@ export enum VideoStreamStatusFlags {
   'RUNNING'                                        = 1,
   'THERMAL'                                        = 2,
 }
+
 /**
  * Video stream types
  */
@@ -1688,6 +1761,7 @@ export enum VideoStreamType {
   'TCP_MPEG'                                       = 2,
   'MPEG_TS_H264'                                   = 3,
 }
+
 /**
  * Camera tracking status flags
  */
@@ -1696,6 +1770,7 @@ export enum CameraTrackingStatusFlags {
   'ACTIVE'                                         = 1,
   'ERROR'                                          = 2,
 }
+
 /**
  * Camera tracking modes
  */
@@ -1704,6 +1779,7 @@ export enum CameraTrackingMode {
   'POINT'                                          = 1,
   'RECTANGLE'                                      = 2,
 }
+
 /**
  * Camera tracking target data (shows where tracked target is within image)
  */
@@ -1713,6 +1789,7 @@ export enum CameraTrackingTargetData {
   'RENDERED'                                       = 2,
   'IN_STATUS'                                      = 4,
 }
+
 /**
  * Zoom types for MAV_CMD_SET_CAMERA_ZOOM
  */
@@ -1727,6 +1804,7 @@ export enum CameraZoomType {
    */
   'FOCAL_LENGTH'                                   = 3,
 }
+
 /**
  * Focus types for MAV_CMD_SET_CAMERA_FOCUS
  */
@@ -1745,6 +1823,7 @@ export enum SetFocusType {
    */
   'METERS'                                         = 3,
 }
+
 /**
  * Result from PARAM_EXT_SET message (or a PARAM_SET within a transaction).
  */
@@ -1760,6 +1839,7 @@ export enum ParamAck {
    */
   'IN_PROGRESS'                                    = 3,
 }
+
 /**
  * Camera Modes.
  */
@@ -1772,6 +1852,7 @@ export enum CameraMode {
    */
   'IMAGE_SURVEY'                                   = 2,
 }
+
 /**
  * MAV_ARM_AUTH_DENIED_REASON
  */
@@ -1787,6 +1868,7 @@ export enum MavArmAuthDeniedReason {
   'AIRSPACE_IN_USE'                                = 4,
   'BAD_WEATHER'                                    = 5,
 }
+
 /**
  * RC type
  */
@@ -1794,6 +1876,7 @@ export enum RcType {
   'SPEKTRUM_DSM2'                                  = 0,
   'SPEKTRUM_DSMX'                                  = 1,
 }
+
 /**
  * Bitmap to indicate which dimensions should be ignored by the vehicle: a value of 0b0000000000000000
  * or 0b0000001000000000 indicates that none of the setpoint dimensions should be ignored. If bit 9 is
@@ -1813,6 +1896,7 @@ export enum PositionTargetTypemask {
   'YAW_IGNORE'                                     = 1024,
   'YAW_RATE_IGNORE'                                = 2048,
 }
+
 /**
  * Bitmap to indicate which dimensions should be ignored by the vehicle: a value of 0b00000000
  * indicates that none of the setpoint dimensions should be ignored.
@@ -1825,6 +1909,7 @@ export enum AttitudeTargetTypemask {
   'THROTTLE_IGNORE'                                = 64,
   'ATTITUDE_IGNORE'                                = 128,
 }
+
 /**
  * Airborne status of UAS.
  */
@@ -1835,6 +1920,7 @@ export enum UtmFlightState {
   'EMERGENCY'                                      = 16,
   'NOCTRL'                                         = 32,
 }
+
 /**
  * Flags for the global position report.
  */
@@ -1848,6 +1934,7 @@ export enum UtmDataAvailFlags {
   'VERTICAL_VELO_AVAILABLE'                        = 64,
   'NEXT_WAYPOINT_AVAILABLE'                        = 128,
 }
+
 /**
  * Cellular network radio type
  */
@@ -1858,6 +1945,7 @@ export enum CellularNetworkRadioType {
   'WCDMA'                                          = 3,
   'LTE'                                            = 4,
 }
+
 /**
  * These flags encode the cellular network status
  */
@@ -1892,6 +1980,7 @@ export enum CellularStatusFlag {
   'CONNECTING'                                     = 11,
   'CONNECTED'                                      = 12,
 }
+
 /**
  * These flags are used to diagnose the failure state of CELLULAR_STATUS
  */
@@ -1901,6 +1990,7 @@ export enum CellularNetworkFailedReason {
   'SIM_MISSING'                                    = 2,
   'SIM_ERROR'                                      = 3,
 }
+
 /**
  * Precision land modes (used in MAV_CMD_NAV_LAND).
  */
@@ -1913,6 +2003,7 @@ export enum PrecisionLandMode {
    */
   'REQUIRED'                                       = 2,
 }
+
 /**
  * Parachute actions. Trigger release and enable/disable auto-release.
  */
@@ -1921,6 +2012,7 @@ export enum ParachuteAction {
   'ENABLE'                                         = 1,
   'RELEASE'                                        = 2,
 }
+
 /**
  * MAV_TUNNEL_PAYLOAD_TYPE
  */
@@ -1937,6 +2029,7 @@ export enum MavTunnelPayloadType {
   'STORM32_RESERVED8'                              = 208,
   'STORM32_RESERVED9'                              = 209,
 }
+
 /**
  * MAV_ODID_ID_TYPE
  */
@@ -1946,6 +2039,7 @@ export enum MavOdidIdType {
   'CAA_REGISTRATION_ID'                            = 2,
   'UTM_ASSIGNED_UUID'                              = 3,
 }
+
 /**
  * MAV_ODID_UA_TYPE
  */
@@ -1967,6 +2061,7 @@ export enum MavOdidUaType {
   'GROUND_OBSTACLE'                                = 14,
   'OTHER'                                          = 15,
 }
+
 /**
  * MAV_ODID_STATUS
  */
@@ -1976,6 +2071,7 @@ export enum MavOdidStatus {
   'AIRBORNE'                                       = 2,
   'EMERGENCY'                                      = 3,
 }
+
 /**
  * MAV_ODID_HEIGHT_REF
  */
@@ -1983,6 +2079,7 @@ export enum MavOdidHeightRef {
   'OVER_TAKEOFF'                                   = 0,
   'OVER_GROUND'                                    = 1,
 }
+
 /**
  * MAV_ODID_HOR_ACC
  */
@@ -2001,6 +2098,7 @@ export enum MavOdidHorAcc {
   'MAV_ODID_HOR_ACC_3_METER'                       = 11,
   'MAV_ODID_HOR_ACC_1_METER'                       = 12,
 }
+
 /**
  * MAV_ODID_VER_ACC
  */
@@ -2013,6 +2111,7 @@ export enum MavOdidVerAcc {
   'MAV_ODID_VER_ACC_3_METER'                       = 5,
   'MAV_ODID_VER_ACC_1_METER'                       = 6,
 }
+
 /**
  * MAV_ODID_SPEED_ACC
  */
@@ -2023,6 +2122,7 @@ export enum MavOdidSpeedAcc {
   'MAV_ODID_SPEED_ACC_1_METERS_PER_SECOND'         = 3,
   'MAV_ODID_SPEED_ACC_0_3_METERS_PER_SECOND'       = 4,
 }
+
 /**
  * MAV_ODID_TIME_ACC
  */
@@ -2044,6 +2144,7 @@ export enum MavOdidTimeAcc {
   'MAV_ODID_TIME_ACC_1_4_SECOND'                   = 14,
   'MAV_ODID_TIME_ACC_1_5_SECOND'                   = 15,
 }
+
 /**
  * MAV_ODID_AUTH_TYPE
  */
@@ -2054,12 +2155,14 @@ export enum MavOdidAuthType {
   'MESSAGE_SET_SIGNATURE'                          = 3,
   'NETWORK_REMOTE_ID'                              = 4,
 }
+
 /**
  * MAV_ODID_DESC_TYPE
  */
 export enum MavOdidDescType {
   'TEXT'                                           = 0,
 }
+
 /**
  * MAV_ODID_OPERATOR_LOCATION_TYPE
  */
@@ -2068,6 +2171,7 @@ export enum MavOdidOperatorLocationType {
   'LIVE_GNSS'                                      = 1,
   'FIXED'                                          = 2,
 }
+
 /**
  * MAV_ODID_CLASSIFICATION_TYPE
  */
@@ -2075,6 +2179,7 @@ export enum MavOdidClassificationType {
   'UNDECLARED'                                     = 0,
   'EU'                                             = 1,
 }
+
 /**
  * MAV_ODID_CATEGORY_EU
  */
@@ -2084,6 +2189,7 @@ export enum MavOdidCategoryEu {
   'SPECIFIC'                                       = 2,
   'CERTIFIED'                                      = 3,
 }
+
 /**
  * MAV_ODID_CLASS_EU
  */
@@ -2097,12 +2203,14 @@ export enum MavOdidClassEu {
   'CLASS_5'                                        = 6,
   'CLASS_6'                                        = 7,
 }
+
 /**
  * MAV_ODID_OPERATOR_ID_TYPE
  */
 export enum MavOdidOperatorIdType {
   'CAA'                                            = 0,
 }
+
 /**
  * Tune formats (used for vehicle buzzer/tone generation).
  */
@@ -2114,6 +2222,7 @@ export enum TuneFormat {
    */
   'MML_MODERN'                                     = 2,
 }
+
 /**
  * Component capability flags (Bitmap)
  */
@@ -2121,6 +2230,7 @@ export enum ComponentCapFlags {
   'PARAM'                                          = 1,
   'PARAM_EXT'                                      = 2,
 }
+
 /**
  * Type of AIS vessel, enum duplicated from AIS standard, https://gpsd.gitlab.io/gpsd/AIVDM.html
  */
@@ -2226,6 +2336,7 @@ export enum AisType {
   'OTHER_RESERVED_4'                               = 98,
   'OTHER_UNKNOWN'                                  = 99,
 }
+
 /**
  * Navigational status of AIS vessel, enum duplicated from AIS standard,
  * https://gpsd.gitlab.io/gpsd/AIVDM.html
@@ -2248,6 +2359,7 @@ export enum AisNavStatus {
   'AIS_SART'                                       = 14,
   'UNKNOWN'                                        = 15,
 }
+
 /**
  * These flags are used in the AIS_VESSEL.fields bitmask to indicate validity of data in the other
  * message fields. When set, the data is valid.
@@ -2271,6 +2383,7 @@ export enum AisFlags {
   'VALID_CALLSIGN'                                 = 2048,
   'VALID_NAME'                                     = 4096,
 }
+
 /**
  * List of possible units where failures can be injected.
  */
@@ -2291,6 +2404,7 @@ export enum FailureUnit {
   'SYSTEM_RC_SIGNAL'                               = 104,
   'SYSTEM_MAVLINK_SIGNAL'                          = 105,
 }
+
 /**
  * List of possible failure type to inject.
  */
@@ -2304,6 +2418,7 @@ export enum FailureType {
   'DELAYED'                                        = 6,
   'INTERMITTENT'                                   = 7,
 }
+
 /**
  * Winch status flags used in WINCH_STATUS
  */
@@ -2313,6 +2428,7 @@ export enum MavWinchStatusFlag {
   'MOVING'                                         = 4,
   'CLUTCH_ENGAGED'                                 = 8,
 }
+
 /**
  * MAG_CAL_STATUS
  */
@@ -2326,12 +2442,14 @@ export enum MagCalStatus {
   'BAD_ORIENTATION'                                = 6,
   'BAD_RADIUS'                                     = 7,
 }
+
 /**
  * Reason for an event error response.
  */
 export enum MavEventErrorReason {
   'UNAVAILABLE'                                    = 0,
 }
+
 /**
  * Flags for CURRENT_EVENT_SEQUENCE.
  */

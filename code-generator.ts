@@ -207,6 +207,7 @@ function generate(obj: any, output: Writter) {
 
   // generate enums
   enums.forEach(entry => {
+    output.write('')
     // generate enum description
     output.write('/**')
     if (entry.description.length > 0) {

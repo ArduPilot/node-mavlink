@@ -32,6 +32,7 @@ export enum AccelcalVehiclePos {
   'SUCCESS'                           = 16777215,
   'FAILED'                            = 16777216,
 }
+
 /**
  * HEADING_TYPE
  */
@@ -39,6 +40,7 @@ export enum HeadingType {
   'COURSE_OVER_GROUND'                = 0,
   'HEADING'                           = 1,
 }
+
 /**
  * SPEED_TYPE
  */
@@ -46,6 +48,7 @@ export enum SpeedType {
   'AIRSPEED'                          = 0,
   'GROUNDSPEED'                       = 1,
 }
+
 /**
  * MAV_CMD
  */
@@ -109,6 +112,7 @@ export enum MavCmd {
    */
   'GUIDED_CHANGE_HEADING'             = 43002,
 }
+
 /**
  * SCRIPTING_CMD
  */
@@ -116,6 +120,7 @@ export enum ScriptingCmd {
   'REPL_START'                        = 0,
   'REPL_STOP'                         = 1,
 }
+
 /**
  * LIMITS_STATE
  */
@@ -127,6 +132,7 @@ export enum LimitsState {
   'RECOVERING'                        = 4,
   'RECOVERED'                         = 5,
 }
+
 /**
  * LIMIT_MODULE
  */
@@ -135,6 +141,7 @@ export enum LimitModule {
   'GEOFENCE'                          = 2,
   'ALTITUDE'                          = 4,
 }
+
 /**
  * Flags in RALLY_POINT message.
  */
@@ -146,6 +153,7 @@ export enum RallyFlags {
    */
   'LAND_IMMEDIATELY'                  = 2,
 }
+
 /**
  * CAMERA_STATUS_TYPES
  */
@@ -158,6 +166,7 @@ export enum CameraStatusTypes {
   'LOWSTORE'                          = 5,
   'LOWSTOREV'                         = 6,
 }
+
 /**
  * CAMERA_FEEDBACK_FLAGS
  */
@@ -172,6 +181,7 @@ export enum CameraFeedbackFlags {
    */
   'OPENLOOP'                          = 4,
 }
+
 /**
  * MAV_MODE_GIMBAL
  */
@@ -192,6 +202,7 @@ export enum MavModeGimbal {
    */
   'RATE_CMD_TIMEOUT'                  = 6,
 }
+
 /**
  * GIMBAL_AXIS
  */
@@ -200,6 +211,7 @@ export enum GimbalAxis {
   'PITCH'                             = 1,
   'ROLL'                              = 2,
 }
+
 /**
  * GIMBAL_AXIS_CALIBRATION_STATUS
  */
@@ -208,6 +220,7 @@ export enum GimbalAxisCalibrationStatus {
   'SUCCEEDED'                         = 1,
   'FAILED'                            = 2,
 }
+
 /**
  * GIMBAL_AXIS_CALIBRATION_REQUIRED
  */
@@ -216,6 +229,7 @@ export enum GimbalAxisCalibrationRequired {
   'TRUE'                              = 1,
   'FALSE'                             = 2,
 }
+
 /**
  * GOPRO_HEARTBEAT_STATUS
  */
@@ -225,12 +239,14 @@ export enum GoproHeartbeatStatus {
   'CONNECTED'                         = 2,
   'ERROR'                             = 3,
 }
+
 /**
  * GOPRO_HEARTBEAT_FLAGS
  */
 export enum GoproHeartbeatFlags {
   'RECORDING'                         = 1,
 }
+
 /**
  * GOPRO_REQUEST_STATUS
  */
@@ -238,6 +254,7 @@ export enum GoproRequestStatus {
   'SUCCESS'                           = 0,
   'FAILED'                            = 1,
 }
+
 /**
  * GOPRO_COMMAND
  */
@@ -260,6 +277,7 @@ export enum GoproCommand {
   'TIME'                              = 15,
   'CHARGING'                          = 16,
 }
+
 /**
  * GOPRO_CAPTURE_MODE
  */
@@ -273,6 +291,7 @@ export enum GoproCaptureMode {
   'SETUP'                             = 6,
   'UNKNOWN'                           = 255,
 }
+
 /**
  * GOPRO_RESOLUTION
  */
@@ -292,6 +311,7 @@ export enum GoproResolution {
   'GOPRO_RESOLUTION_2_7k_SUPERVIEW'   = 12,
   'GOPRO_RESOLUTION_4k_SUPERVIEW'     = 13,
 }
+
 /**
  * GOPRO_FRAME_RATE
  */
@@ -311,6 +331,7 @@ export enum GoproFrameRate {
   'GOPRO_FRAME_RATE_240'              = 12,
   'GOPRO_FRAME_RATE_12_5'             = 13,
 }
+
 /**
  * GOPRO_FIELD_OF_VIEW
  */
@@ -319,12 +340,14 @@ export enum GoproFieldOfView {
   'MEDIUM'                            = 1,
   'NARROW'                            = 2,
 }
+
 /**
  * GOPRO_VIDEO_SETTINGS_FLAGS
  */
 export enum GoproVideoSettingsFlags {
   'MODE'                              = 1,
 }
+
 /**
  * GOPRO_PHOTO_RESOLUTION
  */
@@ -335,6 +358,7 @@ export enum GoproPhotoResolution {
   'GOPRO_PHOTO_RESOLUTION_10MP_WIDE'  = 3,
   'GOPRO_PHOTO_RESOLUTION_12MP_WIDE'  = 4,
 }
+
 /**
  * GOPRO_PROTUNE_WHITE_BALANCE
  */
@@ -345,6 +369,7 @@ export enum GoproProtuneWhiteBalance {
   'GOPRO_PROTUNE_WHITE_BALANCE_6500K' = 3,
   'RAW'                               = 4,
 }
+
 /**
  * GOPRO_PROTUNE_COLOUR
  */
@@ -352,6 +377,7 @@ export enum GoproProtuneColour {
   'STANDARD'                          = 0,
   'NEUTRAL'                           = 1,
 }
+
 /**
  * GOPRO_PROTUNE_GAIN
  */
@@ -362,6 +388,7 @@ export enum GoproProtuneGain {
   'GOPRO_PROTUNE_GAIN_3200'           = 3,
   'GOPRO_PROTUNE_GAIN_6400'           = 4,
 }
+
 /**
  * GOPRO_PROTUNE_SHARPNESS
  */
@@ -370,6 +397,7 @@ export enum GoproProtuneSharpness {
   'MEDIUM'                            = 1,
   'HIGH'                              = 2,
 }
+
 /**
  * GOPRO_PROTUNE_EXPOSURE
  */
@@ -396,6 +424,7 @@ export enum GoproProtuneExposure {
   'POS_4_5'                           = 19,
   'POS_5_0'                           = 20,
 }
+
 /**
  * GOPRO_CHARGING
  */
@@ -403,6 +432,7 @@ export enum GoproCharging {
   'DISABLED'                          = 0,
   'ENABLED'                           = 1,
 }
+
 /**
  * GOPRO_MODEL
  */
@@ -413,6 +443,7 @@ export enum GoproModel {
   'HERO_4_SILVER'                     = 3,
   'HERO_4_BLACK'                      = 4,
 }
+
 /**
  * GOPRO_BURST_RATE
  */
@@ -427,6 +458,7 @@ export enum GoproBurstRate {
   'GOPRO_BURST_RATE_30_IN_3_SECOND'   = 7,
   'GOPRO_BURST_RATE_30_IN_6_SECOND'   = 8,
 }
+
 /**
  * LED_CONTROL_PATTERN
  */
@@ -435,6 +467,7 @@ export enum LedControlPattern {
   'FIRMWAREUPDATE'                    = 1,
   'CUSTOM'                            = 255,
 }
+
 /**
  * Flags in EKF_STATUS message.
  */
@@ -451,6 +484,7 @@ export enum EkfStatusFlags {
   'PRED_POS_HORIZ_ABS'                = 512,
   'UNINITIALIZED'                     = 1024,
 }
+
 /**
  * PID_TUNING_AXIS
  */
@@ -462,6 +496,7 @@ export enum PidTuningAxis {
   'STEER'                             = 5,
   'LANDING'                           = 6,
 }
+
 /**
  * Special ACK block numbers control activation of dataflash log streaming.
  */
@@ -469,6 +504,7 @@ export enum MavRemoteLogDataBlockCommands {
   'STOP'                              = 2147483645,
   'START'                             = 2147483646,
 }
+
 /**
  * Possible remote log data block statuses.
  */
@@ -476,6 +512,7 @@ export enum MavRemoteLogDataBlockStatuses {
   'NACK'                              = 0,
   'ACK'                               = 1,
 }
+
 /**
  * Bus types for device operations.
  */
@@ -483,6 +520,7 @@ export enum DeviceOpBustype {
   'I2C'                               = 0,
   'SPI'                               = 1,
 }
+
 /**
  * Deepstall flight stage.
  */
@@ -495,6 +533,7 @@ export enum DeepstallStage {
   'APPROACH'                          = 5,
   'LAND'                              = 6,
 }
+
 /**
  * A mapping of plane flight modes for custom_mode field of heartbeat.
  */
@@ -524,6 +563,7 @@ export enum PlaneMode {
   'QACRO'                             = 23,
   'THERMAL'                           = 24,
 }
+
 /**
  * A mapping of copter flight modes for custom_mode field of heartbeat.
  */
@@ -553,6 +593,7 @@ export enum CopterMode {
   'SYSTEMID'                          = 25,
   'AUTOROTATE'                        = 26,
 }
+
 /**
  * A mapping of sub flight modes for custom_mode field of heartbeat.
  */
@@ -567,6 +608,7 @@ export enum SubMode {
   'POSHOLD'                           = 16,
   'MANUAL'                            = 19,
 }
+
 /**
  * A mapping of rover flight modes for custom_mode field of heartbeat.
  */
@@ -584,6 +626,7 @@ export enum RoverMode {
   'GUIDED'                            = 15,
   'INITIALIZING'                      = 16,
 }
+
 /**
  * A mapping of antenna tracker flight modes for custom_mode field of heartbeat.
  */
@@ -595,6 +638,7 @@ export enum TrackerMode {
   'AUTO'                              = 10,
   'INITIALIZING'                      = 16,
 }
+
 /**
  * The type of parameter for the OSD parameter editor.
  */
@@ -609,6 +653,7 @@ export enum OsdParamConfigType {
   'FAILSAFE_ACTION_2'                 = 7,
   'NUM_TYPES'                         = 8,
 }
+
 /**
  * The error type for the OSD parameter editor.
  */
