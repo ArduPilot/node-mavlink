@@ -30,7 +30,7 @@
     "get:ardupilotmega": "nwget https://raw.githubusercontent.com/mavlink/mavlink/master/message_definitions/v1.0/ardupilotmega.xml -O ardupilotmega.xml",
     "get:uavionix": "nwget https://raw.githubusercontent.com/mavlink/mavlink/master/message_definitions/v1.0/uAvionix.xml -O uavionix.xml",
     "get:icarous": "nwget https://raw.githubusercontent.com/mavlink/mavlink/master/message_definitions/v1.0/icarous.xml -O icarous.xml",
-    "postinstall": "npm run get:minimal && npm run get:common && npm run get:ardupilotmega && npm run get:uavionix && npm run get:icarous && npm run code-generator"
+    "prepare": "npm run get:minimal && npm run get:common && npm run get:ardupilotmega && npm run get:uavionix && npm run get:icarous && npm run code-generator"
   },
   "devDependencies": {
     "@types/node": "^15.0.1",
