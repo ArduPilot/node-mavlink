@@ -17,7 +17,7 @@ $ npm install --save node-mavlink serialport
 Once you've done it you can start using it. First you'll need a serial port that can parse messages one by one. Please note that since we're using ECMAScript modules the file name should end with `.mjs` extension (e.g. `test.mjs`)
 
 ```
-import * as SerialPort from 'serialport'
+import SerialPort from 'serialport'
 import { MavLinkPacketSplitter, MavLinkPacketParser } from 'node-mavlink'
 
 // substitute /dev/ttyACM0 with your serial port!
