@@ -3,7 +3,7 @@ import { MSG_ID_MAGIC_NUMBER } from './magic-numbers'
 
 export function x25crc(buffer: Buffer, start = 0, trim = 0, magic = null) {
   let crc = 0xffff;
-  
+
   for (let i = start; i < buffer.length - trim; i++) {
     const byte = buffer[i]
     let tmp = (byte & 0xff) ^ (crc & 0xff);
@@ -198,7 +198,7 @@ export class MavLinkPacket {
     readonly payload: Buffer = Buffer.from(new Uint8Array(255)),
     readonly crc: uint16_t = 0,
   ) {}
-  
+
   deserialize<T extends MavLinkData>(clazz: MavLinkDataConstructor<T>): T {
     if (this.header.msgid !== clazz.MSG_ID) {
       throw new Error(`Incompatible message id: expected ${this.header.msgid}, got ${clazz.MSG_ID}`)
@@ -212,7 +212,7 @@ export class MavLinkPacket {
       }
       instance[field.name] = deserialize(this.payload, field.offset, field.length)
     })
-    
+
     return instance
   }
 }
@@ -222,7 +222,7 @@ export class MavLinkPacket {
  */
 export class MavLinkPacketSplitter extends Transform {
   private buffer = Buffer.from([])
-  
+
   _transform(chunk: Buffer, encoding, callback: TransformCallback) {
     this.buffer = Buffer.concat([ this.buffer, chunk ])
 
@@ -252,13 +252,13 @@ export class MavLinkPacketSplitter extends Transform {
         // current buffer is not fully retrieved yet - skipping
         break
       }
-      
+
       // retrieve the buffer based on payload size
       const buffer = this.buffer.slice(0, expectedBufferLength)
 
       // truncate the buffer to remove the current message
       this.buffer = this.buffer.slice(expectedBufferLength)
-      
+
       // validate message checksum including the magic byte
       const msgid = buffer.readUIntLE(7, 3)
       const magic = MSG_ID_MAGIC_NUMBER[msgid]
@@ -317,10 +317,10 @@ export class MavLinkPacketParser extends Transform {
     const payload = Buffer.concat([ chunk.slice(10, chunk.length - 2), padding ])
     // read the crc - two last bytes
     const crc = chunk.readUInt16LE(chunk.length - 2)
-    
+
     // construct the packet
     const packet = new MavLinkPacket(header, payload, crc)
-    
+
     callback(null, packet)
   }
 }

@@ -42,7 +42,7 @@ function getTypeSize(type) {
   const name = (type.indexOf('[') > -1)
     ? type.replace(/(.*)\[(\d+)\]/, (x, t, size) => t)
     : type
-  
+
   switch (name) {
     case 'char':
     case 'int8_t':
@@ -87,7 +87,7 @@ function matchTextToWidth(s, width = 100) {
   if (result[result.length - 1] === '') {
     result.pop()
   }
-    
+
   return result
 }
 
@@ -109,7 +109,7 @@ function generate(obj: any, output: Writter) {
   // ------------------------------------------------------------------------
 
   // parse XML data
-  
+
   const enums = obj.mavlink.enums[0].enum.map(xml => ({
     name: makeClassName(xml.$.name),
     source: {
@@ -136,7 +136,7 @@ function generate(obj: any, output: Writter) {
       value.description = matchTextToWidth(value.description)
     })
   })
-  
+
   // calculate common prefix for enum values (needed later to trim the common part and make the enum values shorter)
   enums.forEach(entry => {
     entry.source.commonPrefix = entry.values
@@ -174,7 +174,7 @@ function generate(obj: any, output: Writter) {
     entry.values.forEach(value => {
       value.name = value.source.name
     })
-    
+
     // trim the common prefix
     for (let i = 0; i < 2; i++) {
       entry.values.forEach(value => {
@@ -183,7 +183,7 @@ function generate(obj: any, output: Writter) {
         }
       })
     }
-    
+
     // if the trimmed value starts with a digit revert to xml source
     entry.values.forEach(value => {
       if ([ '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' ].includes(value.name[0])) {
@@ -191,14 +191,14 @@ function generate(obj: any, output: Writter) {
       }
     })
   })
-    
+
   // compute enum value
   enums.forEach(entry => {
     entry.values.forEach(value => {
       value.value = value.source.value
     })
   })
-  
+
   // compute max length of value name for later padding values
   const maxValueNameLength = enums.reduce((acc, entry) => {
     const maxLength = entry.values.reduce((acc, value) => Math.max(acc, value.name.length), 0)
@@ -215,10 +215,10 @@ function generate(obj: any, output: Writter) {
       output.write(` * ${entry.source.name}`)
     }
     output.write(' */')
-    
+
     // generate enum declaration
     output.write(`export enum ${entry.name} {`)
-    
+
     // generate enum values
     entry.values.forEach(value => {
       if (value.description.length > 1) {
@@ -237,7 +237,7 @@ function generate(obj: any, output: Writter) {
   // ------------------------------------------------------------------------
 
   // parse XML data
-  
+
   const messages = obj.mavlink.messages[0].message.map(message => ({
     source: {
       xml: message,
@@ -265,7 +265,7 @@ function generate(obj: any, output: Writter) {
       message.name = FIXED_MESSAGE_NAMES[message.id]
     }
   })
-  
+
   // gather message fields
   //
   // The order does matter and there are things like <wip> and <extensions> that also need
@@ -302,7 +302,7 @@ function generate(obj: any, output: Writter) {
       }
     })
   })
-  
+
   // preprocess description of messages to match 100 characters per line
   messages.forEach((message) => {
     message.description = matchTextToWidth(message.description)
@@ -313,7 +313,7 @@ function generate(obj: any, output: Writter) {
     message.fields.forEach(field => {
       field.description = matchTextToWidth(field.description)
     })
-  })    
+  })
 
   // calculate CRC_EXTRA
   messages.forEach((message) => {
@@ -337,11 +337,11 @@ function generate(obj: any, output: Writter) {
     }
     const crc = x25crc(buffer)
     message.magic = (crc & 0xff) ^ (crc >> 8)
-    
+
     // put the magic number in global table - the magic-numbers.ts will be generated at the end from it
     magicNumbers[message.id] = message.magic
   })
-  
+
   // generate message classes
   messages.forEach(message => {
     output.write('')
@@ -353,7 +353,7 @@ function generate(obj: any, output: Writter) {
     } else {
       output.write(` * ${message.source.name}`)
     }
-    
+
     // generate deprecation information
     if (message.deprecated) {
       const description = message.deprecated.description ? `; ${message.deprecated.description}` : ''
@@ -362,22 +362,22 @@ function generate(obj: any, output: Writter) {
     }
 
     output.write(' */')
-    
+
     // generate class header
     output.write(`export class ${message.name} extends MavLinkData {`)
-    
+
     // generate static fields
     output.write(`  static MSG_ID = ${message.id}`)
     output.write(`  static MAGIC_NUMBER = ${message.magic}`)
     output.write(``)
-    
+
     // generate fields collection
     output.write('  static FIELDS = [')
     const fields = [...message.fields]
     fields.sort((f1, f2) => f2.fieldSize - f1.fieldSize)
 
     let offset = 0
-    
+
     // base fields go first
     fields
       .filter(field => !field.extension)
@@ -389,7 +389,7 @@ function generate(obj: any, output: Writter) {
         }
         offset += field.size
       })
-      
+
     // extension fields retain their original definition order and are but after base fields
     message.fields
       .filter(field => field.extension)
@@ -403,7 +403,7 @@ function generate(obj: any, output: Writter) {
       })
     output.write('  ]')
     output.write('')
-    
+
     // generate fields
     message.fields.forEach(field => {
       if (field.description.length > 0) {
@@ -415,7 +415,7 @@ function generate(obj: any, output: Writter) {
     })
     output.write(`}`)
   })
-  
+
   // generate message registry
   output.write()
   output.write('export const REGISTRY = {')

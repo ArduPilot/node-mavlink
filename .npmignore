@@ -1,5 +1,5 @@
 node_modules
 *.xml
 test.ts
-code-generators.ts
+code-generator.ts
 lib/*.imports.ts
