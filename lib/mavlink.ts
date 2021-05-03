@@ -109,9 +109,9 @@ export const DESERIALIZERS = {
   'double'  : (buffer: Buffer, offset: number) => buffer.readDoubleLE(offset),
 
   // array types
-  'char[]': (buffer: Buffer, offset: number, length: number, payloadLength: number) => {
+  'char[]': (buffer: Buffer, offset: number, length: number) => {
     let result = ''
-    for (let i = 0; (i < length) && ((offset + i) < payloadLength); i++) {
+    for (let i = 0; i < length; i++) {
       const charCode = buffer.readUInt8(offset + i)
       if (charCode !== 0) {
         result += String.fromCharCode(charCode)
@@ -210,7 +210,7 @@ export class MavLinkPacket {
       if (!deserialize) {
         throw new Error(`Unknown field type ${field.type}`)
       }
-      instance[field.name] = deserialize(this.payload, field.offset, field.length, this.header.payloadLength)
+      instance[field.name] = deserialize(this.payload, field.offset, field.length)
     })
     
     return instance
@@ -253,6 +253,9 @@ export class MavLinkPacket {
       
       // retrieve the buffer based on payload size
       const buffer = this.buffer.slice(0, expectedBufferLength)
+
+      // truncate the buffer to remove the current message
+      this.buffer = this.buffer.slice(expectedBufferLength)
       
       // validate message checksum including the magic byte
       const msgid = buffer.readUIntLE(7, 3)
@@ -276,7 +279,6 @@ export class MavLinkPacket {
         // this meessage has not been generated - ignoring
         console.error(`Unknown message with id ${msgid} (magic number not found) - skipping`)
       }
-      this.buffer = this.buffer.slice(expectedBufferLength)
     }
 
     callback(null)
@@ -285,6 +287,10 @@ export class MavLinkPacket {
 
 /**
  * A transform stream that takes a buffer with data and converts it to MavLinkPacket object
+ *
+ * At this stage the buffer contains all the data but possibly truncated (MavLink protocol 2.0)
+ * What this Transform does it reads all the common values and takes the buffer up to a length
+ * that will allow reading values without checking the length of the buffer.
  */
  export class MavLinkPacketParser extends Transform {
   constructor(opts = {}) {
@@ -292,8 +298,6 @@ export class MavLinkPacket {
   }
 
   _transform(chunk: Buffer, encoding, callback: TransformCallback) {
-    // At this stage the buffer contains all the data but possibly truncated (MavLink protocol 2.0)
-
     // read packet header data
     const header = new MavLinkPacketHeader()
     header.magic = chunk.readUInt8(0)
@@ -306,7 +310,7 @@ export class MavLinkPacket {
     header.msgid = chunk.readUIntLE(7, 3)
 
     // extend the buffer to the max length of the possible data so that reading doesn't have to check it
-    const padding = Buffer.from(new Uint8Array(288 - chunk.length))
+    const padding = Buffer.from(new Uint8Array(254 - chunk.length))
     // trim header and checksum data from the buffer - it will contain just the payload padded for easier reading
     const payload = Buffer.concat([ chunk.slice(10, chunk.length - 2), padding ])
     // read the crc - two last bytes
