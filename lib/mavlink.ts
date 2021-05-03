@@ -38,7 +38,7 @@ export function dump(buffer: Buffer, lineWidth = 10) {
   }
 }
 
-export const MAVLINK_MAGIC_NUMBER    = 0xFD
+export const MAVLINK_START_BYTE    = 0xFD
 export const MAVLINK_PAYLOAD_OFFSET  = 0x0A
 export const MAVLINK_CHECKSUM_LENGTH = 0x02
 
@@ -59,7 +59,7 @@ export type double = number
  * Header definition of the MavLink packet
  */
  export class MavLinkPacketHeader {
-  magic: number = MAVLINK_MAGIC_NUMBER
+  magic: number = MAVLINK_START_BYTE
   payloadLength: uint8_t = 0
   incompatibilityFlags: uint8_t = 0
   compatibilityFlags: uint8_t = 0
@@ -109,9 +109,9 @@ export const DESERIALIZERS = {
   'double'  : (buffer: Buffer, offset: number) => buffer.readDoubleLE(offset),
 
   // array types
-  'char[]': (buffer: Buffer, offset: number, length: number) => {
+  'char[]': (buffer: Buffer, offset: number, length: number, payloadLength: number) => {
     let result = ''
-    for (let i = 0; i < length; i++) {
+    for (let i = 0; (i < length) && ((offset + i) < payloadLength); i++) {
       const charCode = buffer.readUInt8(offset + i)
       if (charCode !== 0) {
         result += String.fromCharCode(charCode)
@@ -210,7 +210,7 @@ export class MavLinkPacket {
       if (!deserialize) {
         throw new Error(`Unknown field type ${field.type}`)
       }
-      instance[field.name] = deserialize(this.payload, field.offset, field.length)
+      instance[field.name] = deserialize(this.payload, field.offset, field.length, this.header.payloadLength)
     })
     
     return instance
@@ -227,37 +227,56 @@ export class MavLinkPacket {
     this.buffer = Buffer.concat([ this.buffer, chunk ])
 
     while (true) {
-      const magicNumberFirstOffset = this.buffer.indexOf(MAVLINK_MAGIC_NUMBER)
-      if (magicNumberFirstOffset === -1) {
+      // check for start byte
+      const startByteFirstOffset = this.buffer.indexOf(MAVLINK_START_BYTE)
+      if (startByteFirstOffset === -1) {
+        // start byte not found - skipping
         break
-      } else {
-        this.buffer = this.buffer.slice(magicNumberFirstOffset)
-        const payloadLength = this.buffer.readUInt8(1)
-        const expectedBufferLength = MAVLINK_PAYLOAD_OFFSET + payloadLength + MAVLINK_CHECKSUM_LENGTH
-        if (this.buffer.length >= expectedBufferLength) {
-          const buffer = this.buffer.slice(0, expectedBufferLength)
-          const msgid = buffer.readUIntLE(7, 3)
-          const magic = MSG_ID_MAGIC_NUMBER[msgid]
-          if (magic) {
-            const crc = buffer.readUInt16LE(MAVLINK_PAYLOAD_OFFSET + payloadLength)
-            const crc2 = x25crc(buffer, 1, 2, magic)
-            if (crc === crc2) {
-              this.push(buffer)
-            } else {
-              console.error(
-                'CRC error; expected', crc2, `(0x${crc2.toString(16).padStart(4, '0')})`,
-                'got', crc, `(0x${crc.toString(16).padStart(4, '0')})`,
-                '; msgid:', msgid, ', magic:', magic
-              )
-              dump(buffer, 28)
-              process.exit(0)
-            }
-          }
-          this.buffer = this.buffer.slice(expectedBufferLength)
-        } else {
-          break
-        }
       }
+
+      // fast-forward the buffer to the first start byte
+      this.buffer = this.buffer.slice(startByteFirstOffset)
+
+      // check if the buffer contains at least the minumum size of data
+      if (this.buffer.length < MAVLINK_PAYLOAD_OFFSET + MAVLINK_CHECKSUM_LENGTH) {
+        // current buffer shorter than the shortest message - skipping
+        break
+      }
+
+      // check if the current buffer contains the entire message
+      const payloadLength = this.buffer.readUInt8(1)
+      const expectedBufferLength = MAVLINK_PAYLOAD_OFFSET + payloadLength + MAVLINK_CHECKSUM_LENGTH
+      if (this.buffer.length < expectedBufferLength) {
+        // current buffer is not fully retrieved yet - skipping
+        break
+      }
+      
+      // retrieve the buffer based on payload size
+      const buffer = this.buffer.slice(0, expectedBufferLength)
+      
+      // validate message checksum including the magic byte
+      const msgid = buffer.readUIntLE(7, 3)
+      const magic = MSG_ID_MAGIC_NUMBER[msgid]
+      if (magic) {
+        const crc = buffer.readUInt16LE(MAVLINK_PAYLOAD_OFFSET + payloadLength)
+        const crc2 = x25crc(buffer, 1, 2, magic)
+        if (crc === crc2) {
+          // CRC matches - accept this packet
+          this.push(buffer)
+        } else {
+          // CRC mismatch - skip packet
+          console.error(
+            'CRC error; expected', crc2, `(0x${crc2.toString(16).padStart(4, '0')})`,
+            'got', crc, `(0x${crc.toString(16).padStart(4, '0')})`,
+            '; msgid:', msgid, ', magic:', magic
+          )
+          dump(buffer, 28)
+        }
+      } else {
+        // this meessage has not been generated - ignoring
+        console.error(`Unknown message with id ${msgid} (magic number not found) - skipping`)
+      }
+      this.buffer = this.buffer.slice(expectedBufferLength)
     }
 
     callback(null)
@@ -273,6 +292,9 @@ export class MavLinkPacket {
   }
 
   _transform(chunk: Buffer, encoding, callback: TransformCallback) {
+    // At this stage the buffer contains all the data but possibly truncated (MavLink protocol 2.0)
+
+    // read packet header data
     const header = new MavLinkPacketHeader()
     header.magic = chunk.readUInt8(0)
     header.payloadLength = chunk.readUInt8(1)
@@ -283,9 +305,14 @@ export class MavLinkPacket {
     header.compid = chunk.readUInt8(6)
     header.msgid = chunk.readUIntLE(7, 3)
 
+    // extend the buffer to the max length of the possible data so that reading doesn't have to check it
     const padding = Buffer.from(new Uint8Array(288 - chunk.length))
-    const payload = Buffer.concat([ chunk, padding ]).slice(10)
+    // trim header and checksum data from the buffer - it will contain just the payload padded for easier reading
+    const payload = Buffer.concat([ chunk.slice(10, chunk.length - 2), padding ])
+    // read the crc - two last bytes
     const crc = chunk.readUInt16LE(chunk.length - 2)
+    
+    // construct the packet
     const packet = new MavLinkPacket(header, payload, crc)
     
     callback(null, packet)

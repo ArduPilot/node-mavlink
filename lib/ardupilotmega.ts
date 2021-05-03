@@ -53,10 +53,10 @@ export enum MavCmd {
   'DO_SET_RESUME_REPEAT_DIST'         = 215,
   'DO_SPRAYER'                        = 216,
   /**
-   * Mission command to wait for an altitude or downwards vertical speed. This is meant for high
-   * altitude balloon launches, allowing the aircraft to be idle until either an altitude is reached
-   * or a negative vertical speed is reached (indicating early balloon burst). The wiggle time is how
-   * often to wiggle the control surfaces to prevent them seizing up.
+   * Mission command to wait for an altitude or downwards vertical speed. This is meant for high altitude
+   * balloon launches, allowing the aircraft to be idle until either an altitude is reached or a negative
+   * vertical speed is reached (indicating early balloon burst). The wiggle time is how often to wiggle
+   * the control surfaces to prevent them seizing up.
    */
   'NAV_ALTITUDE_WAIT'                 = 83,
   'POWER_OFF_INITIATED'               = 42000,
@@ -64,8 +64,8 @@ export enum MavCmd {
   'SOLO_BTN_FLY_HOLD'                 = 42002,
   'SOLO_BTN_PAUSE_CLICK'              = 42003,
   /**
-   * Magnetometer calibration based on fixed position in earth field given by inclination,
-   * declination and intensity.
+   * Magnetometer calibration based on fixed position in earth field given by inclination, declination
+   * and intensity.
    */
   'FIXED_MAG_CAL'                     = 42004,
   'FIXED_MAG_CAL_FIELD'               = 42005,
@@ -73,8 +73,8 @@ export enum MavCmd {
   'DO_ACCEPT_MAG_CAL'                 = 42425,
   'DO_CANCEL_MAG_CAL'                 = 42426,
   /**
-   * Used when doing accelerometer calibration. When sent to the GCS tells it what position to put
-   * the vehicle in. When sent to the vehicle says what position the vehicle is in.
+   * Used when doing accelerometer calibration. When sent to the GCS tells it what position to put the
+   * vehicle in. When sent to the vehicle says what position the vehicle is in.
    */
   'ACCELCAL_VEHICLE_POS'              = 42429,
   'DO_SEND_BANNER'                    = 42428,
@@ -95,16 +95,16 @@ export enum MavCmd {
    */
   'GUIDED_CHANGE_SPEED'               = 43000,
   /**
-   * Change target altitude at a given rate. This slews the vehicle at a controllable rate between
-   * it's previous altitude and the new one. (affects GUIDED only. Outside GUIDED, aircraft ignores
-   * these commands. Designed for onboard companion-computer command-and-control, not normally
-   * operator/GCS control.)
+   * Change target altitude at a given rate. This slews the vehicle at a controllable rate between it's
+   * previous altitude and the new one. (affects GUIDED only. Outside GUIDED, aircraft ignores these
+   * commands. Designed for onboard companion-computer command-and-control, not normally operator/GCS
+   * control.)
    */
   'GUIDED_CHANGE_ALTITUDE'            = 43001,
   /**
-   * Change to target heading at a given rate, overriding previous heading/s. This slews the vehicle
-   * at a controllable rate between it's previous heading and the new one. (affects GUIDED only.
-   * Exiting GUIDED returns aircraft to normal behaviour defined elsewhere. Designed for onboard
+   * Change to target heading at a given rate, overriding previous heading/s. This slews the vehicle at a
+   * controllable rate between it's previous heading and the new one. (affects GUIDED only. Exiting
+   * GUIDED returns aircraft to normal behaviour defined elsewhere. Designed for onboard
    * companion-computer command-and-control, not normally operator/GCS control.)
    */
   'GUIDED_CHANGE_HEADING'             = 43002,
@@ -141,8 +141,8 @@ export enum LimitModule {
 export enum RallyFlags {
   'FAVORABLE_WIND'                    = 1,
   /**
-   * Flag set when plane is to immediately descend to break altitude and land without GCS
-   * intervention. Flag not set when plane is to loiter at Rally point until commanded to land.
+   * Flag set when plane is to immediately descend to break altitude and land without GCS intervention.
+   * Flag not set when plane is to loiter at Rally point until commanded to land.
    */
   'LAND_IMMEDIATELY'                  = 2,
 }
@@ -167,8 +167,8 @@ export enum CameraFeedbackFlags {
   'BADEXPOSURE'                       = 2,
   'CLOSEDLOOP'                        = 3,
   /**
-   * Open loop camera, an image trigger has been requested but we can't know for sure it has
-   * successfully taken a picture.
+   * Open loop camera, an image trigger has been requested but we can't know for sure it has successfully
+   * taken a picture.
    */
   'OPENLOOP'                          = 4,
 }
@@ -850,8 +850,8 @@ export class DigicamConfigure extends MavLinkData {
    */
   exposureType: uint8_t
   /**
-   * Command Identity (incremental loop: 0 to 255). //A command sent multiple times will be executed
-   * or pooled just once.
+   * Command Identity (incremental loop: 0 to 255). //A command sent multiple times will be executed or
+   * pooled just once.
    */
   commandId: uint8_t
   /**
@@ -1848,8 +1848,7 @@ export class CameraFeedback extends MavLinkData {
   ]
 
   /**
-   * Image timestamp (since UNIX epoch), as passed in by CAMERA_STATUS message (or autopilot if no
-   * CCB).
+   * Image timestamp (since UNIX epoch), as passed in by CAMERA_STATUS message (or autopilot if no CCB).
    */
   timeUsec: uint64_t
   /**
@@ -2935,8 +2934,8 @@ export class VisionPositionDelta extends MavLinkData {
    */
   angleDelta: float[]
   /**
-   * Change in position to the current MAV_FRAME_BODY_FRD from the previous FRAME_BODY_FRD rotated to
-   * the current MAV_FRAME_BODY_FRD.
+   * Change in position to the current MAV_FRAME_BODY_FRD from the previous FRAME_BODY_FRD rotated to the
+   * current MAV_FRAME_BODY_FRD.
    */
   positionDelta: float[]
   /**
@@ -3302,8 +3301,8 @@ export class ObstacleDistance3d extends MavLinkData {
    */
   frame: MavFrame
   /**
-   * Unique ID given to each obstacle so that its movement can be tracked. Use UINT16_MAX if object
-   * ID is unknown or cannot be determined.
+   * Unique ID given to each obstacle so that its movement can be tracked. Use UINT16_MAX if object ID is
+   * unknown or cannot be determined.
    */
   obstacleId: uint16_t
   /**

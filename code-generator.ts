@@ -65,6 +65,32 @@ function getTypeSize(type) {
   }
 }
 
+function matchTextToWidth(s, width = 100) {
+  // replace all new-line characters with spaces
+  while (s.indexOf('\n') !== -1) {
+    s = s.replace('\n', ' ')
+  }
+  // replace all double-spaces with single spaces
+  while (s.indexOf('  ') !== -1) {
+    s = s.replaceAll('  ', ' ')
+  }
+
+  // cut text into max 100 character lines and remove any persisting whitespaces
+  const result = s
+    .replace(/\s*(?:(\S{100})|([\s\S]{1,100})(?!\S))/g, ($0,$1,$2) => $1 ? $1 + '-\n' : $2 + '\n')
+    .split('\n')
+    .map(line => line.trim())
+
+  // if the resulting array of lines contains empty string at the end it usually means
+  // that the original text was empty. We'll remove that which will leave the result
+  // as an empty array
+  if (result[result.length - 1] === '') {
+    result.pop()
+  }
+    
+  return result
+}
+
 class Writter {
   lines = []
 
@@ -81,6 +107,9 @@ function generate(obj: any, output: Writter) {
   // ------------------------------------------------------------------------
   // ENUMS
   // ------------------------------------------------------------------------
+
+  // parse XML data
+  
   const enums = obj.mavlink.enums[0].enum.map(xml => ({
     name: makeClassName(xml.$.name),
     source: {
@@ -96,31 +125,20 @@ function generate(obj: any, output: Writter) {
     }))
   }))
 
+  // preprocess description of enum to match 100 characters per line
   enums.forEach((entry) => {
-    // preprocess description to match 100 characters per line
-    entry.description = entry.description
-      .replace('\n', ' ')
-      .replace('\n', ' ')
-      .replaceAll('  ', ' ').replaceAll('  ', ' ').replaceAll('  ', ' ').replaceAll('  ', ' ')
-      .replace(/\s*(?:(\S{100})|([\s\S]{1,100})(?!\S))/g, ($0,$1,$2) => $1 ? $1 + '-\n' : $2 + '\n')
-      .split('\n')
-      .map(line => line.trim())
-    if (entry.description[entry.description.length - 1] === '')
-      entry.description.pop()
+    entry.description = matchTextToWidth(entry.description)
+  })
 
+  // preprocess description of values to match 100 characters per line
+  enums.forEach(entry => {
     entry.values.forEach(value => {
-      value.description = value.description
-        .replace('\n', ' ')
-        .replace('\n', ' ')
-        .replaceAll('  ', ' ').replaceAll('  ', ' ').replaceAll('  ', ' ').replaceAll('  ', ' ')
-        .replace(/\s*(?:(\S{96})|([\s\S]{1,96})(?!\S))/g, ($0,$1,$2) => $1 ? $1 + '-\n' : $2 + '\n')
-        .split('\n')
-        .map(line => line.trim())
-      if (value.description[value.description.length - 1] === '')
-        value.description.pop()
+      value.description = matchTextToWidth(value.description)
     })
-      
-    // calculate common prefix
+  })
+  
+  // calculate common prefix for enum values (needed later to trim the common part and make the enum values shorter)
+  enums.forEach(entry => {
     entry.source.commonPrefix = entry.values
       .map(entry => entry.source.name)
       .reduce((acc, name) => {
@@ -136,11 +154,16 @@ function generate(obj: any, output: Writter) {
     if (entry.source.commonPrefix === '') {
       entry.source.commonPrefix = entry.source.name + '_'
     }
+  })
 
-    // compute value name based on the source name and common prefix
+  // compute value name based on the source name and common prefix
+  enums.forEach(entry => {
+    // initialize the name from xml source
     entry.values.forEach(value => {
       value.name = value.source.name
     })
+    
+    // trim the common prefix
     for (let i = 0; i < 2; i++) {
       entry.values.forEach(value => {
         if (value.name.startsWith(entry.source.commonPrefix)) {
@@ -148,26 +171,23 @@ function generate(obj: any, output: Writter) {
         }
       })
     }
+    
+    // if the trimmed value starts with a digit revert to xml source
     entry.values.forEach(value => {
       if ([ '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' ].includes(value.name[0])) {
         value.name = value.source.name
-      } else if (value.name === '') {
-        // value.name = value.source.name
       }
     })
+  })
     
-    // compute actual enum value
+  // compute enum value
+  enums.forEach(entry => {
     entry.values.forEach(value => {
       value.value = value.source.value
     })
-    
-    // preprocess value description
-    entry.values.forEach(value => {
-      // todo
-    })
   })
   
-  // compute max length of value name for later padding
+  // compute max length of value name for later padding values
   const maxValueNameLength = enums.reduce((acc, entry) => {
     const maxLength = entry.values.reduce((acc, value) => Math.max(acc, value.name.length), 0)
     return Math.max(acc, maxLength)
@@ -175,6 +195,7 @@ function generate(obj: any, output: Writter) {
 
   // generate enums
   enums.forEach(entry => {
+    // generate enum description
     output.write('/**')
     if (entry.description.length > 0) {
       output.write(` * ${entry.description.join('\n * ')}`)
@@ -182,7 +203,11 @@ function generate(obj: any, output: Writter) {
       output.write(` * ${entry.source.name}`)
     }
     output.write(' */')
+    
+    // generate enum declaration
     output.write(`export enum ${entry.name} {`)
+    
+    // generate enum values
     entry.values.forEach(value => {
       if (value.description.length > 1) {
         output.write('  /**')
@@ -218,7 +243,21 @@ function generate(obj: any, output: Writter) {
     fields: [],
   }))
 
+  // fix some messages because they lack underscore in the original name
+  const FIXED_MESSAGE_NAMES = {
+    '253': 'StatusText',
+  }
+
+  messages.forEach(message => {
+    if (FIXED_MESSAGE_NAMES[message.id]) {
+      message.name = FIXED_MESSAGE_NAMES[message.id]
+    }
+  })
+  
   // gather message fields
+  //
+  // The order does matter and there are things like <wip> and <extensions> that also need
+  // to be understood to properly collect fields
   messages.forEach(message => {
     let isExtensionField = false
 
@@ -252,38 +291,31 @@ function generate(obj: any, output: Writter) {
     })
   })
   
-  // preprocess description to match 100 characters per line
+  // preprocess description of messages to match 100 characters per line
   messages.forEach((message) => {
-    message.description = message.description
-      .replace('\n', ' ')
-      .replace('\n', ' ')
-      .replaceAll('  ', ' ').replaceAll('  ', ' ').replaceAll('  ', ' ').replaceAll('  ', ' ')
-      .replace(/\s*(?:(\S{100})|([\s\S]{1,100})(?!\S))/g, ($0,$1,$2) => $1 ? $1 + '-\n' : $2 + '\n')
-      .split('\n')
-      .map(line => line.trim())
-    if (message.description[message.description.length - 1] === '')
-      message.description.pop()
-      
+    message.description = matchTextToWidth(message.description)
+  })
+
+  // preprocess description of fields to match 100 characters per line
+  messages.forEach((message) => {
     message.fields.forEach(field => {
-      field.description = field.description
-        .replace('\n', ' ')
-        .replace('\n', ' ')
-        .replaceAll('  ', ' ').replaceAll('  ', ' ').replaceAll('  ', ' ').replaceAll('  ', ' ')
-        .replace(/\s*(?:(\S{96})|([\s\S]{1,96})(?!\S))/g, ($0,$1,$2) => $1 ? $1 + '-\n' : $2 + '\n')
-        .split('\n')
-        .map(line => line.trim())
-      if (field.description[field.description.length - 1] === '')
-        field.description.pop()
+      field.description = matchTextToWidth(field.description)
     })
-    
-    // calculate CRC_EXTRA
+  })    
+
+  // calculate CRC_EXTRA
+  messages.forEach((message) => {
+    // CRC is generated from the definition of base fields in network order (big fields first, then the small ones)
     const fields = [...message.fields]
       .filter(field => !field.extension)
       .sort((f1, f2) => f2.fieldSize - f1.fieldSize)
-    
+
+    // See https://mavlink.io/en/guide/serialization.html#crc_extra for more information
     let buffer = Buffer.from(message.source.name + ' ')
     for (let i = 0; i < fields.length; i++) {
       const field = fields[i]
+      // the uint8_t_mavlink_version typ is actually uint8_t but spelled like that
+      // to denote that it is read-only (crazy stuff)
       const fieldType = field.source.type === 'uint8_t_mavlink_version' ? 'uint8_t' : field.itemType
       const fieldName = field.source.name
       buffer = Buffer.concat([ buffer, Buffer.from(`${fieldType} ${fieldName} `) ])
@@ -293,33 +325,48 @@ function generate(obj: any, output: Writter) {
     }
     const crc = x25crc(buffer)
     message.magic = (crc & 0xff) ^ (crc >> 8)
+    
+    // put the magic number in global table - the magic-numbers.ts will be generated at the end from it
     magicNumbers[message.id] = message.magic
   })
   
   // generate message classes
   messages.forEach(message => {
     output.write('')
+
+    // generate message description
     output.write('/**')
     if (message.description.length > 0) {
       output.write(` * ${message.description.join('\n * ')}`)
     } else {
       output.write(` * ${message.source.name}`)
     }
+    
+    // generate deprecation information
     if (message.deprecated) {
       const description = message.deprecated.description ? `; ${message.deprecated.description}` : ''
       output.write(` *`)
       output.write(` * @deprecated since ${message.deprecated.since}, replaced by ${message.deprecated.replacedBy}${description}`)
     }
+
     output.write(' */')
+    
+    // generate class header
     output.write(`export class ${message.name} extends MavLinkData {`)
+    
+    // generate static fields
     output.write(`  static MSG_ID = ${message.id}`)
     output.write(`  static MAGIC_NUMBER = ${message.magic}`)
     output.write(``)
+    
+    // generate fields collection
     output.write('  static FIELDS = [')
     const fields = [...message.fields]
     fields.sort((f1, f2) => f2.fieldSize - f1.fieldSize)
 
     let offset = 0
+    
+    // base fields go first
     fields
       .filter(field => !field.extension)
       .forEach(field => {
@@ -330,6 +377,8 @@ function generate(obj: any, output: Writter) {
         }
         offset += field.size
       })
+      
+    // extension fields retain their original definition order and are but after base fields
     message.fields
       .filter(field => field.extension)
       .forEach(field => {
@@ -342,6 +391,8 @@ function generate(obj: any, output: Writter) {
       })
     output.write('  ]')
     output.write('')
+    
+    // generate fields
     message.fields.forEach(field => {
       if (field.description.length > 0) {
         output.write('  /**')
@@ -364,7 +415,6 @@ function generate(obj: any, output: Writter) {
 }
 
 const parts = [ 'minimal', 'common', 'ardupilotmega' ]
-// const parts = [ 'minimal' ]
 
 async function main() {
   for (let i = 0; i < parts.length; i++) {
@@ -378,6 +428,7 @@ async function main() {
     fs.writeFileSync(`./lib/${part}.ts`, output.lines.join('\n'))
   }
 
+  // generate magic-numbers.ts
   const magic = [
     `export const MSG_ID_MAGIC_NUMBER = {`,
     ...Object.entries(magicNumbers).map(([msgid, magic]) => `  '${msgid}': ${magic},`, ''),

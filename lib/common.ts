@@ -74,13 +74,13 @@ export enum MavMode {
   'GUIDED_DISARMED'                                = 88,
   'GUIDED_ARMED'                                   = 216,
   /**
-   * System is allowed to be active, under autonomous control and navigation (the trajectory is
-   * decided onboard and not pre-programmed by waypoints)
+   * System is allowed to be active, under autonomous control and navigation (the trajectory is decided
+   * onboard and not pre-programmed by waypoints)
    */
   'AUTO_DISARMED'                                  = 92,
   /**
-   * System is allowed to be active, under autonomous control and navigation (the trajectory is
-   * decided onboard and not pre-programmed by waypoints)
+   * System is allowed to be active, under autonomous control and navigation (the trajectory is decided
+   * onboard and not pre-programmed by waypoints)
    */
   'AUTO_ARMED'                                     = 220,
   /**
@@ -142,49 +142,49 @@ export enum MavFrame {
   'LOCAL_NED'                                      = 1,
   'MISSION'                                        = 2,
   /**
-   * Global (WGS84) coordinate frame + altitude relative to the home position. First value / x:
-   * latitude, second value / y: longitude, third value / z: positive altitude with 0 being at the
-   * altitude of the home location.
+   * Global (WGS84) coordinate frame + altitude relative to the home position. First value / x: latitude,
+   * second value / y: longitude, third value / z: positive altitude with 0 being at the altitude of the
+   * home location.
    */
   'GLOBAL_RELATIVE_ALT'                            = 3,
   'LOCAL_ENU'                                      = 4,
   /**
    * Global (WGS84) coordinate frame (scaled) + MSL altitude. First value / x: latitude in
-   * degrees*1.0e-7, second value / y: longitude in degrees*1.0e-7, third value / z: positive
-   * altitude over mean sea level (MSL).
+   * degrees*1.0e-7, second value / y: longitude in degrees*1.0e-7, third value / z: positive altitude
+   * over mean sea level (MSL).
    */
   'GLOBAL_INT'                                     = 5,
   /**
-   * Global (WGS84) coordinate frame (scaled) + altitude relative to the home position. First value /
-   * x: latitude in degrees*10e-7, second value / y: longitude in degrees*10e-7, third value / z:
-   * positive altitude with 0 being at the altitude of the home location.
+   * Global (WGS84) coordinate frame (scaled) + altitude relative to the home position. First value / x:
+   * latitude in degrees*10e-7, second value / y: longitude in degrees*10e-7, third value / z: positive
+   * altitude with 0 being at the altitude of the home location.
    */
   'GLOBAL_RELATIVE_ALT_INT'                        = 6,
   /**
-   * Offset to the current local frame. Anything expressed in this frame should be added to the
-   * current local frame position.
+   * Offset to the current local frame. Anything expressed in this frame should be added to the current
+   * local frame position.
    */
   'LOCAL_OFFSET_NED'                               = 7,
   /**
-   * Setpoint in body NED frame. This makes sense if all position control is externalized - e.g.
-   * useful to command 2 m/s^2 acceleration to the right.
+   * Setpoint in body NED frame. This makes sense if all position control is externalized - e.g. useful
+   * to command 2 m/s^2 acceleration to the right.
    */
   'BODY_NED'                                       = 8,
   /**
-   * Offset in body NED frame. This makes sense if adding setpoints to the current flight path, to
-   * avoid an obstacle - e.g. useful to command 2 m/s^2 acceleration to the east.
+   * Offset in body NED frame. This makes sense if adding setpoints to the current flight path, to avoid
+   * an obstacle - e.g. useful to command 2 m/s^2 acceleration to the east.
    */
   'BODY_OFFSET_NED'                                = 9,
   /**
    * Global (WGS84) coordinate frame with AGL altitude (at the waypoint coordinate). First value / x:
-   * latitude in degrees, second value / y: longitude in degrees, third value / z: positive altitude
-   * in meters with 0 being at ground level in terrain model.
+   * latitude in degrees, second value / y: longitude in degrees, third value / z: positive altitude in
+   * meters with 0 being at ground level in terrain model.
    */
   'GLOBAL_TERRAIN_ALT'                             = 10,
   /**
-   * Global (WGS84) coordinate frame (scaled) with AGL altitude (at the waypoint coordinate). First
-   * value / x: latitude in degrees*10e-7, second value / y: longitude in degrees*10e-7, third value
-   * / z: positive altitude in meters with 0 being at ground level in terrain model.
+   * Global (WGS84) coordinate frame (scaled) with AGL altitude (at the waypoint coordinate). First value
+   * / x: latitude in degrees*10e-7, second value / y: longitude in degrees*10e-7, third value / z:
+   * positive altitude in meters with 0 being at ground level in terrain model.
    */
   'GLOBAL_TERRAIN_ALT_INT'                         = 11,
   'BODY_FRD'                                       = 12,
@@ -195,33 +195,33 @@ export enum MavFrame {
    */
   'RESERVED_14'                                    = 14,
   /**
-   * MAV_FRAME_MOCAP_ENU - Odometry local coordinate frame of data given by a motion capture system,
-   * Z-up (x: East, y: North, z: Up).
+   * MAV_FRAME_MOCAP_ENU - Odometry local coordinate frame of data given by a motion capture system, Z-up
+   * (x: East, y: North, z: Up).
    */
   'RESERVED_15'                                    = 15,
   /**
-   * MAV_FRAME_VISION_NED - Odometry local coordinate frame of data given by a vision estimation
-   * system, Z-down (x: North, y: East, z: Down).
+   * MAV_FRAME_VISION_NED - Odometry local coordinate frame of data given by a vision estimation system,
+   * Z-down (x: North, y: East, z: Down).
    */
   'RESERVED_16'                                    = 16,
   /**
-   * MAV_FRAME_VISION_ENU - Odometry local coordinate frame of data given by a vision estimation
-   * system, Z-up (x: East, y: North, z: Up).
+   * MAV_FRAME_VISION_ENU - Odometry local coordinate frame of data given by a vision estimation system,
+   * Z-up (x: East, y: North, z: Up).
    */
   'RESERVED_17'                                    = 17,
   /**
-   * MAV_FRAME_ESTIM_NED - Odometry local coordinate frame of data given by an estimator running
-   * onboard the vehicle, Z-down (x: North, y: East, z: Down).
+   * MAV_FRAME_ESTIM_NED - Odometry local coordinate frame of data given by an estimator running onboard
+   * the vehicle, Z-down (x: North, y: East, z: Down).
    */
   'RESERVED_18'                                    = 18,
   /**
-   * MAV_FRAME_ESTIM_ENU - Odometry local coordinate frame of data given by an estimator running
-   * onboard the vehicle, Z-up (x: East, y: North, z: Up).
+   * MAV_FRAME_ESTIM_ENU - Odometry local coordinate frame of data given by an estimator running onboard
+   * the vehicle, Z-up (x: East, y: North, z: Up).
    */
   'RESERVED_19'                                    = 19,
   /**
-   * Forward, Right, Down coordinate frame. This is a local frame with Z-down and arbitrary F/R
-   * alignment (i.e. not aligned with NED/earth frame).
+   * Forward, Right, Down coordinate frame. This is a local frame with Z-down and arbitrary F/R alignment
+   * (i.e. not aligned with NED/earth frame).
    */
   'LOCAL_FRD'                                      = 20,
   /**
@@ -289,10 +289,6 @@ export enum GimbalDeviceCapFlags {
   'HAS_NEUTRAL'                                    = 2,
   'HAS_ROLL_AXIS'                                  = 4,
   'HAS_ROLL_FOLLOW'                                = 8,
-  /**
-   * Gimbal device supports locking to an roll angle (generally that's the default with roll
-   * stabilized)
-   */
   'HAS_ROLL_LOCK'                                  = 16,
   'HAS_PITCH_AXIS'                                 = 32,
   'HAS_PITCH_FOLLOW'                               = 64,
@@ -302,10 +298,6 @@ export enum GimbalDeviceCapFlags {
    */
   'HAS_PITCH_LOCK'                                 = 128,
   'HAS_YAW_AXIS'                                   = 256,
-  /**
-   * Gimbal device supports to follow a yaw angle relative to the vehicle (generally that's the
-   * default)
-   */
   'HAS_YAW_FOLLOW'                                 = 512,
   'HAS_YAW_LOCK'                                   = 1024,
   'SUPPORTS_INFINITE_YAW'                          = 2048,
@@ -338,25 +330,25 @@ export enum GimbalManagerCapFlags {
 export enum GimbalDeviceFlags {
   'RETRACT'                                        = 1,
   /**
-   * Set to neutral position (horizontal, forward looking, with stabiliziation), takes presedence
-   * over all other flags except RETRACT.
+   * Set to neutral position (horizontal, forward looking, with stabiliziation), takes presedence over
+   * all other flags except RETRACT.
    */
   'NEUTRAL'                                        = 2,
   /**
-   * Lock roll angle to absolute angle relative to horizon (not relative to drone). This is generally
-   * the default with a stabilizing gimbal.
+   * Lock roll angle to absolute angle relative to horizon (not relative to drone). This is generally the
+   * default with a stabilizing gimbal.
    */
   'ROLL_LOCK'                                      = 4,
   /**
-   * Lock pitch angle to absolute angle relative to horizon (not relative to drone). This is
-   * generally the default.
+   * Lock pitch angle to absolute angle relative to horizon (not relative to drone). This is generally
+   * the default.
    */
   'PITCH_LOCK'                                     = 8,
   /**
-   * Lock yaw angle to absolute angle relative to North (not relative to drone). If this flag is set,
-   * the quaternion is in the Earth frame with the x-axis pointing North (yaw absolute). If this flag
-   * is not set, the quaternion frame is in the Earth frame rotated so that the x-axis is pointing
-   * forward (yaw relative to vehicle).
+   * Lock yaw angle to absolute angle relative to North (not relative to drone). If this flag is set, the
+   * quaternion is in the Earth frame with the x-axis pointing North (yaw absolute). If this flag is not
+   * set, the quaternion frame is in the Earth frame rotated so that the x-axis is pointing forward (yaw
+   * relative to vehicle).
    */
   'YAW_LOCK'                                       = 16,
 }
@@ -554,11 +546,11 @@ export enum MavCmd {
   'NAV_LOITER_UNLIM'                               = 17,
   'NAV_LOITER_TURNS'                               = 18,
   /**
-   * Loiter at the specified latitude, longitude and altitude for a certain amount of time.
-   * Multicopter vehicles stop at the point (within a vehicle-specific acceptance radius).
-   * Forward-only moving vehicles (e.g. fixed-wing) circle the point with the specified
-   * radius/direction. If the Heading Required parameter (2) is non-zero forward moving aircraft will
-   * only leave the loiter circle once heading towards the next waypoint.
+   * Loiter at the specified latitude, longitude and altitude for a certain amount of time. Multicopter
+   * vehicles stop at the point (within a vehicle-specific acceptance radius). Forward-only moving
+   * vehicles (e.g. fixed-wing) circle the point with the specified radius/direction. If the Heading
+   * Required parameter (2) is non-zero forward moving aircraft will only leave the loiter circle once
+   * heading towards the next waypoint.
    */
   'NAV_LOITER_TIME'                                = 19,
   'NAV_RETURN_TO_LAUNCH'                           = 20,
@@ -572,16 +564,16 @@ export enum MavCmd {
   'NAV_TAKEOFF_LOCAL'                              = 24,
   'NAV_FOLLOW'                                     = 25,
   /**
-   * Continue on the current course and climb/descend to specified altitude. When the altitude is
-   * reached continue to the next command (i.e., don't proceed to the next command until the desired
-   * altitude is reached.
+   * Continue on the current course and climb/descend to specified altitude. When the altitude is reached
+   * continue to the next command (i.e., don't proceed to the next command until the desired altitude is
+   * reached.
    */
   'NAV_CONTINUE_AND_CHANGE_ALT'                    = 30,
   /**
    * Begin loiter at the specified Latitude and Longitude. If Lat=Lon=0, then loiter at the current
-   * position. Don't consider the navigation command complete (don't leave loiter) until the altitude
-   * has been reached. Additionally, if the Heading Required parameter is non-zero the aircraft will
-   * not leave the loiter until heading toward the next waypoint.
+   * position. Don't consider the navigation command complete (don't leave loiter) until the altitude has
+   * been reached. Additionally, if the Heading Required parameter is non-zero the aircraft will not
+   * leave the loiter until heading toward the next waypoint.
    */
   'NAV_LOITER_TO_ALT'                              = 31,
   'DO_FOLLOW'                                      = 32,
@@ -592,16 +584,16 @@ export enum MavCmd {
    */
   'DO_ORBIT'                                       = 34,
   /**
-   * Sets the region of interest (ROI) for a sensor set or the vehicle itself. This can then be used
-   * by the vehicle's control system to control the vehicle attitude and the attitude of various
-   * sensors such as cameras.
+   * Sets the region of interest (ROI) for a sensor set or the vehicle itself. This can then be used by
+   * the vehicle's control system to control the vehicle attitude and the attitude of various sensors
+   * such as cameras.
    */
   'NAV_ROI'                                        = 80,
   'NAV_PATHPLANNING'                               = 81,
   'NAV_SPLINE_WAYPOINT'                            = 82,
   /**
-   * Takeoff from ground using VTOL mode, and transition to forward flight with specified heading.
-   * The command should be ignored by vehicles that dont support both VTOL and fixed-wing flight
+   * Takeoff from ground using VTOL mode, and transition to forward flight with specified heading. The
+   * command should be ignored by vehicles that dont support both VTOL and fixed-wing flight
    * (multicopters, boats,etc.).
    */
   'NAV_VTOL_TAKEOFF'                               = 84,
@@ -609,10 +601,10 @@ export enum MavCmd {
   'NAV_GUIDED_ENABLE'                              = 92,
   'NAV_DELAY'                                      = 93,
   /**
-   * Descend and place payload. Vehicle moves to specified location, descends until it detects a
-   * hanging payload has reached the ground, and then releases the payload. If ground is not detected
-   * before the reaching the maximum descent value (param1), the command will complete without
-   * releasing the payload.
+   * Descend and place payload. Vehicle moves to specified location, descends until it detects a hanging
+   * payload has reached the ground, and then releases the payload. If ground is not detected before the
+   * reaching the maximum descent value (param1), the command will complete without releasing the
+   * payload.
    */
   'NAV_PAYLOAD_PLACE'                              = 94,
   /**
@@ -628,10 +620,6 @@ export enum MavCmd {
   'CONDITION_CHANGE_ALT'                           = 113,
   'CONDITION_DISTANCE'                             = 114,
   'CONDITION_YAW'                                  = 115,
-  /**
-   * NOP - This command is only used to mark the upper limit of the CONDITION commands in the
-   * enumeration
-   */
   'CONDITION_LAST'                                 = 159,
   'DO_SET_MODE'                                    = 176,
   /**
@@ -642,32 +630,31 @@ export enum MavCmd {
   'DO_CHANGE_SPEED'                                = 178,
   'DO_SET_HOME'                                    = 179,
   /**
-   * Set a system parameter. Caution! Use of this command requires knowledge of the numeric
-   * enumeration value of the parameter.
+   * Set a system parameter. Caution! Use of this command requires knowledge of the numeric enumeration
+   * value of the parameter.
    */
   'DO_SET_PARAMETER'                               = 180,
   'DO_SET_RELAY'                                   = 181,
   'DO_REPEAT_RELAY'                                = 182,
   'DO_SET_SERVO'                                   = 183,
   /**
-   * Cycle a between its nominal setting and a desired PWM for a desired number of cycles with a
-   * desired period.
+   * Cycle a between its nominal setting and a desired PWM for a desired number of cycles with a desired
+   * period.
    */
   'DO_REPEAT_SERVO'                                = 184,
   'DO_FLIGHTTERMINATION'                           = 185,
   'DO_CHANGE_ALTITUDE'                             = 186,
   /**
-   * Sets actuators (e.g. servos) to a desired value. The actuator numbers are mapped to specific
-   * outputs (e.g. on any MAIN or AUX PWM or UAVCAN) using a flight-stack specific mechanism (i.e. a
-   * parameter).
+   * Sets actuators (e.g. servos) to a desired value. The actuator numbers are mapped to specific outputs
+   * (e.g. on any MAIN or AUX PWM or UAVCAN) using a flight-stack specific mechanism (i.e. a parameter).
    */
   'DO_SET_ACTUATOR'                                = 187,
   /**
-   * Mission command to perform a landing. This is used as a marker in a mission to tell the
-   * autopilot where a sequence of mission items that represents a landing starts. It may also be
-   * sent via a COMMAND_LONG to trigger a landing, in which case the nearest (geographically) landing
-   * sequence in the mission will be used. The Latitude/Longitude is optional, and may be set to 0 if
-   * not needed. If specified then it will be used to help find the closest landing sequence.
+   * Mission command to perform a landing. This is used as a marker in a mission to tell the autopilot
+   * where a sequence of mission items that represents a landing starts. It may also be sent via a
+   * COMMAND_LONG to trigger a landing, in which case the nearest (geographically) landing sequence in
+   * the mission will be used. The Latitude/Longitude is optional, and may be set to 0 if not needed. If
+   * specified then it will be used to help find the closest landing sequence.
    */
   'DO_LAND_START'                                  = 189,
   'DO_RALLY_LAND'                                  = 190,
@@ -678,37 +665,36 @@ export enum MavCmd {
   /**
    * Sets the region of interest (ROI) to a location. This can then be used by the vehicle's control
    * system to control the vehicle attitude and the attitude of various sensors such as cameras. This
-   * command can be sent to a gimbal manager but not to a gimbal device. A gimbal is not to react to
-   * this message.
+   * command can be sent to a gimbal manager but not to a gimbal device. A gimbal is not to react to this
+   * message.
    */
   'DO_SET_ROI_LOCATION'                            = 195,
   /**
-   * Sets the region of interest (ROI) to be toward next waypoint, with optional pitch/roll/yaw
-   * offset. This can then be used by the vehicle's control system to control the vehicle attitude
-   * and the attitude of various sensors such as cameras. This command can be sent to a gimbal
-   * manager but not to a gimbal device. A gimbal device is not to react to this message.
+   * Sets the region of interest (ROI) to be toward next waypoint, with optional pitch/roll/yaw offset.
+   * This can then be used by the vehicle's control system to control the vehicle attitude and the
+   * attitude of various sensors such as cameras. This command can be sent to a gimbal manager but not to
+   * a gimbal device. A gimbal device is not to react to this message.
    */
   'DO_SET_ROI_WPNEXT_OFFSET'                       = 196,
   /**
-   * Cancels any previous ROI command returning the vehicle/sensors to default flight
-   * characteristics. This can then be used by the vehicle's control system to control the vehicle
-   * attitude and the attitude of various sensors such as cameras. This command can be sent to a
-   * gimbal manager but not to a gimbal device. A gimbal device is not to react to this message.
-   * After this command the gimbal manager should go back to manual input if available, and otherwise
-   * assume a neutral position.
+   * Cancels any previous ROI command returning the vehicle/sensors to default flight characteristics.
+   * This can then be used by the vehicle's control system to control the vehicle attitude and the
+   * attitude of various sensors such as cameras. This command can be sent to a gimbal manager but not to
+   * a gimbal device. A gimbal device is not to react to this message. After this command the gimbal
+   * manager should go back to manual input if available, and otherwise assume a neutral position.
    */
   'DO_SET_ROI_NONE'                                = 197,
   /**
-   * Mount tracks system with specified system ID. Determination of target vehicle position may be
-   * done with GLOBAL_POSITION_INT or any other means. This command can be sent to a gimbal manager
-   * but not to a gimbal device. A gimbal device is not to react to this message.
+   * Mount tracks system with specified system ID. Determination of target vehicle position may be done
+   * with GLOBAL_POSITION_INT or any other means. This command can be sent to a gimbal manager but not to
+   * a gimbal device. A gimbal device is not to react to this message.
    */
   'DO_SET_ROI_SYSID'                               = 198,
   'DO_CONTROL_VIDEO'                               = 200,
   /**
-   * Sets the region of interest (ROI) for a sensor set or the vehicle itself. This can then be used
-   * by the vehicle's control system to control the vehicle attitude and the attitude of various
-   * sensors such as cameras.
+   * Sets the region of interest (ROI) for a sensor set or the vehicle itself. This can then be used by
+   * the vehicle's control system to control the vehicle attitude and the attitude of various sensors
+   * such as cameras.
    */
   'DO_SET_ROI'                                     = 201,
   /**
@@ -726,9 +712,9 @@ export enum MavCmd {
   'DO_MOUNT_CONFIGURE'                             = 204,
   'DO_MOUNT_CONTROL'                               = 205,
   /**
-   * Mission command to set camera trigger distance for this flight. The camera is triggered each
-   * time this distance is exceeded. This command can also be used to set the shutter integration
-   * time for the camera.
+   * Mission command to set camera trigger distance for this flight. The camera is triggered each time
+   * this distance is exceeded. This command can also be used to set the shutter integration time for the
+   * camera.
    */
   'DO_SET_CAM_TRIGG_DIST'                          = 206,
   'DO_FENCE_ENABLE'                                = 207,
@@ -739,37 +725,36 @@ export enum MavCmd {
   'DO_AUTOTUNE_ENABLE'                             = 212,
   'NAV_SET_YAW_SPEED'                              = 213,
   /**
-   * Mission command to set camera trigger interval for this flight. If triggering is enabled, the
-   * camera is triggered each time this interval expires. This command can also be used to set the
-   * shutter integration time for the camera.
+   * Mission command to set camera trigger interval for this flight. If triggering is enabled, the camera
+   * is triggered each time this interval expires. This command can also be used to set the shutter
+   * integration time for the camera.
    */
   'DO_SET_CAM_TRIGG_INTERVAL'                      = 214,
   'DO_MOUNT_CONTROL_QUAT'                          = 220,
   'DO_GUIDED_MASTER'                               = 221,
   'DO_GUIDED_LIMITS'                               = 222,
   /**
-   * Control vehicle engine. This is interpreted by the vehicles engine controller to change the
-   * target engine state. It is intended for vehicles with internal combustion engines
+   * Control vehicle engine. This is interpreted by the vehicles engine controller to change the target
+   * engine state. It is intended for vehicles with internal combustion engines
    */
   'DO_ENGINE_CONTROL'                              = 223,
   /**
-   * Set the mission item with sequence number seq as current item. This means that the MAV will
-   * continue to this mission item on the shortest path (not following the mission items in-between).
+   * Set the mission item with sequence number seq as current item. This means that the MAV will continue
+   * to this mission item on the shortest path (not following the mission items in-between).
    */
   'DO_SET_MISSION_CURRENT'                         = 224,
   'DO_LAST'                                        = 240,
   /**
    * Trigger calibration. This command will be only accepted if in pre-flight mode. Except for
-   * Temperature Calibration, only one sensor should be set in a single message and all others should
-   * be zero.
+   * Temperature Calibration, only one sensor should be set in a single message and all others should be
+   * zero.
    */
   'PREFLIGHT_CALIBRATION'                          = 241,
   'PREFLIGHT_SET_SENSOR_OFFSETS'                   = 242,
   /**
-   * Trigger UAVCAN configuration (actuator ID assignment and direction mapping). Note that this maps
-   * to the legacy UAVCAN v0 function UAVCAN_ENUMERATE, which is intended to be executed just once
-   * during initial vehicle configuration (it is not a normal pre-flight command and has been poorly
-   * named).
+   * Trigger UAVCAN configuration (actuator ID assignment and direction mapping). Note that this maps to
+   * the legacy UAVCAN v0 function UAVCAN_ENUMERATE, which is intended to be executed just once during
+   * initial vehicle configuration (it is not a normal pre-flight command and has been poorly named).
    */
   'PREFLIGHT_UAVCAN'                               = 243,
   /**
@@ -780,45 +765,44 @@ export enum MavCmd {
   'PREFLIGHT_REBOOT_SHUTDOWN'                      = 246,
   /**
    * Request a target system to start an upgrade of one (or all) of its components. For example, the
-   * command might be sent to a companion computer to cause it to upgrade a connected flight
-   * controller. The system doing the upgrade will report progress using the normal command protocol
-   * sequence for a long running operation. Command protocol information:
-   * https://mavlink.io/en/services/command.html.
+   * command might be sent to a companion computer to cause it to upgrade a connected flight controller.
+   * The system doing the upgrade will report progress using the normal command protocol sequence for a
+   * long running operation. Command protocol information: https://mavlink.io/en/services/command.html.
    */
   'DO_UPGRADE'                                     = 247,
   /**
    * Override current mission with command to pause mission, pause mission and move to position,
-   * continue/resume mission. When param 1 indicates that the mission is paused (MAV_GOTO_DO_HOLD),
-   * param 2 defines whether it holds in place or moves to another position.
+   * continue/resume mission. When param 1 indicates that the mission is paused (MAV_GOTO_DO_HOLD), param
+   * 2 defines whether it holds in place or moves to another position.
    */
   'OVERRIDE_GOTO'                                  = 252,
   /**
-   * Mission command to set a Camera Auto Mount Pivoting Oblique Survey (Replaces CAM_TRIGG_DIST for
-   * this purpose). The camera is triggered each time this distance is exceeded, then the mount moves
-   * to the next position. Params 4~6 set-up the angle limits and number of positions for oblique
-   * survey, where mount-enabled vehicles automatically roll the camera between shots to emulate an
-   * oblique camera setup (providing an increased HFOV). This command can also be used to set the
-   * shutter integration time for the camera.
+   * Mission command to set a Camera Auto Mount Pivoting Oblique Survey (Replaces CAM_TRIGG_DIST for this
+   * purpose). The camera is triggered each time this distance is exceeded, then the mount moves to the
+   * next position. Params 4~6 set-up the angle limits and number of positions for oblique survey, where
+   * mount-enabled vehicles automatically roll the camera between shots to emulate an oblique camera
+   * setup (providing an increased HFOV). This command can also be used to set the shutter integration
+   * time for the camera.
    */
   'OBLIQUE_SURVEY'                                 = 260,
   'MISSION_START'                                  = 300,
   'COMPONENT_ARM_DISARM'                           = 400,
   /**
-   * Turns illuminators ON/OFF. An illuminator is a light source that is used for lighting up dark
-   * areas external to the sytstem: e.g. a torch or searchlight (as opposed to a light source for
-   * illuminating the system itself, e.g. an indicator light).
+   * Turns illuminators ON/OFF. An illuminator is a light source that is used for lighting up dark areas
+   * external to the sytstem: e.g. a torch or searchlight (as opposed to a light source for illuminating
+   * the system itself, e.g. an indicator light).
    */
   'ILLUMINATOR_ON_OFF'                             = 405,
   'GET_HOME_POSITION'                              = 410,
   /**
-   * Inject artificial failure for testing purposes. Note that autopilots should implement an
-   * additional protection before accepting this command such as a specific param setting.
+   * Inject artificial failure for testing purposes. Note that autopilots should implement an additional
+   * protection before accepting this command such as a specific param setting.
    */
   'INJECT_FAILURE'                                 = 420,
   'START_RX_PAIR'                                  = 500,
   /**
-   * Request the interval between messages for a particular MAVLink message ID. The receiver should
-   * ACK the command and then emit its response in a MESSAGE_INTERVAL message.
+   * Request the interval between messages for a particular MAVLink message ID. The receiver should ACK
+   * the command and then emit its response in a MESSAGE_INTERVAL message.
    */
   'GET_MESSAGE_INTERVAL'                           = 510,
   /**
@@ -832,20 +816,20 @@ export enum MavCmd {
    */
   'REQUEST_MESSAGE'                                = 512,
   /**
-   * Request MAVLink protocol version compatibility. All receivers should ACK the command and then
-   * emit their capabilities in an PROTOCOL_VERSION message
+   * Request MAVLink protocol version compatibility. All receivers should ACK the command and then emit
+   * their capabilities in an PROTOCOL_VERSION message
    */
   'REQUEST_PROTOCOL_VERSION'                       = 519,
   /**
-   * Request autopilot capabilities. The receiver should ACK the command and then emit its
-   * capabilities in an AUTOPILOT_VERSION message
+   * Request autopilot capabilities. The receiver should ACK the command and then emit its capabilities
+   * in an AUTOPILOT_VERSION message
    */
   'REQUEST_AUTOPILOT_CAPABILITIES'                 = 520,
   'REQUEST_CAMERA_INFORMATION'                     = 521,
   'REQUEST_CAMERA_SETTINGS'                        = 522,
   /**
-   * Request storage information (STORAGE_INFORMATION). Use the command's target_component to target
-   * a specific component's storage.
+   * Request storage information (STORAGE_INFORMATION). Use the command's target_component to target a
+   * specific component's storage.
    */
   'REQUEST_STORAGE_INFORMATION'                    = 525,
   /**
@@ -866,31 +850,31 @@ export enum MavCmd {
   'SET_CAMERA_FOCUS'                               = 532,
   'JUMP_TAG'                                       = 600,
   /**
-   * Jump to the matching tag in the mission list. Repeat this action for the specified number of
-   * times. A mission should contain a single matching tag for each jump. If this is not the case
-   * then a jump to a missing tag should complete the mission, and a jump where there are multiple
-   * matching tags should always select the one with the lowest mission sequence number.
+   * Jump to the matching tag in the mission list. Repeat this action for the specified number of times.
+   * A mission should contain a single matching tag for each jump. If this is not the case then a jump to
+   * a missing tag should complete the mission, and a jump where there are multiple matching tags should
+   * always select the one with the lowest mission sequence number.
    */
   'DO_JUMP_TAG'                                    = 601,
   /**
-   * Request to start or end a parameter transaction. Multiple kinds of transport layers can be used
-   * to exchange parameters in the transaction (param, param_ext and mavftp). The command response
-   * can either be a success/failure or an in progress in case the receiving side takes some time to
-   * apply the parameters.
+   * Request to start or end a parameter transaction. Multiple kinds of transport layers can be used to
+   * exchange parameters in the transaction (param, param_ext and mavftp). The command response can
+   * either be a success/failure or an in progress in case the receiving side takes some time to apply
+   * the parameters.
    */
   'PARAM_TRANSACTION'                              = 900,
   /**
-   * High level setpoint to be sent to a gimbal manager to set a gimbal attitude. It is possible to
-   * set combinations of the values below. E.g. an angle as well as a desired angular rate can be
-   * used to get to this angle at a certain angular rate, or an angular rate only will result in
-   * continuous turning. NaN is to be used to signal unset. Note: a gimbal is never to react to this
-   * command but only the gimbal manager.
+   * High level setpoint to be sent to a gimbal manager to set a gimbal attitude. It is possible to set
+   * combinations of the values below. E.g. an angle as well as a desired angular rate can be used to get
+   * to this angle at a certain angular rate, or an angular rate only will result in continuous turning.
+   * NaN is to be used to signal unset. Note: a gimbal is never to react to this command but only the
+   * gimbal manager.
    */
   'DO_GIMBAL_MANAGER_PITCHYAW'                     = 1000,
   'DO_GIMBAL_MANAGER_CONFIGURE'                    = 1001,
   /**
-   * Start image capture sequence. Sends CAMERA_IMAGE_CAPTURED after each capture. Use NaN for
-   * reserved values.
+   * Start image capture sequence. Sends CAMERA_IMAGE_CAPTURED after each capture. Use NaN for reserved
+   * values.
    */
   'IMAGE_START_CAPTURE'                            = 2000,
   'IMAGE_STOP_CAPTURE'                             = 2001,
@@ -902,8 +886,8 @@ export enum MavCmd {
    */
   'CAMERA_TRACK_POINT'                             = 2004,
   /**
-   * If the camera supports rectangle visual tracking (CAMERA_CAP_FLAGS_HAS_TRACKING_RECTANGLE is
-   * set), this command allows to initiate the tracking.
+   * If the camera supports rectangle visual tracking (CAMERA_CAP_FLAGS_HAS_TRACKING_RECTANGLE is set),
+   * this command allows to initiate the tracking.
    */
   'CAMERA_TRACK_RECTANGLE'                         = 2005,
   'CAMERA_STOP_TRACKING'                           = 2010,
@@ -920,50 +904,49 @@ export enum MavCmd {
   'PANORAMA_CREATE'                                = 2800,
   'DO_VTOL_TRANSITION'                             = 3000,
   /**
-   * Request authorization to arm the vehicle to a external entity, the arm authorizer is responsible
-   * to request all data that is needs from the vehicle before authorize or deny the request. If
-   * approved the progress of command_ack message should be set with period of time that this
-   * authorization is valid in seconds or in case it was denied it should be set with one of the
-   * reasons in ARM_AUTH_DENIED_REASON.
+   * Request authorization to arm the vehicle to a external entity, the arm authorizer is responsible to
+   * request all data that is needs from the vehicle before authorize or deny the request. If approved
+   * the progress of command_ack message should be set with period of time that this authorization is
+   * valid in seconds or in case it was denied it should be set with one of the reasons in
+   * ARM_AUTH_DENIED_REASON.
    */
   'ARM_AUTHORIZATION_REQUEST'                      = 3001,
   /**
-   * This command sets the submode to standard guided when vehicle is in guided mode. The vehicle
-   * holds position and altitude and the user can input the desired velocities along all three axes.
-   * 
+   * This command sets the submode to standard guided when vehicle is in guided mode. The vehicle holds
+   * position and altitude and the user can input the desired velocities along all three axes.
    */
   'SET_GUIDED_SUBMODE_STANDARD'                    = 4000,
   /**
-   * This command sets submode circle when vehicle is in guided mode. Vehicle flies along a circle
-   * facing the center of the circle. The user can input the velocity along the circle and change the
-   * radius. If no input is given the vehicle will hold position.
+   * This command sets submode circle when vehicle is in guided mode. Vehicle flies along a circle facing
+   * the center of the circle. The user can input the velocity along the circle and change the radius. If
+   * no input is given the vehicle will hold position.
    */
   'SET_GUIDED_SUBMODE_CIRCLE'                      = 4001,
   'CONDITION_GATE'                                 = 4501,
   /**
-   * Fence return point (there can only be one such point in a geofence definition). If rally points
-   * are supported they should be used instead.
+   * Fence return point (there can only be one such point in a geofence definition). If rally points are
+   * supported they should be used instead.
    */
   'NAV_FENCE_RETURN_POINT'                         = 5000,
   /**
-   * Fence vertex for an inclusion polygon (the polygon must not be self-intersecting). The vehicle
-   * must stay within this area. Minimum of 3 vertices required.
+   * Fence vertex for an inclusion polygon (the polygon must not be self-intersecting). The vehicle must
+   * stay within this area. Minimum of 3 vertices required.
    */
   'NAV_FENCE_POLYGON_VERTEX_INCLUSION'             = 5001,
   /**
-   * Fence vertex for an exclusion polygon (the polygon must not be self-intersecting). The vehicle
-   * must stay outside this area. Minimum of 3 vertices required.
+   * Fence vertex for an exclusion polygon (the polygon must not be self-intersecting). The vehicle must
+   * stay outside this area. Minimum of 3 vertices required.
    */
   'NAV_FENCE_POLYGON_VERTEX_EXCLUSION'             = 5002,
   'NAV_FENCE_CIRCLE_INCLUSION'                     = 5003,
   'NAV_FENCE_CIRCLE_EXCLUSION'                     = 5004,
   'NAV_RALLY_POINT'                                = 5100,
   /**
-   * Commands the vehicle to respond with a sequence of messages UAVCAN_NODE_INFO, one message per
-   * every UAVCAN node that is online. Note that some of the response messages can be lost, which the
-   * receiver can detect easily by checking whether every received UAVCAN_NODE_STATUS has a matching
-   * message UAVCAN_NODE_INFO received earlier; if not, this command should be sent again in order to
-   * request re-transmission of the node information messages.
+   * Commands the vehicle to respond with a sequence of messages UAVCAN_NODE_INFO, one message per every
+   * UAVCAN node that is online. Note that some of the response messages can be lost, which the receiver
+   * can detect easily by checking whether every received UAVCAN_NODE_STATUS has a matching message
+   * UAVCAN_NODE_INFO received earlier; if not, this command should be sent again in order to request
+   * re-transmission of the node information messages.
    */
   'UAVCAN_GET_NODE_INFO'                           = 5200,
   /**
@@ -974,8 +957,8 @@ export enum MavCmd {
   'PAYLOAD_CONTROL_DEPLOY'                         = 30002,
   /**
    * Magnetometer calibration based on provided known yaw. This allows for fast calibration using WMM
-   * field tables in the vehicle, given only the known yaw of the vehicle. If Latitude and longitude
-   * are both zero then use the current vehicle location.
+   * field tables in the vehicle, given only the known yaw of the vehicle. If Latitude and longitude are
+   * both zero then use the current vehicle location.
    */
   'FIXED_MAG_CAL_YAW'                              = 42006,
   'DO_WINCH'                                       = 42600,
@@ -1010,28 +993,28 @@ export enum MavCmd {
    */
   'SPATIAL_USER_5'                                 = 31009,
   /**
-   * User defined command. Ground Station will not show the Vehicle as flying through this item.
-   * Example: MAV_CMD_DO_SET_PARAMETER item.
+   * User defined command. Ground Station will not show the Vehicle as flying through this item. Example:
+   * MAV_CMD_DO_SET_PARAMETER item.
    */
   'USER_1'                                         = 31010,
   /**
-   * User defined command. Ground Station will not show the Vehicle as flying through this item.
-   * Example: MAV_CMD_DO_SET_PARAMETER item.
+   * User defined command. Ground Station will not show the Vehicle as flying through this item. Example:
+   * MAV_CMD_DO_SET_PARAMETER item.
    */
   'USER_2'                                         = 31011,
   /**
-   * User defined command. Ground Station will not show the Vehicle as flying through this item.
-   * Example: MAV_CMD_DO_SET_PARAMETER item.
+   * User defined command. Ground Station will not show the Vehicle as flying through this item. Example:
+   * MAV_CMD_DO_SET_PARAMETER item.
    */
   'USER_3'                                         = 31012,
   /**
-   * User defined command. Ground Station will not show the Vehicle as flying through this item.
-   * Example: MAV_CMD_DO_SET_PARAMETER item.
+   * User defined command. Ground Station will not show the Vehicle as flying through this item. Example:
+   * MAV_CMD_DO_SET_PARAMETER item.
    */
   'USER_4'                                         = 31013,
   /**
-   * User defined command. Ground Station will not show the Vehicle as flying through this item.
-   * Example: MAV_CMD_DO_SET_PARAMETER item.
+   * User defined command. Ground Station will not show the Vehicle as flying through this item. Example:
+   * MAV_CMD_DO_SET_PARAMETER item.
    */
   'USER_5'                                         = 31014,
 }
@@ -1051,8 +1034,8 @@ export enum MavDataStream {
   'EXTRA3'                                         = 12,
 }
 /**
- * The ROI (region of interest) for the vehicle. This can be  be used by the vehicle for camera/vehicle
- * attitude alignment (see  MAV_CMD_NAV_ROI).
+ * The ROI (region of interest) for the vehicle. This can be be used by the vehicle for camera/vehicle
+ * attitude alignment (see MAV_CMD_NAV_ROI).
  */
 export enum MavRoi {
   'NONE'                                           = 0,
@@ -1076,8 +1059,7 @@ export enum MavCmdAck {
   'ERR_COORDINATE_FRAME_NOT_SUPPORTED'             = 4,
   /**
    * The coordinate frame of this command is ok, but he coordinate values exceed the safety limits of
-   * this system. This is a generic error, please use the more specific error messages below if
-   * possible.
+   * this system. This is a generic error, please use the more specific error messages below if possible.
    */
   'ERR_COORDINATES_OUT_OF_RANGE'                   = 5,
   'ERR_X_LAT_OUT_OF_RANGE'                         = 6,
@@ -1122,29 +1104,29 @@ export enum MavResult {
   'ACCEPTED'                                       = 0,
   /**
    * Command is valid, but cannot be executed at this time. This is used to indicate a problem that
-   * should be fixed just by waiting (e.g. a state machine is busy, can't arm because have not got
-   * GPS lock, etc.). Retrying later should work.
+   * should be fixed just by waiting (e.g. a state machine is busy, can't arm because have not got GPS
+   * lock, etc.). Retrying later should work.
    */
   'TEMPORARILY_REJECTED'                           = 1,
   /**
-   * Command is invalid (is supported but has invalid parameters). Retrying same command and
-   * parameters will not work.
+   * Command is invalid (is supported but has invalid parameters). Retrying same command and parameters
+   * will not work.
    */
   'DENIED'                                         = 2,
   'UNSUPPORTED'                                    = 3,
   /**
-   * Command is valid, but execution has failed. This is used to indicate any non-temporary or
-   * unexpected problem, i.e. any problem that must be fixed before the command can succeed/be
-   * retried. For example, attempting to write a file when out of memory, attempting to arm when
-   * sensors are not calibrated, etc.
+   * Command is valid, but execution has failed. This is used to indicate any non-temporary or unexpected
+   * problem, i.e. any problem that must be fixed before the command can succeed/be retried. For example,
+   * attempting to write a file when out of memory, attempting to arm when sensors are not calibrated,
+   * etc.
    */
   'FAILED'                                         = 4,
   /**
-   * Command is valid and is being executed. This will be followed by further progress updates, i.e.
-   * the component may send further COMMAND_ACK messages with result MAV_RESULT_IN_PROGRESS (at a
-   * rate decided by the implementation), and must terminate by sending a COMMAND_ACK message with
-   * final result of the operation. The COMMAND_ACK.progress field can be used to indicate the
-   * progress of the operation.
+   * Command is valid and is being executed. This will be followed by further progress updates, i.e. the
+   * component may send further COMMAND_ACK messages with result MAV_RESULT_IN_PROGRESS (at a rate
+   * decided by the implementation), and must terminate by sending a COMMAND_ACK message with final
+   * result of the operation. The COMMAND_ACK.progress field can be used to indicate the progress of the
+   * operation.
    */
   'IN_PROGRESS'                                    = 5,
   'CANCELLED'                                      = 6,
@@ -1181,19 +1163,19 @@ export enum MavSeverity {
   'CRITICAL'                                       = 2,
   'ERROR'                                          = 3,
   /**
-   * Indicates about a possible future error if this is not resolved within a given timeframe.
-   * Example would be a low battery warning.
+   * Indicates about a possible future error if this is not resolved within a given timeframe. Example
+   * would be a low battery warning.
    */
   'WARNING'                                        = 4,
   /**
-   * An unusual event has occurred, though not an error condition. This should be investigated for
-   * the root cause.
+   * An unusual event has occurred, though not an error condition. This should be investigated for the
+   * root cause.
    */
   'NOTICE'                                         = 5,
   'INFO'                                           = 6,
   /**
-   * Useful non-operational messages that can assist in debugging. These should not occur during
-   * normal operation.
+   * Useful non-operational messages that can assist in debugging. These should not occur during normal
+   * operation.
    */
   'DEBUG'                                          = 7,
 }
@@ -1399,8 +1381,8 @@ export enum MavBatteryMode {
   'UNKNOWN'                                        = 0,
   'AUTO_DISCHARGING'                               = 1,
   /**
-   * Battery in hot-swap mode (current limited to prevent spikes that might damage sensitive
-   * electrical circuits).
+   * Battery in hot-swap mode (current limited to prevent spikes that might damage sensitive electrical
+   * circuits).
    */
   'HOT_SWAP'                                       = 2,
 }
@@ -1413,8 +1395,8 @@ export enum MavBatteryFault {
   'DEEP_DISCHARGE'                                 = 1,
   'SPIKES'                                         = 2,
   /**
-   * One or more cells have failed. Battery should also report MAV_BATTERY_CHARGE_STATE_FAILE (and
-   * should not be used).
+   * One or more cells have failed. Battery should also report MAV_BATTERY_CHARGE_STATE_FAILE (and should
+   * not be used).
    */
   'CELL_FAIL'                                      = 4,
   'OVER_CURRENT'                                   = 8,
@@ -1460,8 +1442,8 @@ export enum MavGeneratorStatusFlag {
    */
   'BATTERY_OVERCHARGE_CURRENT_FAULT'               = 65536,
   /**
-   * Generator controller exceeded it's overvoltage threshold and shutdown to prevent it exceeding
-   * the voltage rating.
+   * Generator controller exceeded it's overvoltage threshold and shutdown to prevent it exceeding the
+   * voltage rating.
    */
   'OVERVOLTAGE_FAULT'                              = 131072,
   'BATTERY_UNDERVOLT_FAULT'                        = 262144,
@@ -1563,15 +1545,7 @@ export enum EstimatorStatusFlags {
    * optical flow)
    */
   'CONST_POS_MODE'                                 = 128,
-  /**
-   * True if the EKF has sufficient data to enter a mode that will provide a (relative) position
-   * estimate
-   */
   'PRED_POS_HORIZ_REL'                             = 256,
-  /**
-   * True if the EKF has sufficient data to enter a mode that will provide a (absolute) position
-   * estimate
-   */
   'PRED_POS_HORIZ_ABS'                             = 512,
   'GPS_GLITCH'                                     = 1024,
   'ACCEL_ERROR'                                    = 2048,
@@ -1661,10 +1635,6 @@ export enum LandingTargetType {
   'LIGHT_BEACON'                                   = 0,
   'RADIO_BEACON'                                   = 1,
   'VISION_FIDUCIAL'                                = 2,
-  /**
-   * Landing target represented by a pre-defined visual shape/feature (ex: X-marker, H-marker,
-   * square)
-   */
   'VISION_OTHER'                                   = 3,
 }
 /**
@@ -1751,9 +1721,9 @@ export enum CameraZoomType {
   'CONTINUOUS'                                     = 1,
   'RANGE'                                          = 2,
   /**
-   * Zoom value/variable focal length in milimetres. Note that there is no message to get the valid
-   * zoom range of the camera, so this can type can only be used for cameras where the zoom range is
-   * known (implying that this cannot reliably be used in a GCS for an arbitrary camera)
+   * Zoom value/variable focal length in milimetres. Note that there is no message to get the valid zoom
+   * range of the camera, so this can type can only be used for cameras where the zoom range is known
+   * (implying that this cannot reliably be used in a GCS for an arbitrary camera)
    */
   'FOCAL_LENGTH'                                   = 3,
 }
@@ -1763,15 +1733,15 @@ export enum CameraZoomType {
 export enum SetFocusType {
   'STEP'                                           = 0,
   /**
-   * Continuous focus up/down until stopped (-1 for focusing in, 1 for focusing out towards infinity,
-   * 0 to stop focusing)
+   * Continuous focus up/down until stopped (-1 for focusing in, 1 for focusing out towards infinity, 0
+   * to stop focusing)
    */
   'CONTINUOUS'                                     = 1,
   'RANGE'                                          = 2,
   /**
-   * Focus value in metres. Note that there is no message to get the valid focus range of the camera,
-   * so this can type can only be used for cameras where the range is known (implying that this
-   * cannot reliably be used in a GCS for an arbitrary camera).
+   * Focus value in metres. Note that there is no message to get the valid focus range of the camera, so
+   * this can type can only be used for cameras where the range is known (implying that this cannot
+   * reliably be used in a GCS for an arbitrary camera).
    */
   'METERS'                                         = 3,
 }
@@ -1785,8 +1755,8 @@ export enum ParamAck {
   /**
    * Parameter value received but not yet set/accepted. A subsequent PARAM_ACK_TRANSACTION or
    * PARAM_EXT_ACK with the final result will follow once operation is completed. This is returned
-   * immediately for parameters that take longer to set, indicating taht the the parameter was
-   * recieved and does not need to be resent.
+   * immediately for parameters that take longer to set, indicating taht the the parameter was recieved
+   * and does not need to be resent.
    */
   'IN_PROGRESS'                                    = 3,
 }
@@ -1797,8 +1767,8 @@ export enum CameraMode {
   'IMAGE'                                          = 0,
   'VIDEO'                                          = 1,
   /**
-   * Camera is in image survey capture mode. It allows for camera controller to do specific settings
-   * for surveys.
+   * Camera is in image survey capture mode. It allows for camera controller to do specific settings for
+   * surveys.
    */
   'IMAGE_SURVEY'                                   = 2,
 }
@@ -1811,8 +1781,8 @@ export enum MavArmAuthDeniedReason {
   'INVALID_WAYPOINT'                               = 2,
   'TIMEOUT'                                        = 3,
   /**
-   * Airspace of the mission in use by another vehicle, second result parameter can have the waypoint
-   * id that caused it to be denied.
+   * Airspace of the mission in use by another vehicle, second result parameter can have the waypoint id
+   * that caused it to be denied.
    */
   'AIRSPACE_IN_USE'                                = 4,
   'BAD_WEATHER'                                    = 5,
@@ -1906,19 +1876,18 @@ export enum CellularStatusFlag {
   'ENABLED'                                        = 7,
   'SEARCHING'                                      = 8,
   /**
-   * Modem is registered with a network provider, and data connections and messaging may be available
-   * for use
+   * Modem is registered with a network provider, and data connections and messaging may be available for
+   * use
    */
   'REGISTERED'                                     = 9,
   /**
-   * Modem is disconnecting and deactivating the last active packet data bearer. This state will not
-   * be entered if more than one packet data bearer is active and one of the active bearers is
-   * deactivated
+   * Modem is disconnecting and deactivating the last active packet data bearer. This state will not be
+   * entered if more than one packet data bearer is active and one of the active bearers is deactivated
    */
   'DISCONNECTING'                                  = 10,
   /**
-   * Modem is activating and connecting the first packet data bearer. Subsequent bearer activations
-   * when another bearer is already active do not cause this state to be entered
+   * Modem is activating and connecting the first packet data bearer. Subsequent bearer activations when
+   * another bearer is already active do not cause this state to be entered
    */
   'CONNECTING'                                     = 11,
   'CONNECTED'                                      = 12,
@@ -1939,8 +1908,8 @@ export enum PrecisionLandMode {
   'DISABLED'                                       = 0,
   'OPPORTUNISTIC'                                  = 1,
   /**
-   * Use precision landing, searching for beacon if not found when land command accepted (land
-   * normally if beacon cannot be found).
+   * Use precision landing, searching for beacon if not found when land command accepted (land normally
+   * if beacon cannot be found).
    */
   'REQUIRED'                                       = 2,
 }
@@ -2290,8 +2259,8 @@ export enum AisFlags {
   'HIGH_VELOCITY'                                  = 8,
   'VALID_TURN_RATE'                                = 16,
   /**
-   * Only the sign of the returned turn rate value is valid, either greater than 5deg/30s or less
-   * than -5deg/30s
+   * Only the sign of the returned turn rate value is valid, either greater than 5deg/30s or less than
+   * -5deg/30s
    */
   'TURN_RATE_SIGN_ONLY'                            = 32,
   'VALID_DIMENSIONS'                               = 64,
@@ -2403,18 +2372,18 @@ export class SysStatus extends MavLinkData {
   ]
 
   /**
-   * Bitmap showing which onboard controllers and sensors are present. Value of 0: not present. Value
-   * of 1: present.
+   * Bitmap showing which onboard controllers and sensors are present. Value of 0: not present. Value of
+   * 1: present.
    */
   onboardControlSensorsPresent: MavSysStatusSensor
   /**
-   * Bitmap showing which onboard controllers and sensors are enabled: Value of 0: not enabled. Value
-   * of 1: enabled.
+   * Bitmap showing which onboard controllers and sensors are enabled: Value of 0: not enabled. Value of
+   * 1: enabled.
    */
   onboardControlSensorsEnabled: MavSysStatusSensor
   /**
-   * Bitmap showing which onboard controllers and sensors have an error (or are operational). Value
-   * of 0: error. Value of 1: healthy.
+   * Bitmap showing which onboard controllers and sensors have an error (or are operational). Value of 0:
+   * error. Value of 1: healthy.
    */
   onboardControlSensorsHealth: MavSysStatusSensor
   /**
@@ -2503,8 +2472,8 @@ export class Ping extends MavLinkData {
   ]
 
   /**
-   * Timestamp (UNIX Epoch time or time since system boot). The receiving end can infer timestamp
-   * format (since 1.1.1970 or since system boot) by checking for the magnitude of the number.
+   * Timestamp (UNIX Epoch time or time since system boot). The receiving end can infer timestamp format
+   * (since 1.1.1970 or since system boot) by checking for the magnitude of the number.
    */
   timeUsec: uint64_t
   /**
@@ -2512,8 +2481,8 @@ export class Ping extends MavLinkData {
    */
   seq: uint32_t
   /**
-   * 0: request ping from all receiving systems. If greater than 0: message is a ping response and
-   * number is the system id of the requesting system
+   * 0: request ping from all receiving systems. If greater than 0: message is a ping response and number
+   * is the system id of the requesting system
    */
   targetSystem: uint8_t
   /**
@@ -2546,14 +2515,14 @@ export class ChangeOperatorControl extends MavLinkData {
    */
   controlRequest: uint8_t
   /**
-   * 0: key as plaintext, 1-255: future, different hashing/encryption variants. The GCS should in
-   * general use the safest mode possible initially and then gradually move down the encryption level
-   * if it gets a NACK message indicating an encryption mismatch.
+   * 0: key as plaintext, 1-255: future, different hashing/encryption variants. The GCS should in general
+   * use the safest mode possible initially and then gradually move down the encryption level if it gets
+   * a NACK message indicating an encryption mismatch.
    */
   version: uint8_t
   /**
-   * Password / Key, depending on version plaintext or encrypted. 25 or less characters, NULL
-   * terminated. The characters may involve A-Z, a-z, 0-9, and "!?,.-"
+   * Password / Key, depending on version plaintext or encrypted. 25 or less characters, NULL terminated.
+   * The characters may involve A-Z, a-z, 0-9, and "!?,.-"
    */
   passkey: char[]
 }
@@ -2726,9 +2695,9 @@ export class ParamAckTransaction extends MavLinkData {
    */
   targetComponent: uint8_t
   /**
-   * Parameter id, terminated by NULL if the length is less than 16 human-readable chars and WITHOUT
-   * null termination (NULL) byte if the length is exactly 16 chars - applications have to provide
-   * 16+1 bytes storage if the ID is stored as string
+   * Parameter id, terminated by NULL if the length is less than 16 human-readable chars and WITHOUT null
+   * termination (NULL) byte if the length is exactly 16 chars - applications have to provide 16+1 bytes
+   * storage if the ID is stored as string
    */
   paramId: char[]
   /**
@@ -2779,8 +2748,7 @@ export class ParamRequestRead extends MavLinkData {
    */
   paramId: char[]
   /**
-   * Parameter index. Send -1 to use the param ID field as identifier (else the param id will be
-   * ignored)
+   * Parameter index. Send -1 to use the param ID field as identifier (else the param id will be ignored)
    */
   paramIndex: int16_t
 }
@@ -2898,7 +2866,7 @@ export class ParamSet extends MavLinkData {
 }
 
 /**
- * The global position, as returned by the Global Positioning System (GPS). This is  NOT the global
+ * The global position, as returned by the Global Positioning System (GPS). This is NOT the global
  * position estimate of the system, but rather a RAW sensor value. See message GLOBAL_POSITION for the
  * global position estimate.
  */
@@ -2926,8 +2894,8 @@ export class GpsRawInt extends MavLinkData {
   ]
 
   /**
-   * Timestamp (UNIX Epoch time or time since system boot). The receiving end can infer timestamp
-   * format (since 1.1.1970 or since system boot) by checking for the magnitude of the number.
+   * Timestamp (UNIX Epoch time or time since system boot). The receiving end can infer timestamp format
+   * (since 1.1.1970 or since system boot) by checking for the magnitude of the number.
    */
   timeUsec: uint64_t
   /**
@@ -2960,8 +2928,8 @@ export class GpsRawInt extends MavLinkData {
    */
   vel: uint16_t
   /**
-   * Course over ground (NOT heading, but direction of movement) in degrees * 100, 0.0..359.99
-   * degrees. If unknown, set to: UINT16_MAX
+   * Course over ground (NOT heading, but direction of movement) in degrees * 100, 0.0..359.99 degrees.
+   * If unknown, set to: UINT16_MAX
    */
   cog: uint16_t
   /**
@@ -3102,8 +3070,7 @@ export class ScaledImu extends MavLinkData {
    */
   zmag: int16_t
   /**
-   * Temperature, 0: IMU does not provide temperature values. If the IMU is at 0C it must send 1
-   * (0.01C).
+   * Temperature, 0: IMU does not provide temperature values. If the IMU is at 0C it must send 1 (0.01C).
    */
   temperature: int16_t
 }
@@ -3133,8 +3100,8 @@ export class RawImu extends MavLinkData {
   ]
 
   /**
-   * Timestamp (UNIX Epoch time or time since system boot). The receiving end can infer timestamp
-   * format (since 1.1.1970 or since system boot) by checking for the magnitude of the number.
+   * Timestamp (UNIX Epoch time or time since system boot). The receiving end can infer timestamp format
+   * (since 1.1.1970 or since system boot) by checking for the magnitude of the number.
    */
   timeUsec: uint64_t
   /**
@@ -3179,8 +3146,7 @@ export class RawImu extends MavLinkData {
    */
   id: uint8_t
   /**
-   * Temperature, 0: IMU does not provide temperature values. If the IMU is at 0C it must send 1
-   * (0.01C).
+   * Temperature, 0: IMU does not provide temperature values. If the IMU is at 0C it must send 1 (0.01C).
    */
   temperature: int16_t
 }
@@ -3202,8 +3168,8 @@ export class RawPressure extends MavLinkData {
   ]
 
   /**
-   * Timestamp (UNIX Epoch time or time since system boot). The receiving end can infer timestamp
-   * format (since 1.1.1970 or since system boot) by checking for the magnitude of the number.
+   * Timestamp (UNIX Epoch time or time since system boot). The receiving end can infer timestamp format
+   * (since 1.1.1970 or since system boot) by checking for the magnitude of the number.
    */
   timeUsec: uint64_t
   /**
@@ -3362,12 +3328,12 @@ export class AttitudeQuaternion extends MavLinkData {
    */
   yawspeed: float
   /**
-   * Rotation offset by which the attitude quaternion and angular speed vector should be rotated for
-   * user display (quaternion with [w, x, y, z] order, zero-rotation is [1, 0, 0, 0], send [0, 0, 0,
-   * 0] if field not supported). This field is intended for systems in which the reference attitude
-   * may change during flight. For example, tailsitters VTOLs rotate their reference attitude by 90
-   * degrees between hover mode and fixed wing mode, thus repr_offset_q is equal to [1, 0, 0, 0] in
-   * hover mode and equal to [0.7071, 0, 0.7071, 0] in fixed wing mode.
+   * Rotation offset by which the attitude quaternion and angular speed vector should be rotated for user
+   * display (quaternion with [w, x, y, z] order, zero-rotation is [1, 0, 0, 0], send [0, 0, 0, 0] if
+   * field not supported). This field is intended for systems in which the reference attitude may change
+   * during flight. For example, tailsitters VTOLs rotate their reference attitude by 90 degrees between
+   * hover mode and fixed wing mode, thus repr_offset_q is equal to [1, 0, 0, 0] in hover mode and equal
+   * to [0.7071, 0, 0.7071, 0] in fixed wing mode.
    */
   reprOffsetQ: float[]
 }
@@ -3651,8 +3617,8 @@ export class ServoOutputRaw extends MavLinkData {
   ]
 
   /**
-   * Timestamp (UNIX Epoch time or time since system boot). The receiving end can infer timestamp
-   * format (since 1.1.1970 or since system boot) by checking for the magnitude of the number.
+   * Timestamp (UNIX Epoch time or time since system boot). The receiving end can infer timestamp format
+   * (since 1.1.1970 or since system boot) by checking for the magnitude of the number.
    */
   timeUsec: uint32_t
   /**
@@ -3805,7 +3771,7 @@ export class MissionWritePartialList extends MavLinkData {
 }
 
 /**
- * Message encoding a mission item. This message is emitted to announce  the presence of a mission item
+ * Message encoding a mission item. This message is emitted to announce the presence of a mission item
  * and to set a mission item on the system. The mission item can be either in x, y, z meters (type:
  * LOCAL) or x:lat, y:lon, z:altitude. Local frame is Z-down, right handed (NED), global frame is Z-up,
  * right handed (ENU). NaN may be used to indicate an optional/default value (e.g. to use the system's
@@ -4153,8 +4119,8 @@ export class SetGpsGlobalOrigin extends MavLinkData {
    */
   altitude: int32_t
   /**
-   * Timestamp (UNIX Epoch time or time since system boot). The receiving end can infer timestamp
-   * format (since 1.1.1970 or since system boot) by checking for the magnitude of the number.
+   * Timestamp (UNIX Epoch time or time since system boot). The receiving end can infer timestamp format
+   * (since 1.1.1970 or since system boot) by checking for the magnitude of the number.
    */
   timeUsec: uint64_t
 }
@@ -4187,8 +4153,8 @@ export class GpsGlobalOrigin extends MavLinkData {
    */
   altitude: int32_t
   /**
-   * Timestamp (UNIX Epoch time or time since system boot). The receiving end can infer timestamp
-   * format (since 1.1.1970 or since system boot) by checking for the magnitude of the number.
+   * Timestamp (UNIX Epoch time or time since system boot). The receiving end can infer timestamp format
+   * (since 1.1.1970 or since system boot) by checking for the magnitude of the number.
    */
   timeUsec: uint64_t
 }
@@ -4310,8 +4276,8 @@ export class MissionChanged extends MavLinkData {
    */
   startIndex: int16_t
   /**
-   * End index of a partial mission change. -1 is a synonym for the last mission item (i.e. selects
-   * all items from start_index). Ignore field if start_index=-1.
+   * End index of a partial mission change. -1 is a synonym for the last mission item (i.e. selects all
+   * items from start_index). Ignore field if start_index=-1.
    */
   endIndex: int16_t
   /**
@@ -4358,8 +4324,8 @@ export class SafetySetAllowedArea extends MavLinkData {
    */
   targetComponent: uint8_t
   /**
-   * Coordinate frame. Can be either global, GPS, right-handed with Z axis up or local, right handed,
-   * Z axis down.
+   * Coordinate frame. Can be either global, GPS, right-handed with Z axis up or local, right handed, Z
+   * axis down.
    */
   frame: MavFrame
   /**
@@ -4406,8 +4372,8 @@ export class SafetyAllowedArea extends MavLinkData {
   ]
 
   /**
-   * Coordinate frame. Can be either global, GPS, right-handed with Z axis up or local, right handed,
-   * Z axis down.
+   * Coordinate frame. Can be either global, GPS, right-handed with Z axis up or local, right handed, Z
+   * axis down.
    */
   frame: MavFrame
   /**
@@ -4454,8 +4420,8 @@ export class AttitudeQuaternionCov extends MavLinkData {
   ]
 
   /**
-   * Timestamp (UNIX Epoch time or time since system boot). The receiving end can infer timestamp
-   * format (since 1.1.1970 or since system boot) by checking for the magnitude of the number.
+   * Timestamp (UNIX Epoch time or time since system boot). The receiving end can infer timestamp format
+   * (since 1.1.1970 or since system boot) by checking for the magnitude of the number.
    */
   timeUsec: uint64_t
   /**
@@ -4475,9 +4441,9 @@ export class AttitudeQuaternionCov extends MavLinkData {
    */
   yawspeed: float
   /**
-   * Row-major representation of a 3x3 attitude covariance matrix (states: roll, pitch, yaw; first
-   * three entries are the first ROW, next three entries are the second row, etc.). If unknown,
-   * assign NaN value to first element in the array.
+   * Row-major representation of a 3x3 attitude covariance matrix (states: roll, pitch, yaw; first three
+   * entries are the first ROW, next three entries are the second row, etc.). If unknown, assign NaN
+   * value to first element in the array.
    */
   covariance: float[]
 }
@@ -4559,8 +4525,8 @@ export class GlobalPositionIntCov extends MavLinkData {
   ]
 
   /**
-   * Timestamp (UNIX Epoch time or time since system boot). The receiving end can infer timestamp
-   * format (since 1.1.1970 or since system boot) by checking for the magnitude of the number.
+   * Timestamp (UNIX Epoch time or time since system boot). The receiving end can infer timestamp format
+   * (since 1.1.1970 or since system boot) by checking for the magnitude of the number.
    */
   timeUsec: uint64_t
   /**
@@ -4596,9 +4562,9 @@ export class GlobalPositionIntCov extends MavLinkData {
    */
   vz: float
   /**
-   * Row-major representation of a 6x6 position and velocity 6x6 cross-covariance matrix (states:
-   * lat, lon, alt, vx, vy, vz; first six entries are the first ROW, next six entries are the second
-   * row, etc.). If unknown, assign NaN value to first element in the array.
+   * Row-major representation of a 6x6 position and velocity 6x6 cross-covariance matrix (states: lat,
+   * lon, alt, vx, vy, vz; first six entries are the first ROW, next six entries are the second row,
+   * etc.). If unknown, assign NaN value to first element in the array.
    */
   covariance: float[]
 }
@@ -4627,8 +4593,8 @@ export class LocalPositionNedCov extends MavLinkData {
   ]
 
   /**
-   * Timestamp (UNIX Epoch time or time since system boot). The receiving end can infer timestamp
-   * format (since 1.1.1970 or since system boot) by checking for the magnitude of the number.
+   * Timestamp (UNIX Epoch time or time since system boot). The receiving end can infer timestamp format
+   * (since 1.1.1970 or since system boot) by checking for the magnitude of the number.
    */
   timeUsec: uint64_t
   /**
@@ -4672,10 +4638,9 @@ export class LocalPositionNedCov extends MavLinkData {
    */
   az: float
   /**
-   * Row-major representation of position, velocity and acceleration 9x9 cross-covariance matrix
-   * upper right triangle (states: x, y, z, vx, vy, vz, ax, ay, az; first nine entries are the first
-   * ROW, next eight entries are the second row, etc.). If unknown, assign NaN value to first element
-   * in the array.
+   * Row-major representation of position, velocity and acceleration 9x9 cross-covariance matrix upper
+   * right triangle (states: x, y, z, vx, vy, vz, ax, ay, az; first nine entries are the first ROW, next
+   * eight entries are the second row, etc.). If unknown, assign NaN value to first element in the array.
    */
   covariance: float[]
 }
@@ -4719,8 +4684,8 @@ export class RcChannels extends MavLinkData {
   timeBootMs: uint32_t
   /**
    * Total number of RC channels being received. This can be larger than 18, indicating that more
-   * channels are available but not given in this message. This value should be 0 when no RC channels
-   * are available.
+   * channels are available but not given in this message. This value should be 0 when no RC channels are
+   * available.
    */
   chancount: uint8_t
   /**
@@ -4894,32 +4859,32 @@ export class ManualControl extends MavLinkData {
   target: uint8_t
   /**
    * X-axis, normalized to the range [-1000,1000]. A value of INT16_MAX indicates that this axis is
-   * invalid. Generally corresponds to forward(1000)-backward(-1000) movement on a joystick and the
-   * pitch of a vehicle.
+   * invalid. Generally corresponds to forward(1000)-backward(-1000) movement on a joystick and the pitch
+   * of a vehicle.
    */
   x: int16_t
   /**
    * Y-axis, normalized to the range [-1000,1000]. A value of INT16_MAX indicates that this axis is
-   * invalid. Generally corresponds to left(-1000)-right(1000) movement on a joystick and the roll of
-   * a vehicle.
+   * invalid. Generally corresponds to left(-1000)-right(1000) movement on a joystick and the roll of a
+   * vehicle.
    */
   y: int16_t
   /**
    * Z-axis, normalized to the range [-1000,1000]. A value of INT16_MAX indicates that this axis is
    * invalid. Generally corresponds to a separate slider movement with maximum being 1000 and minimum
-   * being -1000 on a joystick and the thrust of a vehicle. Positive values are positive thrust,
-   * negative values are negative thrust.
+   * being -1000 on a joystick and the thrust of a vehicle. Positive values are positive thrust, negative
+   * values are negative thrust.
    */
   z: int16_t
   /**
    * R-axis, normalized to the range [-1000,1000]. A value of INT16_MAX indicates that this axis is
-   * invalid. Generally corresponds to a twisting of the joystick, with counter-clockwise being 1000
-   * and clockwise being -1000, and the yaw of a vehicle.
+   * invalid. Generally corresponds to a twisting of the joystick, with counter-clockwise being 1000 and
+   * clockwise being -1000, and the yaw of a vehicle.
    */
   r: int16_t
   /**
-   * A bitfield corresponding to the joystick buttons' current state, 1 for pressed, 0 for released.
-   * The lowest bit corresponds to Button 1.
+   * A bitfield corresponding to the joystick buttons' current state, 1 for pressed, 0 for released. The
+   * lowest bit corresponds to Button 1.
    */
   buttons: uint16_t
 }
@@ -4966,99 +4931,99 @@ export class RcChannelsOverride extends MavLinkData {
    */
   targetComponent: uint8_t
   /**
-   * RC channel 1 value. A value of UINT16_MAX means to ignore this field. A value of 0 means to
-   * release this channel back to the RC radio.
+   * RC channel 1 value. A value of UINT16_MAX means to ignore this field. A value of 0 means to release
+   * this channel back to the RC radio.
    */
   chan1Raw: uint16_t
   /**
-   * RC channel 2 value. A value of UINT16_MAX means to ignore this field. A value of 0 means to
-   * release this channel back to the RC radio.
+   * RC channel 2 value. A value of UINT16_MAX means to ignore this field. A value of 0 means to release
+   * this channel back to the RC radio.
    */
   chan2Raw: uint16_t
   /**
-   * RC channel 3 value. A value of UINT16_MAX means to ignore this field. A value of 0 means to
-   * release this channel back to the RC radio.
+   * RC channel 3 value. A value of UINT16_MAX means to ignore this field. A value of 0 means to release
+   * this channel back to the RC radio.
    */
   chan3Raw: uint16_t
   /**
-   * RC channel 4 value. A value of UINT16_MAX means to ignore this field. A value of 0 means to
-   * release this channel back to the RC radio.
+   * RC channel 4 value. A value of UINT16_MAX means to ignore this field. A value of 0 means to release
+   * this channel back to the RC radio.
    */
   chan4Raw: uint16_t
   /**
-   * RC channel 5 value. A value of UINT16_MAX means to ignore this field. A value of 0 means to
-   * release this channel back to the RC radio.
+   * RC channel 5 value. A value of UINT16_MAX means to ignore this field. A value of 0 means to release
+   * this channel back to the RC radio.
    */
   chan5Raw: uint16_t
   /**
-   * RC channel 6 value. A value of UINT16_MAX means to ignore this field. A value of 0 means to
-   * release this channel back to the RC radio.
+   * RC channel 6 value. A value of UINT16_MAX means to ignore this field. A value of 0 means to release
+   * this channel back to the RC radio.
    */
   chan6Raw: uint16_t
   /**
-   * RC channel 7 value. A value of UINT16_MAX means to ignore this field. A value of 0 means to
-   * release this channel back to the RC radio.
+   * RC channel 7 value. A value of UINT16_MAX means to ignore this field. A value of 0 means to release
+   * this channel back to the RC radio.
    */
   chan7Raw: uint16_t
   /**
-   * RC channel 8 value. A value of UINT16_MAX means to ignore this field. A value of 0 means to
-   * release this channel back to the RC radio.
+   * RC channel 8 value. A value of UINT16_MAX means to ignore this field. A value of 0 means to release
+   * this channel back to the RC radio.
    */
   chan8Raw: uint16_t
   /**
-   * RC channel 9 value. A value of 0 or UINT16_MAX means to ignore this field. A value of
-   * UINT16_MAX-1 means to release this channel back to the RC radio.
+   * RC channel 9 value. A value of 0 or UINT16_MAX means to ignore this field. A value of UINT16_MAX-1
+   * means to release this channel back to the RC radio.
    */
   chan9Raw: uint16_t
   /**
-   * RC channel 10 value. A value of 0 or UINT16_MAX means to ignore this field. A value of
-   * UINT16_MAX-1 means to release this channel back to the RC radio.
+   * RC channel 10 value. A value of 0 or UINT16_MAX means to ignore this field. A value of UINT16_MAX-1
+   * means to release this channel back to the RC radio.
    */
   chan10Raw: uint16_t
   /**
-   * RC channel 11 value. A value of 0 or UINT16_MAX means to ignore this field. A value of
-   * UINT16_MAX-1 means to release this channel back to the RC radio.
+   * RC channel 11 value. A value of 0 or UINT16_MAX means to ignore this field. A value of UINT16_MAX-1
+   * means to release this channel back to the RC radio.
    */
   chan11Raw: uint16_t
   /**
-   * RC channel 12 value. A value of 0 or UINT16_MAX means to ignore this field. A value of
-   * UINT16_MAX-1 means to release this channel back to the RC radio.
+   * RC channel 12 value. A value of 0 or UINT16_MAX means to ignore this field. A value of UINT16_MAX-1
+   * means to release this channel back to the RC radio.
    */
   chan12Raw: uint16_t
   /**
-   * RC channel 13 value. A value of 0 or UINT16_MAX means to ignore this field. A value of
-   * UINT16_MAX-1 means to release this channel back to the RC radio.
+   * RC channel 13 value. A value of 0 or UINT16_MAX means to ignore this field. A value of UINT16_MAX-1
+   * means to release this channel back to the RC radio.
    */
   chan13Raw: uint16_t
   /**
-   * RC channel 14 value. A value of 0 or UINT16_MAX means to ignore this field. A value of
-   * UINT16_MAX-1 means to release this channel back to the RC radio.
+   * RC channel 14 value. A value of 0 or UINT16_MAX means to ignore this field. A value of UINT16_MAX-1
+   * means to release this channel back to the RC radio.
    */
   chan14Raw: uint16_t
   /**
-   * RC channel 15 value. A value of 0 or UINT16_MAX means to ignore this field. A value of
-   * UINT16_MAX-1 means to release this channel back to the RC radio.
+   * RC channel 15 value. A value of 0 or UINT16_MAX means to ignore this field. A value of UINT16_MAX-1
+   * means to release this channel back to the RC radio.
    */
   chan15Raw: uint16_t
   /**
-   * RC channel 16 value. A value of 0 or UINT16_MAX means to ignore this field. A value of
-   * UINT16_MAX-1 means to release this channel back to the RC radio.
+   * RC channel 16 value. A value of 0 or UINT16_MAX means to ignore this field. A value of UINT16_MAX-1
+   * means to release this channel back to the RC radio.
    */
   chan16Raw: uint16_t
   /**
-   * RC channel 17 value. A value of 0 or UINT16_MAX means to ignore this field. A value of
-   * UINT16_MAX-1 means to release this channel back to the RC radio.
+   * RC channel 17 value. A value of 0 or UINT16_MAX means to ignore this field. A value of UINT16_MAX-1
+   * means to release this channel back to the RC radio.
    */
   chan17Raw: uint16_t
   /**
-   * RC channel 18 value. A value of 0 or UINT16_MAX means to ignore this field. A value of
-   * UINT16_MAX-1 means to release this channel back to the RC radio.
+   * RC channel 18 value. A value of 0 or UINT16_MAX means to ignore this field. A value of UINT16_MAX-1
+   * means to release this channel back to the RC radio.
    */
   chan18Raw: uint16_t
 }
 
 /**
- * Message encoding a mission item. This message is emitted to announce  the presence of a mission item
+ * Message encoding a mission item. This message is emitted to announce the presence of a mission item
  * and to set a mission item on the system. The mission item can be either in x, y, z meters (type:
  * LOCAL) or x:lat, y:lon, z:altitude. Local frame is Z-down, right handed (NED), global frame is Z-up,
  * right handed (ENU). NaN or INT32_MAX may be used in float/integer params (respectively) to indicate
@@ -5096,8 +5061,8 @@ export class MissionItemInt extends MavLinkData {
    */
   targetComponent: uint8_t
   /**
-   * Waypoint ID (sequence number). Starts at zero. Increases monotonically for each waypoint, no
-   * gaps in the sequence (0,1,2,3,4).
+   * Waypoint ID (sequence number). Starts at zero. Increases monotonically for each waypoint, no gaps in
+   * the sequence (0,1,2,3,4).
    */
   seq: uint16_t
   /**
@@ -5168,8 +5133,8 @@ export class VfrHud extends MavLinkData {
 
   /**
    * Vehicle speed in form appropriate for vehicle type. For standard aircraft this is typically
-   * calibrated airspeed (CAS) or indicated airspeed (IAS) - either of which can be used by a pilot
-   * to estimate stall speed.
+   * calibrated airspeed (CAS) or indicated airspeed (IAS) - either of which can be used by a pilot to
+   * estimate stall speed.
    */
   airspeed: float
   /**
@@ -5366,24 +5331,24 @@ export class CommandAck extends MavLinkData {
    */
   result: MavResult
   /**
-   * WIP: Also used as result_param1, it can be set with an enum containing the errors reasons of why
-   * the command was denied, or the progress percentage when result is MAV_RESULT_IN_PROGRESS (255 if
-   * the progress is unknown).
+   * WIP: Also used as result_param1, it can be set with an enum containing the errors reasons of why the
+   * command was denied, or the progress percentage when result is MAV_RESULT_IN_PROGRESS (255 if the
+   * progress is unknown).
    */
   progress: uint8_t
   /**
-   * WIP: Additional parameter of the result, example: which parameter of MAV_CMD_NAV_WAYPOINT caused
-   * it to be denied.
+   * WIP: Additional parameter of the result, example: which parameter of MAV_CMD_NAV_WAYPOINT caused it
+   * to be denied.
    */
   resultParam2: int32_t
   /**
-   * WIP: System ID of the target recipient. This is the ID of the system that sent the command for
-   * which this COMMAND_ACK is an acknowledgement.
+   * WIP: System ID of the target recipient. This is the ID of the system that sent the command for which
+   * this COMMAND_ACK is an acknowledgement.
    */
   targetSystem: uint8_t
   /**
-   * WIP: Component ID of the target recipient. This is the ID of the system that sent the command
-   * for which this COMMAND_ACK is an acknowledgement.
+   * WIP: Component ID of the target recipient. This is the ID of the system that sent the command for
+   * which this COMMAND_ACK is an acknowledgement.
    */
   targetComponent: uint8_t
 }
@@ -5618,8 +5583,8 @@ export class SetPositionTargetLocalNed extends MavLinkData {
    */
   targetComponent: uint8_t
   /**
-   * Valid options are: MAV_FRAME_LOCAL_NED = 1, MAV_FRAME_LOCAL_OFFSET_NED = 7, MAV_FRAME_BODY_NED =
-   * 8, MAV_FRAME_BODY_OFFSET_NED = 9
+   * Valid options are: MAV_FRAME_LOCAL_NED = 1, MAV_FRAME_LOCAL_OFFSET_NED = 7, MAV_FRAME_BODY_NED = 8,
+   * MAV_FRAME_BODY_OFFSET_NED = 9
    */
   coordinateFrame: MavFrame
   /**
@@ -5703,8 +5668,8 @@ export class PositionTargetLocalNed extends MavLinkData {
    */
   timeBootMs: uint32_t
   /**
-   * Valid options are: MAV_FRAME_LOCAL_NED = 1, MAV_FRAME_LOCAL_OFFSET_NED = 7, MAV_FRAME_BODY_NED =
-   * 8, MAV_FRAME_BODY_OFFSET_NED = 9
+   * Valid options are: MAV_FRAME_LOCAL_NED = 1, MAV_FRAME_LOCAL_OFFSET_NED = 7, MAV_FRAME_BODY_NED = 8,
+   * MAV_FRAME_BODY_OFFSET_NED = 9
    */
   coordinateFrame: MavFrame
   /**
@@ -5785,9 +5750,9 @@ export class SetPositionTargetGlobalInt extends MavLinkData {
   ]
 
   /**
-   * Timestamp (time since system boot). The rationale for the timestamp in the setpoint is to allow
-   * the system to compensate for the transport delay of the setpoint. This allows the system to
-   * compensate processing latency.
+   * Timestamp (time since system boot). The rationale for the timestamp in the setpoint is to allow the
+   * system to compensate for the transport delay of the setpoint. This allows the system to compensate
+   * processing latency.
    */
   timeBootMs: uint32_t
   /**
@@ -5880,9 +5845,9 @@ export class PositionTargetGlobalInt extends MavLinkData {
   ]
 
   /**
-   * Timestamp (time since system boot). The rationale for the timestamp in the setpoint is to allow
-   * the system to compensate for the transport delay of the setpoint. This allows the system to
-   * compensate processing latency.
+   * Timestamp (time since system boot). The rationale for the timestamp in the setpoint is to allow the
+   * system to compensate for the transport delay of the setpoint. This allows the system to compensate
+   * processing latency.
    */
   timeBootMs: uint32_t
   /**
@@ -6019,8 +5984,8 @@ export class HilState extends MavLinkData {
   ]
 
   /**
-   * Timestamp (UNIX Epoch time or time since system boot). The receiving end can infer timestamp
-   * format (since 1.1.1970 or since system boot) by checking for the magnitude of the number.
+   * Timestamp (UNIX Epoch time or time since system boot). The receiving end can infer timestamp format
+   * (since 1.1.1970 or since system boot) by checking for the magnitude of the number.
    */
   timeUsec: uint64_t
   /**
@@ -6107,8 +6072,8 @@ export class HilControls extends MavLinkData {
   ]
 
   /**
-   * Timestamp (UNIX Epoch time or time since system boot). The receiving end can infer timestamp
-   * format (since 1.1.1970 or since system boot) by checking for the magnitude of the number.
+   * Timestamp (UNIX Epoch time or time since system boot). The receiving end can infer timestamp format
+   * (since 1.1.1970 or since system boot) by checking for the magnitude of the number.
    */
   timeUsec: uint64_t
   /**
@@ -6180,8 +6145,8 @@ export class HilRcInputsRaw extends MavLinkData {
   ]
 
   /**
-   * Timestamp (UNIX Epoch time or time since system boot). The receiving end can infer timestamp
-   * format (since 1.1.1970 or since system boot) by checking for the magnitude of the number.
+   * Timestamp (UNIX Epoch time or time since system boot). The receiving end can infer timestamp format
+   * (since 1.1.1970 or since system boot) by checking for the magnitude of the number.
    */
   timeUsec: uint64_t
   /**
@@ -6255,8 +6220,8 @@ export class HilActuatorControls extends MavLinkData {
   ]
 
   /**
-   * Timestamp (UNIX Epoch time or time since system boot). The receiving end can infer timestamp
-   * format (since 1.1.1970 or since system boot) by checking for the magnitude of the number.
+   * Timestamp (UNIX Epoch time or time since system boot). The receiving end can infer timestamp format
+   * (since 1.1.1970 or since system boot) by checking for the magnitude of the number.
    */
   timeUsec: uint64_t
   /**
@@ -6294,8 +6259,8 @@ export class OpticalFlow extends MavLinkData {
   ]
 
   /**
-   * Timestamp (UNIX Epoch time or time since system boot). The receiving end can infer timestamp
-   * format (since 1.1.1970 or since system boot) by checking for the magnitude of the number.
+   * Timestamp (UNIX Epoch time or time since system boot). The receiving end can infer timestamp format
+   * (since 1.1.1970 or since system boot) by checking for the magnitude of the number.
    */
   timeUsec: uint64_t
   /**
@@ -6384,15 +6349,15 @@ export class GlobalVisionPositionEstimate extends MavLinkData {
    */
   yaw: float
   /**
-   * Row-major representation of pose 6x6 cross-covariance matrix upper right triangle (states:
-   * x_global, y_global, z_global, roll, pitch, yaw; first six entries are the first ROW, next five
-   * entries are the second ROW, etc.). If unknown, assign NaN value to first element in the array.
+   * Row-major representation of pose 6x6 cross-covariance matrix upper right triangle (states: x_global,
+   * y_global, z_global, roll, pitch, yaw; first six entries are the first ROW, next five entries are the
+   * second ROW, etc.). If unknown, assign NaN value to first element in the array.
    */
   covariance: float[]
   /**
-   * Estimate reset counter. This should be incremented when the estimate resets in any of the
-   * dimensions (position, velocity, attitude, angular speed). This is designed to be used when e.g
-   * an external SLAM system detects a loop-closure and the estimate jumps.
+   * Estimate reset counter. This should be incremented when the estimate resets in any of the dimensions
+   * (position, velocity, attitude, angular speed). This is designed to be used when e.g an external SLAM
+   * system detects a loop-closure and the estimate jumps.
    */
   resetCounter: uint8_t
 }
@@ -6445,15 +6410,15 @@ export class VisionPositionEstimate extends MavLinkData {
    */
   yaw: float
   /**
-   * Row-major representation of pose 6x6 cross-covariance matrix upper right triangle (states: x, y,
-   * z, roll, pitch, yaw; first six entries are the first ROW, next five entries are the second ROW,
-   * etc.). If unknown, assign NaN value to first element in the array.
+   * Row-major representation of pose 6x6 cross-covariance matrix upper right triangle (states: x, y, z,
+   * roll, pitch, yaw; first six entries are the first ROW, next five entries are the second ROW, etc.).
+   * If unknown, assign NaN value to first element in the array.
    */
   covariance: float[]
   /**
-   * Estimate reset counter. This should be incremented when the estimate resets in any of the
-   * dimensions (position, velocity, attitude, angular speed). This is designed to be used when e.g
-   * an external SLAM system detects a loop-closure and the estimate jumps.
+   * Estimate reset counter. This should be incremented when the estimate resets in any of the dimensions
+   * (position, velocity, attitude, angular speed). This is designed to be used when e.g an external SLAM
+   * system detects a loop-closure and the estimate jumps.
    */
   resetCounter: uint8_t
 }
@@ -6496,9 +6461,9 @@ export class VisionSpeedEstimate extends MavLinkData {
    */
   covariance: float[]
   /**
-   * Estimate reset counter. This should be incremented when the estimate resets in any of the
-   * dimensions (position, velocity, attitude, angular speed). This is designed to be used when e.g
-   * an external SLAM system detects a loop-closure and the estimate jumps.
+   * Estimate reset counter. This should be incremented when the estimate resets in any of the dimensions
+   * (position, velocity, attitude, angular speed). This is designed to be used when e.g an external SLAM
+   * system detects a loop-closure and the estimate jumps.
    */
   resetCounter: uint8_t
 }
@@ -6550,9 +6515,9 @@ export class ViconPositionEstimate extends MavLinkData {
    */
   yaw: float
   /**
-   * Row-major representation of 6x6 pose cross-covariance matrix upper right triangle (states: x, y,
-   * z, roll, pitch, yaw; first six entries are the first ROW, next five entries are the second ROW,
-   * etc.). If unknown, assign NaN value to first element in the array.
+   * Row-major representation of 6x6 pose cross-covariance matrix upper right triangle (states: x, y, z,
+   * roll, pitch, yaw; first six entries are the first ROW, next five entries are the second ROW, etc.).
+   * If unknown, assign NaN value to first element in the array.
    */
   covariance: float[]
 }
@@ -6584,8 +6549,8 @@ export class HighresImu extends MavLinkData {
   ]
 
   /**
-   * Timestamp (UNIX Epoch time or time since system boot). The receiving end can infer timestamp
-   * format (since 1.1.1970 or since system boot) by checking for the magnitude of the number.
+   * Timestamp (UNIX Epoch time or time since system boot). The receiving end can infer timestamp format
+   * (since 1.1.1970 or since system boot) by checking for the magnitude of the number.
    */
   timeUsec: uint64_t
   /**
@@ -6674,8 +6639,8 @@ export class OpticalFlowRad extends MavLinkData {
   ]
 
   /**
-   * Timestamp (UNIX Epoch time or time since system boot). The receiving end can infer timestamp
-   * format (since 1.1.1970 or since system boot) by checking for the magnitude of the number.
+   * Timestamp (UNIX Epoch time or time since system boot). The receiving end can infer timestamp format
+   * (since 1.1.1970 or since system boot) by checking for the magnitude of the number.
    */
   timeUsec: uint64_t
   /**
@@ -6722,8 +6687,8 @@ export class OpticalFlowRad extends MavLinkData {
    */
   timeDeltaDistanceUs: uint32_t
   /**
-   * Distance to the center of the flow field. Positive value (including zero): distance known.
-   * Negative value: Unknown distance.
+   * Distance to the center of the flow field. Positive value (including zero): distance known. Negative
+   * value: Unknown distance.
    */
   distance: float
 }
@@ -6755,8 +6720,8 @@ export class HilSensor extends MavLinkData {
   ]
 
   /**
-   * Timestamp (UNIX Epoch time or time since system boot). The receiving end can infer timestamp
-   * format (since 1.1.1970 or since system boot) by checking for the magnitude of the number.
+   * Timestamp (UNIX Epoch time or time since system boot). The receiving end can infer timestamp format
+   * (since 1.1.1970 or since system boot) by checking for the magnitude of the number.
    */
   timeUsec: uint64_t
   /**
@@ -6812,8 +6777,8 @@ export class HilSensor extends MavLinkData {
    */
   temperature: float
   /**
-   * Bitmap for fields that have updated since last message, bit 0 = xacc, bit 12: temperature, bit
-   * 31: full reset of attitude/position/velocities/etc was performed in sim.
+   * Bitmap for fields that have updated since last message, bit 0 = xacc, bit 12: temperature, bit 31:
+   * full reset of attitude/position/velocities/etc was performed in sim.
    */
   fieldsUpdated: uint32_t
   /**
@@ -6957,8 +6922,8 @@ export class RadioStatus extends MavLinkData {
   ]
 
   /**
-   * Local (message sender) recieved signal strength indication in device-dependent units/scale.
-   * Values: [0-254], 255: invalid/unknown.
+   * Local (message sender) recieved signal strength indication in device-dependent units/scale. Values:
+   * [0-254], 255: invalid/unknown.
    */
   rssi: uint8_t
   /**
@@ -6971,13 +6936,13 @@ export class RadioStatus extends MavLinkData {
    */
   txbuf: uint8_t
   /**
-   * Local background noise level. These are device dependent RSSI values (scale as approx 2x dB on
-   * SiK radios). Values: [0-254], 255: invalid/unknown.
+   * Local background noise level. These are device dependent RSSI values (scale as approx 2x dB on SiK
+   * radios). Values: [0-254], 255: invalid/unknown.
    */
   noise: uint8_t
   /**
-   * Remote background noise level. These are device dependent RSSI values (scale as approx 2x dB on
-   * SiK radios). Values: [0-254], 255: invalid/unknown.
+   * Remote background noise level. These are device dependent RSSI values (scale as approx 2x dB on SiK
+   * radios). Values: [0-254], 255: invalid/unknown.
    */
   remnoise: uint8_t
   /**
@@ -7017,10 +6982,10 @@ export class FileTransferProtocol extends MavLinkData {
    */
   targetComponent: uint8_t
   /**
-   * Variable length payload. The length is defined by the remaining message length when subtracting
-   * the header and other fields. The entire content of this block is opaque unless you understand
-   * any the encoding message_type. The particular encoding used can be extension specific and might
-   * not always be documented as part of the mavlink specification.
+   * Variable length payload. The length is defined by the remaining message length when subtracting the
+   * header and other fields. The entire content of this block is opaque unless you understand any the
+   * encoding message_type. The particular encoding used can be extension specific and might not always
+   * be documented as part of the mavlink specification.
    */
   payload: uint8_t[]
 }
@@ -7060,9 +7025,8 @@ export class CameraTrigger extends MavLinkData {
   ]
 
   /**
-   * Timestamp for image frame (UNIX Epoch time or time since system boot). The receiving end can
-   * infer timestamp format (since 1.1.1970 or since system boot) by checking for the magnitude of
-   * the number.
+   * Timestamp for image frame (UNIX Epoch time or time since system boot). The receiving end can infer
+   * timestamp format (since 1.1.1970 or since system boot) by checking for the magnitude of the number.
    */
   timeUsec: uint64_t
   /**
@@ -7072,7 +7036,7 @@ export class CameraTrigger extends MavLinkData {
 }
 
 /**
- * The global position, as returned by the Global Positioning System (GPS). This is  NOT the global
+ * The global position, as returned by the Global Positioning System (GPS). This is NOT the global
  * position estimate of the sytem, but rather a RAW sensor value. See message GLOBAL_POSITION for the
  * global position estimate.
  */
@@ -7099,13 +7063,13 @@ export class HilGps extends MavLinkData {
   ]
 
   /**
-   * Timestamp (UNIX Epoch time or time since system boot). The receiving end can infer timestamp
-   * format (since 1.1.1970 or since system boot) by checking for the magnitude of the number.
+   * Timestamp (UNIX Epoch time or time since system boot). The receiving end can infer timestamp format
+   * (since 1.1.1970 or since system boot) by checking for the magnitude of the number.
    */
   timeUsec: uint64_t
   /**
-   * 0-1: no fix, 2: 2D fix, 3: 3D fix. Some applications will not use the value of this field unless
-   * it is at least two, so always correctly fill in the fix.
+   * 0-1: no fix, 2: 2D fix, 3: 3D fix. Some applications will not use the value of this field unless it
+   * is at least two, so always correctly fill in the fix.
    */
   fixType: uint8_t
   /**
@@ -7145,8 +7109,8 @@ export class HilGps extends MavLinkData {
    */
   vd: int16_t
   /**
-   * Course over ground (NOT heading, but direction of movement), 0.0..359.99 degrees. If unknown,
-   * set to: 65535
+   * Course over ground (NOT heading, but direction of movement), 0.0..359.99 degrees. If unknown, set
+   * to: 65535
    */
   cog: uint16_t
   /**
@@ -7186,8 +7150,8 @@ export class HilOpticalFlow extends MavLinkData {
   ]
 
   /**
-   * Timestamp (UNIX Epoch time or time since system boot). The receiving end can infer timestamp
-   * format (since 1.1.1970 or since system boot) by checking for the magnitude of the number.
+   * Timestamp (UNIX Epoch time or time since system boot). The receiving end can infer timestamp format
+   * (since 1.1.1970 or since system boot) by checking for the magnitude of the number.
    */
   timeUsec: uint64_t
   /**
@@ -7200,13 +7164,13 @@ export class HilOpticalFlow extends MavLinkData {
    */
   integrationTimeUs: uint32_t
   /**
-   * Flow in radians around X axis (Sensor RH rotation about the X axis induces a positive flow.
-   * Sensor linear motion along the positive Y axis induces a negative flow.)
+   * Flow in radians around X axis (Sensor RH rotation about the X axis induces a positive flow. Sensor
+   * linear motion along the positive Y axis induces a negative flow.)
    */
   integratedX: float
   /**
-   * Flow in radians around Y axis (Sensor RH rotation about the Y axis induces a positive flow.
-   * Sensor linear motion along the positive X axis induces a positive flow.)
+   * Flow in radians around Y axis (Sensor RH rotation about the Y axis induces a positive flow. Sensor
+   * linear motion along the positive X axis induces a positive flow.)
    */
   integratedY: float
   /**
@@ -7234,8 +7198,8 @@ export class HilOpticalFlow extends MavLinkData {
    */
   timeDeltaDistanceUs: uint32_t
   /**
-   * Distance to the center of the flow field. Positive value (including zero): distance known.
-   * Negative value: Unknown distance.
+   * Distance to the center of the flow field. Positive value (including zero): distance known. Negative
+   * value: Unknown distance.
    */
   distance: float
 }
@@ -7268,8 +7232,8 @@ export class HilStateQuaternion extends MavLinkData {
   ]
 
   /**
-   * Timestamp (UNIX Epoch time or time since system boot). The receiving end can infer timestamp
-   * format (since 1.1.1970 or since system boot) by checking for the magnitude of the number.
+   * Timestamp (UNIX Epoch time or time since system boot). The receiving end can infer timestamp format
+   * (since 1.1.1970 or since system boot) by checking for the magnitude of the number.
    */
   timeUsec: uint64_t
   /**
@@ -7398,8 +7362,7 @@ export class ScaledImu2 extends MavLinkData {
    */
   zmag: int16_t
   /**
-   * Temperature, 0: IMU does not provide temperature values. If the IMU is at 0C it must send 1
-   * (0.01C).
+   * Temperature, 0: IMU does not provide temperature values. If the IMU is at 0C it must send 1 (0.01C).
    */
   temperature: int16_t
 }
@@ -7649,8 +7612,8 @@ export class Gps2Raw extends MavLinkData {
   ]
 
   /**
-   * Timestamp (UNIX Epoch time or time since system boot). The receiving end can infer timestamp
-   * format (since 1.1.1970 or since system boot) by checking for the magnitude of the number.
+   * Timestamp (UNIX Epoch time or time since system boot). The receiving end can infer timestamp format
+   * (since 1.1.1970 or since system boot) by checking for the magnitude of the number.
    */
   timeUsec: uint64_t
   /**
@@ -7682,8 +7645,8 @@ export class Gps2Raw extends MavLinkData {
    */
   vel: uint16_t
   /**
-   * Course over ground (NOT heading, but direction of movement): 0.0..359.99 degrees. If unknown,
-   * set to: UINT16_MAX
+   * Course over ground (NOT heading, but direction of movement): 0.0..359.99 degrees. If unknown, set
+   * to: UINT16_MAX
    */
   cog: uint16_t
   /**
@@ -8014,8 +7977,7 @@ export class ScaledImu3 extends MavLinkData {
    */
   zmag: int16_t
   /**
-   * Temperature, 0: IMU does not provide temperature values. If the IMU is at 0C it must send 1
-   * (0.01C).
+   * Temperature, 0: IMU does not provide temperature values. If the IMU is at 0C it must send 1 (0.01C).
    */
   temperature: int16_t
 }
@@ -8059,8 +8021,8 @@ export class DataTransmissionHandshake extends MavLinkData {
    */
   packets: uint16_t
   /**
-   * Payload size per packet (normally 253 byte, see DATA field size in message ENCAPSULATED_DATA)
-   * (set on ACK only).
+   * Payload size per packet (normally 253 byte, see DATA field size in message ENCAPSULATED_DATA) (set
+   * on ACK only).
    */
   payload: uint8_t
   /**
@@ -8139,9 +8101,9 @@ export class DistanceSensor extends MavLinkData {
    */
   id: uint8_t
   /**
-   * Direction the sensor faces. downward-facing: ROTATION_PITCH_270, upward-facing:
-   * ROTATION_PITCH_90, backward-facing: ROTATION_PITCH_180, forward-facing: ROTATION_NONE,
-   * left-facing: ROTATION_YAW_90, right-facing: ROTATION_YAW_270
+   * Direction the sensor faces. downward-facing: ROTATION_PITCH_270, upward-facing: ROTATION_PITCH_90,
+   * backward-facing: ROTATION_PITCH_180, forward-facing: ROTATION_NONE, left-facing: ROTATION_YAW_90,
+   * right-facing: ROTATION_YAW_270
    */
   orientation: MavSensorOrientation
   /**
@@ -8149,8 +8111,8 @@ export class DistanceSensor extends MavLinkData {
    */
   covariance: uint8_t
   /**
-   * Horizontal Field of View (angle) where the distance measurement is valid and the field of view
-   * is known. Otherwise this is set to 0.
+   * Horizontal Field of View (angle) where the distance measurement is valid and the field of view is
+   * known. Otherwise this is set to 0.
    */
   horizontalFov: float
   /**
@@ -8159,15 +8121,15 @@ export class DistanceSensor extends MavLinkData {
    */
   verticalFov: float
   /**
-   * Quaternion of the sensor orientation in vehicle body frame (w, x, y, z order, zero-rotation is
-   * 1, 0, 0, 0). Zero-rotation is along the vehicle body x-axis. This field is required if the
-   * orientation is set to MAV_SENSOR_ROTATION_CUSTOM. Set it to 0 if invalid."
+   * Quaternion of the sensor orientation in vehicle body frame (w, x, y, z order, zero-rotation is 1, 0,
+   * 0, 0). Zero-rotation is along the vehicle body x-axis. This field is required if the orientation is
+   * set to MAV_SENSOR_ROTATION_CUSTOM. Set it to 0 if invalid."
    */
   quaternion: float[]
   /**
-   * Signal quality of the sensor. Specific to each sensor type, representing the relation of the
-   * signal strength with the target reflectivity, distance, size or aspect, but normalised as a
-   * percentage. 0 = unknown/unset signal quality, 1 = invalid signal, 100 = perfect signal.
+   * Signal quality of the sensor. Specific to each sensor type, representing the relation of the signal
+   * strength with the target reflectivity, distance, size or aspect, but normalised as a percentage. 0 =
+   * unknown/unset signal quality, 1 = invalid signal, 100 = perfect signal.
    */
   signalQuality: uint8_t
 }
@@ -8369,8 +8331,8 @@ export class AttPosMocap extends MavLinkData {
   ]
 
   /**
-   * Timestamp (UNIX Epoch time or time since system boot). The receiving end can infer timestamp
-   * format (since 1.1.1970 or since system boot) by checking for the magnitude of the number.
+   * Timestamp (UNIX Epoch time or time since system boot). The receiving end can infer timestamp format
+   * (since 1.1.1970 or since system boot) by checking for the magnitude of the number.
    */
   timeUsec: uint64_t
   /**
@@ -8390,9 +8352,9 @@ export class AttPosMocap extends MavLinkData {
    */
   z: float
   /**
-   * Row-major representation of a pose 6x6 cross-covariance matrix upper right triangle (states: x,
-   * y, z, roll, pitch, yaw; first six entries are the first ROW, next five entries are the second
-   * ROW, etc.). If unknown, assign NaN value to first element in the array.
+   * Row-major representation of a pose 6x6 cross-covariance matrix upper right triangle (states: x, y,
+   * z, roll, pitch, yaw; first six entries are the first ROW, next five entries are the second ROW,
+   * etc.). If unknown, assign NaN value to first element in the array.
    */
   covariance: float[]
 }
@@ -8413,13 +8375,13 @@ export class SetActuatorControlTarget extends MavLinkData {
   ]
 
   /**
-   * Timestamp (UNIX Epoch time or time since system boot). The receiving end can infer timestamp
-   * format (since 1.1.1970 or since system boot) by checking for the magnitude of the number.
+   * Timestamp (UNIX Epoch time or time since system boot). The receiving end can infer timestamp format
+   * (since 1.1.1970 or since system boot) by checking for the magnitude of the number.
    */
   timeUsec: uint64_t
   /**
-   * Actuator group. The "_mlx" indicates this is a multi-instance message and a MAVLink parser
-   * should use this field to difference between instances.
+   * Actuator group. The "_mlx" indicates this is a multi-instance message and a MAVLink parser should
+   * use this field to difference between instances.
    */
   groupMlx: uint8_t
   /**
@@ -8453,13 +8415,13 @@ export class ActuatorControlTarget extends MavLinkData {
   ]
 
   /**
-   * Timestamp (UNIX Epoch time or time since system boot). The receiving end can infer timestamp
-   * format (since 1.1.1970 or since system boot) by checking for the magnitude of the number.
+   * Timestamp (UNIX Epoch time or time since system boot). The receiving end can infer timestamp format
+   * (since 1.1.1970 or since system boot) by checking for the magnitude of the number.
    */
   timeUsec: uint64_t
   /**
-   * Actuator group. The "_mlx" indicates this is a multi-instance message and a MAVLink parser
-   * should use this field to difference between instances.
+   * Actuator group. The "_mlx" indicates this is a multi-instance message and a MAVLink parser should
+   * use this field to difference between instances.
    */
   groupMlx: uint8_t
   /**
@@ -8489,37 +8451,36 @@ export class Altitude extends MavLinkData {
   ]
 
   /**
-   * Timestamp (UNIX Epoch time or time since system boot). The receiving end can infer timestamp
-   * format (since 1.1.1970 or since system boot) by checking for the magnitude of the number.
+   * Timestamp (UNIX Epoch time or time since system boot). The receiving end can infer timestamp format
+   * (since 1.1.1970 or since system boot) by checking for the magnitude of the number.
    */
   timeUsec: uint64_t
   /**
-   * This altitude measure is initialized on system boot and monotonic (it is never reset, but
-   * represents the local altitude change). The only guarantee on this field is that it will never be
-   * reset and is consistent within a flight. The recommended value for this field is the uncorrected
-   * barometric altitude at boot time. This altitude will also drift and vary between flights.
+   * This altitude measure is initialized on system boot and monotonic (it is never reset, but represents
+   * the local altitude change). The only guarantee on this field is that it will never be reset and is
+   * consistent within a flight. The recommended value for this field is the uncorrected barometric
+   * altitude at boot time. This altitude will also drift and vary between flights.
    */
   altitudeMonotonic: float
   /**
-   * This altitude measure is strictly above mean sea level and might be non-monotonic (it might
-   * reset on events like GPS lock or when a new QNH value is set). It should be the altitude to
-   * which global altitude waypoints are compared to. Note that it is *not* the GPS altitude,
-   * however, most GPS modules already output MSL by default and not the WGS84 altitude.
+   * This altitude measure is strictly above mean sea level and might be non-monotonic (it might reset on
+   * events like GPS lock or when a new QNH value is set). It should be the altitude to which global
+   * altitude waypoints are compared to. Note that it is *not* the GPS altitude, however, most GPS
+   * modules already output MSL by default and not the WGS84 altitude.
    */
   altitudeAmsl: float
   /**
-   * This is the local altitude in the local coordinate frame. It is not the altitude above home, but
-   * in reference to the coordinate origin (0, 0, 0). It is up-positive.
+   * This is the local altitude in the local coordinate frame. It is not the altitude above home, but in
+   * reference to the coordinate origin (0, 0, 0). It is up-positive.
    */
   altitudeLocal: float
   /**
-   * This is the altitude above the home position. It resets on each change of the current home
-   * position.
+   * This is the altitude above the home position. It resets on each change of the current home position.
    */
   altitudeRelative: float
   /**
-   * This is the altitude above terrain. It might be fed by a terrain database or an altimeter.
-   * Values smaller than -1000 should be interpreted as unknown.
+   * This is the altitude above terrain. It might be fed by a terrain database or an altimeter. Values
+   * smaller than -1000 should be interpreted as unknown.
    */
   altitudeTerrain: float
   /**
@@ -8701,8 +8662,8 @@ export class ControlSystemState extends MavLinkData {
   ]
 
   /**
-   * Timestamp (UNIX Epoch time or time since system boot). The receiving end can infer timestamp
-   * format (since 1.1.1970 or since system boot) by checking for the magnitude of the number.
+   * Timestamp (UNIX Epoch time or time since system boot). The receiving end can infer timestamp format
+   * (since 1.1.1970 or since system boot) by checking for the magnitude of the number.
    */
   timeUsec: uint64_t
   /**
@@ -8813,13 +8774,12 @@ export class BatteryStatus extends MavLinkData {
    */
   temperature: int16_t
   /**
-   * Battery voltage of cells 1 to 10 (see voltages_ext for cells 11-14). Cells in this field above
-   * the valid cell count for this battery should have the UINT16_MAX value. If individual cell
-   * voltages are unknown or not measured for this battery, then the overall battery voltage should
-   * be filled in cell 0, with all others set to UINT16_MAX. If the voltage of the battery is greater
-   * than (UINT16_MAX - 1), then cell 0 should be set to (UINT16_MAX - 1), and cell 1 to the
-   * remaining voltage. This can be extended to multiple cells if the total voltage is greater than 2
-   * * (UINT16_MAX - 1).
+   * Battery voltage of cells 1 to 10 (see voltages_ext for cells 11-14). Cells in this field above the
+   * valid cell count for this battery should have the UINT16_MAX value. If individual cell voltages are
+   * unknown or not measured for this battery, then the overall battery voltage should be filled in cell
+   * 0, with all others set to UINT16_MAX. If the voltage of the battery is greater than (UINT16_MAX -
+   * 1), then cell 0 should be set to (UINT16_MAX - 1), and cell 1 to the remaining voltage. This can be
+   * extended to multiple cells if the total voltage is greater than 2 * (UINT16_MAX - 1).
    */
   voltages: uint16_t[]
   /**
@@ -8835,8 +8795,7 @@ export class BatteryStatus extends MavLinkData {
    */
   energyConsumed: int32_t
   /**
-   * Remaining battery energy. Values: [0-100], -1: autopilot does not estimate the remaining
-   * battery.
+   * Remaining battery energy. Values: [0-100], -1: autopilot does not estimate the remaining battery.
    */
   batteryRemaining: int8_t
   /**
@@ -8848,10 +8807,9 @@ export class BatteryStatus extends MavLinkData {
    */
   chargeState: MavBatteryChargeState
   /**
-   * Battery voltages for cells 11 to 14. Cells above the valid cell count for this battery should
-   * have a value of 0, where zero indicates not supported (note, this is different than for the
-   * voltages field and allows empty byte truncation). If the measured value is 0 then 1 should be
-   * sent instead.
+   * Battery voltages for cells 11 to 14. Cells above the valid cell count for this battery should have a
+   * value of 0, where zero indicates not supported (note, this is different than for the voltages field
+   * and allows empty byte truncation). If the measured value is 0 then 1 should be sent instead.
    */
   voltagesExt: uint16_t[]
   /**
@@ -8860,9 +8818,8 @@ export class BatteryStatus extends MavLinkData {
    */
   mode: MavBatteryMode
   /**
-   * Fault/health indications. These should be set when charge_state is
-   * MAV_BATTERY_CHARGE_STATE_FAILED or MAV_BATTERY_CHARGE_STATE_UNHEALTHY (if not, fault reporting
-   * is not supported).
+   * Fault/health indications. These should be set when charge_state is MAV_BATTERY_CHARGE_STATE_FAILED
+   * or MAV_BATTERY_CHARGE_STATE_UNHEALTHY (if not, fault reporting is not supported).
    */
   faultBitmask: MavBatteryFault
 }
@@ -8911,21 +8868,21 @@ export class AutopilotVersion extends MavLinkData {
    */
   boardVersion: uint32_t
   /**
-   * Custom version field, commonly the first 8 bytes of the git hash. This is not an unique
-   * identifier, but should allow to identify the commit using the main version number even for very
-   * large code bases.
+   * Custom version field, commonly the first 8 bytes of the git hash. This is not an unique identifier,
+   * but should allow to identify the commit using the main version number even for very large code
+   * bases.
    */
   flightCustomVersion: uint8_t[]
   /**
-   * Custom version field, commonly the first 8 bytes of the git hash. This is not an unique
-   * identifier, but should allow to identify the commit using the main version number even for very
-   * large code bases.
+   * Custom version field, commonly the first 8 bytes of the git hash. This is not an unique identifier,
+   * but should allow to identify the commit using the main version number even for very large code
+   * bases.
    */
   middlewareCustomVersion: uint8_t[]
   /**
-   * Custom version field, commonly the first 8 bytes of the git hash. This is not an unique
-   * identifier, but should allow to identify the commit using the main version number even for very
-   * large code bases.
+   * Custom version field, commonly the first 8 bytes of the git hash. This is not an unique identifier,
+   * but should allow to identify the commit using the main version number even for very large code
+   * bases.
    */
   osCustomVersion: uint8_t[]
   /**
@@ -8972,8 +8929,8 @@ export class LandingTarget extends MavLinkData {
   ]
 
   /**
-   * Timestamp (UNIX Epoch time or time since system boot). The receiving end can infer timestamp
-   * format (since 1.1.1970 or since system boot) by checking for the magnitude of the number.
+   * Timestamp (UNIX Epoch time or time since system boot). The receiving end can infer timestamp format
+   * (since 1.1.1970 or since system boot) by checking for the magnitude of the number.
    */
   timeUsec: uint64_t
   /**
@@ -9296,8 +9253,8 @@ export class EstimatorStatus extends MavLinkData {
   ]
 
   /**
-   * Timestamp (UNIX Epoch time or time since system boot). The receiving end can infer timestamp
-   * format (since 1.1.1970 or since system boot) by checking for the magnitude of the number.
+   * Timestamp (UNIX Epoch time or time since system boot). The receiving end can infer timestamp format
+   * (since 1.1.1970 or since system boot) by checking for the magnitude of the number.
    */
   timeUsec: uint64_t
   /**
@@ -9358,8 +9315,8 @@ export class WindCov extends MavLinkData {
   ]
 
   /**
-   * Timestamp (UNIX Epoch time or time since system boot). The receiving end can infer timestamp
-   * format (since 1.1.1970 or since system boot) by checking for the magnitude of the number.
+   * Timestamp (UNIX Epoch time or time since system boot). The receiving end can infer timestamp format
+   * (since 1.1.1970 or since system boot) by checking for the magnitude of the number.
    */
   timeUsec: uint64_t
   /**
@@ -9427,8 +9384,8 @@ export class GpsInput extends MavLinkData {
   ]
 
   /**
-   * Timestamp (UNIX Epoch time or time since system boot). The receiving end can infer timestamp
-   * format (since 1.1.1970 or since system boot) by checking for the magnitude of the number.
+   * Timestamp (UNIX Epoch time or time since system boot). The receiving end can infer timestamp format
+   * (since 1.1.1970 or since system boot) by checking for the magnitude of the number.
    */
   timeUsec: uint64_t
   /**
@@ -9519,14 +9476,14 @@ export class GpsRtcmData extends MavLinkData {
   ]
 
   /**
-   * LSB: 1 means message is fragmented, next 2 bits are the fragment ID, the remaining 5 bits are
-   * used for the sequence ID. Messages are only to be flushed to the GPS when the entire message has
-   * been reconstructed on the autopilot. The fragment ID specifies which order the fragments should
-   * be assembled into a buffer, while the sequence ID is used to detect a mismatch between different
-   * buffers. The buffer is considered fully reconstructed when either all 4 fragments are present,
-   * or all the fragments before the first fragment with a non full payload is received. This
-   * management is used to ensure that normal GPS operation doesn't corrupt RTCM data, and to recover
-   * from a unreliable transport delivery order.
+   * LSB: 1 means message is fragmented, next 2 bits are the fragment ID, the remaining 5 bits are used
+   * for the sequence ID. Messages are only to be flushed to the GPS when the entire message has been
+   * reconstructed on the autopilot. The fragment ID specifies which order the fragments should be
+   * assembled into a buffer, while the sequence ID is used to detect a mismatch between different
+   * buffers. The buffer is considered fully reconstructed when either all 4 fragments are present, or
+   * all the fragments before the first fragment with a non full payload is received. This management is
+   * used to ensure that normal GPS operation doesn't corrupt RTCM data, and to recover from a unreliable
+   * transport delivery order.
    */
   flags: uint8_t
   /**
@@ -9720,8 +9677,7 @@ export class HighLatency2 extends MavLinkData {
    */
   type: MavType
   /**
-   * Autopilot type / class. Use MAV_AUTOPILOT_INVALID for components that are not flight
-   * controllers.
+   * Autopilot type / class. Use MAV_AUTOPILOT_INVALID for components that are not flight controllers.
    */
   autopilot: MavAutopilot
   /**
@@ -9840,8 +9796,8 @@ export class Vibration extends MavLinkData {
   ]
 
   /**
-   * Timestamp (UNIX Epoch time or time since system boot). The receiving end can infer timestamp
-   * format (since 1.1.1970 or since system boot) by checking for the magnitude of the number.
+   * Timestamp (UNIX Epoch time or time since system boot). The receiving end can infer timestamp format
+   * (since 1.1.1970 or since system boot) by checking for the magnitude of the number.
    */
   timeUsec: uint64_t
   /**
@@ -9928,29 +9884,29 @@ export class HomePosition extends MavLinkData {
    */
   q: float[]
   /**
-   * Local X position of the end of the approach vector. Multicopters should set this position based
-   * on their takeoff path. Grass-landing fixed wing aircraft should set it the same way as
-   * multicopters. Runway-landing fixed wing aircraft should set it to the opposite direction of the
-   * takeoff, assuming the takeoff happened from the threshold / touchdown zone.
+   * Local X position of the end of the approach vector. Multicopters should set this position based on
+   * their takeoff path. Grass-landing fixed wing aircraft should set it the same way as multicopters.
+   * Runway-landing fixed wing aircraft should set it to the opposite direction of the takeoff, assuming
+   * the takeoff happened from the threshold / touchdown zone.
    */
   approachX: float
   /**
-   * Local Y position of the end of the approach vector. Multicopters should set this position based
-   * on their takeoff path. Grass-landing fixed wing aircraft should set it the same way as
-   * multicopters. Runway-landing fixed wing aircraft should set it to the opposite direction of the
-   * takeoff, assuming the takeoff happened from the threshold / touchdown zone.
+   * Local Y position of the end of the approach vector. Multicopters should set this position based on
+   * their takeoff path. Grass-landing fixed wing aircraft should set it the same way as multicopters.
+   * Runway-landing fixed wing aircraft should set it to the opposite direction of the takeoff, assuming
+   * the takeoff happened from the threshold / touchdown zone.
    */
   approachY: float
   /**
-   * Local Z position of the end of the approach vector. Multicopters should set this position based
-   * on their takeoff path. Grass-landing fixed wing aircraft should set it the same way as
-   * multicopters. Runway-landing fixed wing aircraft should set it to the opposite direction of the
-   * takeoff, assuming the takeoff happened from the threshold / touchdown zone.
+   * Local Z position of the end of the approach vector. Multicopters should set this position based on
+   * their takeoff path. Grass-landing fixed wing aircraft should set it the same way as multicopters.
+   * Runway-landing fixed wing aircraft should set it to the opposite direction of the takeoff, assuming
+   * the takeoff happened from the threshold / touchdown zone.
    */
   approachZ: float
   /**
-   * Timestamp (UNIX Epoch time or time since system boot). The receiving end can infer timestamp
-   * format (since 1.1.1970 or since system boot) by checking for the magnitude of the number.
+   * Timestamp (UNIX Epoch time or time since system boot). The receiving end can infer timestamp format
+   * (since 1.1.1970 or since system boot) by checking for the magnitude of the number.
    */
   timeUsec: uint64_t
 }
@@ -10017,29 +9973,29 @@ export class SetHomePosition extends MavLinkData {
    */
   q: float[]
   /**
-   * Local X position of the end of the approach vector. Multicopters should set this position based
-   * on their takeoff path. Grass-landing fixed wing aircraft should set it the same way as
-   * multicopters. Runway-landing fixed wing aircraft should set it to the opposite direction of the
-   * takeoff, assuming the takeoff happened from the threshold / touchdown zone.
+   * Local X position of the end of the approach vector. Multicopters should set this position based on
+   * their takeoff path. Grass-landing fixed wing aircraft should set it the same way as multicopters.
+   * Runway-landing fixed wing aircraft should set it to the opposite direction of the takeoff, assuming
+   * the takeoff happened from the threshold / touchdown zone.
    */
   approachX: float
   /**
-   * Local Y position of the end of the approach vector. Multicopters should set this position based
-   * on their takeoff path. Grass-landing fixed wing aircraft should set it the same way as
-   * multicopters. Runway-landing fixed wing aircraft should set it to the opposite direction of the
-   * takeoff, assuming the takeoff happened from the threshold / touchdown zone.
+   * Local Y position of the end of the approach vector. Multicopters should set this position based on
+   * their takeoff path. Grass-landing fixed wing aircraft should set it the same way as multicopters.
+   * Runway-landing fixed wing aircraft should set it to the opposite direction of the takeoff, assuming
+   * the takeoff happened from the threshold / touchdown zone.
    */
   approachY: float
   /**
-   * Local Z position of the end of the approach vector. Multicopters should set this position based
-   * on their takeoff path. Grass-landing fixed wing aircraft should set it the same way as
-   * multicopters. Runway-landing fixed wing aircraft should set it to the opposite direction of the
-   * takeoff, assuming the takeoff happened from the threshold / touchdown zone.
+   * Local Z position of the end of the approach vector. Multicopters should set this position based on
+   * their takeoff path. Grass-landing fixed wing aircraft should set it the same way as multicopters.
+   * Runway-landing fixed wing aircraft should set it to the opposite direction of the takeoff, assuming
+   * the takeoff happened from the threshold / touchdown zone.
    */
   approachZ: float
   /**
-   * Timestamp (UNIX Epoch time or time since system boot). The receiving end can infer timestamp
-   * format (since 1.1.1970 or since system boot) by checking for the magnitude of the number.
+   * Timestamp (UNIX Epoch time or time since system boot). The receiving end can infer timestamp format
+   * (since 1.1.1970 or since system boot) by checking for the magnitude of the number.
    */
   timeUsec: uint64_t
 }
@@ -10062,8 +10018,8 @@ export class MessageInterval extends MavLinkData {
    */
   messageId: uint16_t
   /**
-   * The interval between two messages. A value of -1 indicates this stream is disabled, 0 indicates
-   * it is not available, > 0 indicates the interval at which it is sent.
+   * The interval between two messages. A value of -1 indicates this stream is disabled, 0 indicates it
+   * is not available, > 0 indicates the interval at which it is sent.
    */
   intervalUs: int32_t
 }
@@ -10243,23 +10199,22 @@ export class V2Extension extends MavLinkData {
    */
   targetComponent: uint8_t
   /**
-   * A code that identifies the software component that understands this message (analogous to USB
-   * device classes or mime type strings). If this code is less than 32768, it is considered a
-   * 'registered' protocol extension and the corresponding entry should be added to
-   * https://github.com/mavlink/mavlink/definition_files/extension_message_ids.xml. Software creators
-   * can register blocks of message IDs as needed (useful for GCS specific metadata, etc...).
-   * Message_types greater than 32767 are considered local experiments and should not be checked in
-   * to any widely distributed codebase.
+   * A code that identifies the software component that understands this message (analogous to USB device
+   * classes or mime type strings). If this code is less than 32768, it is considered a 'registered'
+   * protocol extension and the corresponding entry should be added to
+   * https://github.com/mavlink/mavlink/definition_files/extension_message_ids.xml. Software creators can
+   * register blocks of message IDs as needed (useful for GCS specific metadata, etc...). Message_types
+   * greater than 32767 are considered local experiments and should not be checked in to any widely
+   * distributed codebase.
    */
   messageType: uint16_t
   /**
    * Variable length payload. The length must be encoded in the payload as part of the message_type
-   * protocol, e.g. by including the length as payload data, or by terminating the payload data with
-   * a non-zero marker. This is required in order to reconstruct zero-terminated payloads that are
-   * (or otherwise would be) trimmed by MAVLink 2 empty-byte truncation. The entire content of the
-   * payload block is opaque unless you understand the encoding message_type. The particular encoding
-   * used can be extension specific and might not always be documented as part of the MAVLink
-   * specification.
+   * protocol, e.g. by including the length as payload data, or by terminating the payload data with a
+   * non-zero marker. This is required in order to reconstruct zero-terminated payloads that are (or
+   * otherwise would be) trimmed by MAVLink 2 empty-byte truncation. The entire content of the payload
+   * block is opaque unless you understand the encoding message_type. The particular encoding used can be
+   * extension specific and might not always be documented as part of the MAVLink specification.
    */
   payload: uint8_t[]
 }
@@ -10288,8 +10243,8 @@ export class MemoryVect extends MavLinkData {
    */
   ver: uint8_t
   /**
-   * Type code of the memory variables. for ver = 1: 0=16 x int16_t, 1=16 x uint16_t, 2=16 x Q15,
-   * 3=16 x 1Q14
+   * Type code of the memory variables. for ver = 1: 0=16 x int16_t, 1=16 x uint16_t, 2=16 x Q15, 3=16 x
+   * 1Q14
    */
   type: uint8_t
   /**
@@ -10318,8 +10273,8 @@ export class DebugVect extends MavLinkData {
    */
   name: char[]
   /**
-   * Timestamp (UNIX Epoch time or time since system boot). The receiving end can infer timestamp
-   * format (since 1.1.1970 or since system boot) by checking for the magnitude of the number.
+   * Timestamp (UNIX Epoch time or time since system boot). The receiving end can infer timestamp format
+   * (since 1.1.1970 or since system boot) by checking for the magnitude of the number.
    */
   timeUsec: uint64_t
   /**
@@ -10398,7 +10353,7 @@ export class NamedValueInt extends MavLinkData {
  * implemented wisely, these messages are buffered on the MCU and sent only at a limited rate (e.g. 10
  * Hz).
  */
-export class Statustext extends MavLinkData {
+export class StatusText extends MavLinkData {
   static MSG_ID = 253
   static MAGIC_NUMBER = 83
 
@@ -10419,13 +10374,13 @@ export class Statustext extends MavLinkData {
   text: char[]
   /**
    * Unique (opaque) identifier for this statustext message. May be used to reassemble a logical
-   * long-statustext message from a sequence of chunks. A value of zero indicates this is the only
-   * chunk in the sequence and the message can be emitted immediately.
+   * long-statustext message from a sequence of chunks. A value of zero indicates this is the only chunk
+   * in the sequence and the message can be emitted immediately.
    */
   id: uint16_t
   /**
-   * This chunk's sequence number; indexing is from zero. Any null character in the text field is
-   * taken to mean this was the last chunk.
+   * This chunk's sequence number; indexing is from zero. Any null character in the text field is taken
+   * to mean this was the last chunk.
    */
   chunkSeq: uint8_t
 }
@@ -10625,11 +10580,11 @@ export class CameraInformation extends MavLinkData {
    */
   camDefinitionVersion: uint16_t
   /**
-   * Camera definition URI (if any, otherwise only basic functions will be available). HTTP-
-   * (http://) and MAVLink FTP- (mavlinkftp://) formatted URIs are allowed (and both must be
-   * supported by any GCS that implements the Camera Protocol). The definition file may be xz
-   * compressed, which will be indicated by the file extension .xml.xz (a GCS that implements the
-   * protocol must support decompressing the file).
+   * Camera definition URI (if any, otherwise only basic functions will be available). HTTP- (http://)
+   * and MAVLink FTP- (mavlinkftp://) formatted URIs are allowed (and both must be supported by any GCS
+   * that implements the Camera Protocol). The definition file may be xz compressed, which will be
+   * indicated by the file extension .xml.xz (a GCS that implements the protocol must support
+   * decompressing the file).
    */
   camDefinitionUri: char[]
 }
@@ -10715,8 +10670,7 @@ export class StorageInformation extends MavLinkData {
    */
   usedCapacity: float
   /**
-   * Available storage capacity. If storage is not ready (STORAGE_STATUS_READY) value will be
-   * ignored.
+   * Available storage capacity. If storage is not ready (STORAGE_STATUS_READY) value will be ignored.
    */
   availableCapacity: float
   /**
@@ -10732,9 +10686,9 @@ export class StorageInformation extends MavLinkData {
    */
   type: StorageType
   /**
-   * Textual storage name to be used in UI (microSD 1, Internal Memory, etc.) This is a NULL
-   * terminated string. If it is exactly 32 characters long, add a terminating NULL. If this string
-   * is empty, the generic type is shown to the user.
+   * Textual storage name to be used in UI (microSD 1, Internal Memory, etc.) This is a NULL terminated
+   * string. If it is exactly 32 characters long, add a terminating NULL. If this string is empty, the
+   * generic type is shown to the user.
    */
   name: char[]
 }
@@ -10774,8 +10728,8 @@ export class CameraCaptureStatus extends MavLinkData {
    */
   imageInterval: float
   /**
-   * Elapsed time since recording started (0: Not supported/available). A GCS should compute
-   * recording time and use non-zero values of this field to correct any discrepancy.
+   * Elapsed time since recording started (0: Not supported/available). A GCS should compute recording
+   * time and use non-zero values of this field to correct any discrepancy.
    */
   recordingTimeMs: uint32_t
   /**
@@ -10844,8 +10798,8 @@ export class CameraImageCaptured extends MavLinkData {
    */
   q: float[]
   /**
-   * Zero based index of this image (i.e. a new image will have index CAMERA_CAPTURE_STATUS.image
-   * count -1)
+   * Zero based index of this image (i.e. a new image will have index CAMERA_CAPTURE_STATUS.image count
+   * -1)
    */
   imageIndex: int32_t
   /**
@@ -10962,8 +10916,8 @@ export class LoggingData extends MavLinkData {
    */
   length: uint8_t
   /**
-   * offset into data where first message starts. This can be used for recovery, when a previous
-   * message got lost (set to 255 if no start exists).
+   * offset into data where first message starts. This can be used for recovery, when a previous message
+   * got lost (set to 255 if no start exists).
    */
   firstMessageOffset: uint8_t
   /**
@@ -11005,8 +10959,8 @@ export class LoggingDataAcked extends MavLinkData {
    */
   length: uint8_t
   /**
-   * offset into data where first message starts. This can be used for recovery, when a previous
-   * message got lost (set to 255 if no start exists).
+   * offset into data where first message starts. This can be used for recovery, when a previous message
+   * got lost (set to 255 if no start exists).
    */
   firstMessageOffset: uint8_t
   /**
@@ -11110,8 +11064,8 @@ export class VideoStreamInformation extends MavLinkData {
    */
   name: char[]
   /**
-   * Video stream URI (TCP or RTSP URI ground station should connect to) or port number (UDP port
-   * ground station should listen to).
+   * Video stream URI (TCP or RTSP URI ground station should connect to) or port number (UDP port ground
+   * station should listen to).
    */
   uri: char[]
 }
@@ -11206,18 +11160,18 @@ export class CameraFovStatus extends MavLinkData {
    */
   altCamera: int32_t
   /**
-   * Latitude of center of image (INT32_MAX if unknown, INT32_MIN if at infinity, not intersecting
-   * with horizon).
+   * Latitude of center of image (INT32_MAX if unknown, INT32_MIN if at infinity, not intersecting with
+   * horizon).
    */
   latImage: int32_t
   /**
-   * Longitude of center of image (INT32_MAX if unknown, INT32_MIN if at infinity, not intersecting
-   * with horizon).
+   * Longitude of center of image (INT32_MAX if unknown, INT32_MIN if at infinity, not intersecting with
+   * horizon).
    */
   lonImage: int32_t
   /**
-   * Altitude (MSL) of center of image (INT32_MAX if unknown, INT32_MIN if at infinity, not
-   * intersecting with horizon).
+   * Altitude (MSL) of center of image (INT32_MAX if unknown, INT32_MIN if at infinity, not intersecting
+   * with horizon).
    */
   altImage: int32_t
   /**
@@ -11278,28 +11232,28 @@ export class CameraTrackingImageStatus extends MavLinkData {
    */
   pointY: float
   /**
-   * Current tracked radius if CAMERA_TRACKING_MODE_POINT (normalized 0..1, 0 is image left, 1 is
-   * image right), NAN if unknown
+   * Current tracked radius if CAMERA_TRACKING_MODE_POINT (normalized 0..1, 0 is image left, 1 is image
+   * right), NAN if unknown
    */
   radius: float
   /**
-   * Current tracked rectangle top x value if CAMERA_TRACKING_MODE_RECTANGLE (normalized 0..1, 0 is
-   * left, 1 is right), NAN if unknown
+   * Current tracked rectangle top x value if CAMERA_TRACKING_MODE_RECTANGLE (normalized 0..1, 0 is left,
+   * 1 is right), NAN if unknown
    */
   recTopX: float
   /**
-   * Current tracked rectangle top y value if CAMERA_TRACKING_MODE_RECTANGLE (normalized 0..1, 0 is
-   * top, 1 is bottom), NAN if unknown
+   * Current tracked rectangle top y value if CAMERA_TRACKING_MODE_RECTANGLE (normalized 0..1, 0 is top,
+   * 1 is bottom), NAN if unknown
    */
   recTopY: float
   /**
-   * Current tracked rectangle bottom x value if CAMERA_TRACKING_MODE_RECTANGLE (normalized 0..1, 0
-   * is left, 1 is right), NAN if unknown
+   * Current tracked rectangle bottom x value if CAMERA_TRACKING_MODE_RECTANGLE (normalized 0..1, 0 is
+   * left, 1 is right), NAN if unknown
    */
   recBottomX: float
   /**
-   * Current tracked rectangle bottom y value if CAMERA_TRACKING_MODE_RECTANGLE (normalized 0..1, 0
-   * is top, 1 is bottom), NAN if unknown
+   * Current tracked rectangle bottom y value if CAMERA_TRACKING_MODE_RECTANGLE (normalized 0..1, 0 is
+   * top, 1 is bottom), NAN if unknown
    */
   recBottomY: float
 }
@@ -11520,13 +11474,13 @@ export class GimbalManagerSetAttitude extends MavLinkData {
    */
   flags: GimbalManagerFlags
   /**
-   * Component ID of gimbal device to address (or 1-6 for non-MAVLink gimbal), 0 for all gimbal
-   * device components. Send command multiple times for more than one gimbal (but not all gimbals).
+   * Component ID of gimbal device to address (or 1-6 for non-MAVLink gimbal), 0 for all gimbal device
+   * components. Send command multiple times for more than one gimbal (but not all gimbals).
    */
   gimbalDeviceId: uint8_t
   /**
-   * Quaternion components, w, x, y, z (1 0 0 0 is the null-rotation, the frame is depends on whether
-   * the flag GIMBAL_MANAGER_FLAGS_YAW_LOCK is set)
+   * Quaternion components, w, x, y, z (1 0 0 0 is the null-rotation, the frame is depends on whether the
+   * flag GIMBAL_MANAGER_FLAGS_YAW_LOCK is set)
    */
   q: float[]
   /**
@@ -11666,9 +11620,9 @@ export class GimbalDeviceSetAttitude extends MavLinkData {
    */
   flags: GimbalDeviceFlags
   /**
-   * Quaternion components, w, x, y, z (1 0 0 0 is the null-rotation, the frame is depends on whether
-   * the flag GIMBAL_DEVICE_FLAGS_YAW_LOCK is set, set all fields to NaN if only angular velocity
-   * should be used)
+   * Quaternion components, w, x, y, z (1 0 0 0 is the null-rotation, the frame is depends on whether the
+   * flag GIMBAL_DEVICE_FLAGS_YAW_LOCK is set, set all fields to NaN if only angular velocity should be
+   * used)
    */
   q: float[]
   /**
@@ -11724,8 +11678,8 @@ export class GimbalDeviceAttitudeStatus extends MavLinkData {
    */
   flags: GimbalDeviceFlags
   /**
-   * Quaternion components, w, x, y, z (1 0 0 0 is the null-rotation, the frame is depends on whether
-   * the flag GIMBAL_DEVICE_FLAGS_YAW_LOCK is set)
+   * Quaternion components, w, x, y, z (1 0 0 0 is the null-rotation, the frame is depends on whether the
+   * flag GIMBAL_DEVICE_FLAGS_YAW_LOCK is set)
    */
   q: float[]
   /**
@@ -11809,8 +11763,8 @@ export class AutopilotStateForGimbalDevice extends MavLinkData {
    */
   vEstimatedDelayUs: uint32_t
   /**
-   * Feed forward Z component of angular velocity, positive is yawing to the right, NaN to be
-   * ignored. This is to indicate if the autopilot is actively yawing.
+   * Feed forward Z component of angular velocity, positive is yawing to the right, NaN to be ignored.
+   * This is to indicate if the autopilot is actively yawing.
    */
   feedForwardAngularVelocityZ: float
   /**
@@ -11856,8 +11810,8 @@ export class GimbalManagerSetPitchyaw extends MavLinkData {
    */
   flags: GimbalManagerFlags
   /**
-   * Component ID of gimbal device to address (or 1-6 for non-MAVLink gimbal), 0 for all gimbal
-   * device components. Send command multiple times for more than one gimbal (but not all gimbals).
+   * Component ID of gimbal device to address (or 1-6 for non-MAVLink gimbal), 0 for all gimbal device
+   * components. Send command multiple times for more than one gimbal (but not all gimbals).
    */
   gimbalDeviceId: uint8_t
   /**
@@ -11912,8 +11866,8 @@ export class GimbalManagerSetManualControl extends MavLinkData {
    */
   flags: GimbalManagerFlags
   /**
-   * Component ID of gimbal device to address (or 1-6 for non-MAVLink gimbal), 0 for all gimbal
-   * device components. Send command multiple times for more than one gimbal (but not all gimbals).
+   * Component ID of gimbal device to address (or 1-6 for non-MAVLink gimbal), 0 for all gimbal device
+   * components. Send command multiple times for more than one gimbal (but not all gimbals).
    */
   gimbalDeviceId: uint8_t
   /**
@@ -11929,8 +11883,7 @@ export class GimbalManagerSetManualControl extends MavLinkData {
    */
   pitchRate: float
   /**
-   * Yaw angular rate unitless (-1..1, positive: to the right, negative: to the left, NaN to be
-   * ignored).
+   * Yaw angular rate unitless (-1..1, positive: to the right, negative: to the left, NaN to be ignored).
    */
   yawRate: float
 }
@@ -11960,8 +11913,8 @@ export class EscInfo extends MavLinkData {
    */
   index: uint8_t
   /**
-   * Timestamp (UNIX Epoch time or time since system boot). The receiving end can infer timestamp
-   * format (since 1.1.1970 or since system boot) by checking for the magnitude the number.
+   * Timestamp (UNIX Epoch time or time since system boot). The receiving end can infer timestamp format
+   * (since 1.1.1970 or since system boot) by checking for the magnitude the number.
    */
   timeUsec: uint64_t
   /**
@@ -12017,8 +11970,8 @@ export class EscStatus extends MavLinkData {
    */
   index: uint8_t
   /**
-   * Timestamp (UNIX Epoch time or time since system boot). The receiving end can infer timestamp
-   * format (since 1.1.1970 or since system boot) by checking for the magnitude the number.
+   * Timestamp (UNIX Epoch time or time since system boot). The receiving end can infer timestamp format
+   * (since 1.1.1970 or since system boot) by checking for the magnitude the number.
    */
   timeUsec: uint64_t
   /**
@@ -12051,8 +12004,8 @@ export class WifiConfigAp extends MavLinkData {
   ]
 
   /**
-   * Name of Wi-Fi network (SSID). Blank to leave it unchanged when setting. Current SSID when sent
-   * back as a response.
+   * Name of Wi-Fi network (SSID). Blank to leave it unchanged when setting. Current SSID when sent back
+   * as a response.
    */
   ssid: char[]
   /**
@@ -12185,8 +12138,8 @@ export class UavcanNodeStatus extends MavLinkData {
   ]
 
   /**
-   * Timestamp (UNIX Epoch time or time since system boot). The receiving end can infer timestamp
-   * format (since 1.1.1970 or since system boot) by checking for the magnitude of the number.
+   * Timestamp (UNIX Epoch time or time since system boot). The receiving end can infer timestamp format
+   * (since 1.1.1970 or since system boot) by checking for the magnitude of the number.
    */
   timeUsec: uint64_t
   /**
@@ -12236,8 +12189,8 @@ export class UavcanNodeInfo extends MavLinkData {
   ]
 
   /**
-   * Timestamp (UNIX Epoch time or time since system boot). The receiving end can infer timestamp
-   * format (since 1.1.1970 or since system boot) by checking for the magnitude of the number.
+   * Timestamp (UNIX Epoch time or time since system boot). The receiving end can infer timestamp format
+   * (since 1.1.1970 or since system boot) by checking for the magnitude of the number.
    */
   timeUsec: uint64_t
   /**
@@ -12298,9 +12251,9 @@ export class ParamExtRequestRead extends MavLinkData {
    */
   targetComponent: uint8_t
   /**
-   * Parameter id, terminated by NULL if the length is less than 16 human-readable chars and WITHOUT
-   * null termination (NULL) byte if the length is exactly 16 chars - applications have to provide
-   * 16+1 bytes storage if the ID is stored as string
+   * Parameter id, terminated by NULL if the length is less than 16 human-readable chars and WITHOUT null
+   * termination (NULL) byte if the length is exactly 16 chars - applications have to provide 16+1 bytes
+   * storage if the ID is stored as string
    */
   paramId: char[]
   /**
@@ -12351,9 +12304,9 @@ export class ParamExtValue extends MavLinkData {
   ]
 
   /**
-   * Parameter id, terminated by NULL if the length is less than 16 human-readable chars and WITHOUT
-   * null termination (NULL) byte if the length is exactly 16 chars - applications have to provide
-   * 16+1 bytes storage if the ID is stored as string
+   * Parameter id, terminated by NULL if the length is less than 16 human-readable chars and WITHOUT null
+   * termination (NULL) byte if the length is exactly 16 chars - applications have to provide 16+1 bytes
+   * storage if the ID is stored as string
    */
   paramId: char[]
   /**
@@ -12401,9 +12354,9 @@ export class ParamExtSet extends MavLinkData {
    */
   targetComponent: uint8_t
   /**
-   * Parameter id, terminated by NULL if the length is less than 16 human-readable chars and WITHOUT
-   * null termination (NULL) byte if the length is exactly 16 chars - applications have to provide
-   * 16+1 bytes storage if the ID is stored as string
+   * Parameter id, terminated by NULL if the length is less than 16 human-readable chars and WITHOUT null
+   * termination (NULL) byte if the length is exactly 16 chars - applications have to provide 16+1 bytes
+   * storage if the ID is stored as string
    */
   paramId: char[]
   /**
@@ -12431,9 +12384,9 @@ export class ParamExtAck extends MavLinkData {
   ]
 
   /**
-   * Parameter id, terminated by NULL if the length is less than 16 human-readable chars and WITHOUT
-   * null termination (NULL) byte if the length is exactly 16 chars - applications have to provide
-   * 16+1 bytes storage if the ID is stored as string
+   * Parameter id, terminated by NULL if the length is less than 16 human-readable chars and WITHOUT null
+   * termination (NULL) byte if the length is exactly 16 chars - applications have to provide 16+1 bytes
+   * storage if the ID is stored as string
    */
   paramId: char[]
   /**
@@ -12470,8 +12423,8 @@ export class ObstacleDistance extends MavLinkData {
   ]
 
   /**
-   * Timestamp (UNIX Epoch time or time since system boot). The receiving end can infer timestamp
-   * format (since 1.1.1970 or since system boot) by checking for the magnitude of the number.
+   * Timestamp (UNIX Epoch time or time since system boot). The receiving end can infer timestamp format
+   * (since 1.1.1970 or since system boot) by checking for the magnitude of the number.
    */
   timeUsec: uint64_t
   /**
@@ -12479,10 +12432,10 @@ export class ObstacleDistance extends MavLinkData {
    */
   sensorType: MavDistanceSensor
   /**
-   * Distance of obstacles around the vehicle with index 0 corresponding to north + angle_offset,
-   * unless otherwise specified in the frame. A value of 0 is valid and means that the obstacle is
-   * practically touching the sensor. A value of max_distance +1 means no obstacle is present. A
-   * value of UINT16_MAX for unknown/not used. In a array element, one unit corresponds to 1cm.
+   * Distance of obstacles around the vehicle with index 0 corresponding to north + angle_offset, unless
+   * otherwise specified in the frame. A value of 0 is valid and means that the obstacle is practically
+   * touching the sensor. A value of max_distance +1 means no obstacle is present. A value of UINT16_MAX
+   * for unknown/not used. In a array element, one unit corresponds to 1cm.
    */
   distances: uint16_t[]
   /**
@@ -12511,8 +12464,8 @@ export class ObstacleDistance extends MavLinkData {
   angleOffset: float
   /**
    * Coordinate frame of reference for the yaw rotation and offset of the sensor data. Defaults to
-   * MAV_FRAME_GLOBAL, which is north aligned. For body-mounted sensors use MAV_FRAME_BODY_FRD, which
-   * is vehicle front aligned.
+   * MAV_FRAME_GLOBAL, which is north aligned. For body-mounted sensors use MAV_FRAME_BODY_FRD, which is
+   * vehicle front aligned.
    */
   frame: MavFrame
 }
@@ -12546,8 +12499,8 @@ export class Odometry extends MavLinkData {
   ]
 
   /**
-   * Timestamp (UNIX Epoch time or time since system boot). The receiving end can infer timestamp
-   * format (since 1.1.1970 or since system boot) by checking for the magnitude of the number.
+   * Timestamp (UNIX Epoch time or time since system boot). The receiving end can infer timestamp format
+   * (since 1.1.1970 or since system boot) by checking for the magnitude of the number.
    */
   timeUsec: uint64_t
   /**
@@ -12599,21 +12552,21 @@ export class Odometry extends MavLinkData {
    */
   yawspeed: float
   /**
-   * Row-major representation of a 6x6 pose cross-covariance matrix upper right triangle (states: x,
-   * y, z, roll, pitch, yaw; first six entries are the first ROW, next five entries are the second
-   * ROW, etc.). If unknown, assign NaN value to first element in the array.
+   * Row-major representation of a 6x6 pose cross-covariance matrix upper right triangle (states: x, y,
+   * z, roll, pitch, yaw; first six entries are the first ROW, next five entries are the second ROW,
+   * etc.). If unknown, assign NaN value to first element in the array.
    */
   poseCovariance: float[]
   /**
-   * Row-major representation of a 6x6 velocity cross-covariance matrix upper right triangle (states:
-   * vx, vy, vz, rollspeed, pitchspeed, yawspeed; first six entries are the first ROW, next five
-   * entries are the second ROW, etc.). If unknown, assign NaN value to first element in the array.
+   * Row-major representation of a 6x6 velocity cross-covariance matrix upper right triangle (states: vx,
+   * vy, vz, rollspeed, pitchspeed, yawspeed; first six entries are the first ROW, next five entries are
+   * the second ROW, etc.). If unknown, assign NaN value to first element in the array.
    */
   velocityCovariance: float[]
   /**
-   * Estimate reset counter. This should be incremented when the estimate resets in any of the
-   * dimensions (position, velocity, attitude, angular speed). This is designed to be used when e.g
-   * an external SLAM system detects a loop-closure and the estimate jumps.
+   * Estimate reset counter. This should be incremented when the estimate resets in any of the dimensions
+   * (position, velocity, attitude, angular speed). This is designed to be used when e.g an external SLAM
+   * system detects a loop-closure and the estimate jumps.
    */
   resetCounter: uint8_t
   /**
@@ -12647,8 +12600,8 @@ export class TrajectoryRepresentationWaypoints extends MavLinkData {
   ]
 
   /**
-   * Timestamp (UNIX Epoch time or time since system boot). The receiving end can infer timestamp
-   * format (since 1.1.1970 or since system boot) by checking for the magnitude of the number.
+   * Timestamp (UNIX Epoch time or time since system boot). The receiving end can infer timestamp format
+   * (since 1.1.1970 or since system boot) by checking for the magnitude of the number.
    */
   timeUsec: uint64_t
   /**
@@ -12724,8 +12677,8 @@ export class TrajectoryRepresentationBezier extends MavLinkData {
   ]
 
   /**
-   * Timestamp (UNIX Epoch time or time since system boot). The receiving end can infer timestamp
-   * format (since 1.1.1970 or since system boot) by checking for the magnitude of the number.
+   * Timestamp (UNIX Epoch time or time since system boot). The receiving end can infer timestamp format
+   * (since 1.1.1970 or since system boot) by checking for the magnitude of the number.
    */
   timeUsec: uint64_t
   /**
@@ -12820,13 +12773,13 @@ export class IsbdLinkStatus extends MavLinkData {
   ]
 
   /**
-   * Timestamp (UNIX Epoch time or time since system boot). The receiving end can infer timestamp
-   * format (since 1.1.1970 or since system boot) by checking for the magnitude of the number.
+   * Timestamp (UNIX Epoch time or time since system boot). The receiving end can infer timestamp format
+   * (since 1.1.1970 or since system boot) by checking for the magnitude of the number.
    */
   timestamp: uint64_t
   /**
-   * Timestamp of the last successful sbd session. The receiving end can infer timestamp format
-   * (since 1.1.1970 or since system boot) by checking for the magnitude of the number.
+   * Timestamp of the last successful sbd session. The receiving end can infer timestamp format (since
+   * 1.1.1970 or since system boot) by checking for the magnitude of the number.
    */
   lastHeartbeat: uint64_t
   /**
@@ -12838,8 +12791,8 @@ export class IsbdLinkStatus extends MavLinkData {
    */
   successfulSessions: uint16_t
   /**
-   * Signal quality equal to the number of bars displayed on the ISU signal strength indicator. Range
-   * is 0 to 5, where 0 indicates no signal and 5 indicates maximum signal strength.
+   * Signal quality equal to the number of bars displayed on the ISU signal strength indicator. Range is
+   * 0 to 5, where 0 indicates no signal and 5 indicates maximum signal strength.
    */
   signalQuality: uint8_t
   /**
@@ -12876,18 +12829,17 @@ export class CellularConfig extends MavLinkData {
   ]
 
   /**
-   * Enable/disable LTE. 0: setting unchanged, 1: disabled, 2: enabled. Current setting when sent
-   * back as a response.
+   * Enable/disable LTE. 0: setting unchanged, 1: disabled, 2: enabled. Current setting when sent back as
+   * a response.
    */
   enableLte: uint8_t
   /**
-   * Enable/disable PIN on the SIM card. 0: setting unchanged, 1: disabled, 2: enabled. Current
-   * setting when sent back as a response.
+   * Enable/disable PIN on the SIM card. 0: setting unchanged, 1: disabled, 2: enabled. Current setting
+   * when sent back as a response.
    */
   enablePin: uint8_t
   /**
-   * PIN sent to the SIM card. Blank when PIN is disabled. Empty when message is sent back as a
-   * response.
+   * PIN sent to the SIM card. Blank when PIN is disabled. Empty when message is sent back as a response.
    */
   pin: char[]
   /**
@@ -12900,8 +12852,8 @@ export class CellularConfig extends MavLinkData {
    */
   apn: char[]
   /**
-   * Required PUK code in case the user failed to authenticate 3 times with the PIN. Empty when
-   * message is sent back as a response.
+   * Required PUK code in case the user failed to authenticate 3 times with the PIN. Empty when message
+   * is sent back as a response.
    */
   puk: char[]
   /**
@@ -13056,8 +13008,8 @@ export class DebugFloatArray extends MavLinkData {
   ]
 
   /**
-   * Timestamp (UNIX Epoch time or time since system boot). The receiving end can infer timestamp
-   * format (since 1.1.1970 or since system boot) by checking for the magnitude of the number.
+   * Timestamp (UNIX Epoch time or time since system boot). The receiving end can infer timestamp format
+   * (since 1.1.1970 or since system boot) by checking for the magnitude of the number.
    */
   timeUsec: uint64_t
   /**
@@ -13091,8 +13043,8 @@ export class OrbitExecutionStatus extends MavLinkData {
   ]
 
   /**
-   * Timestamp (UNIX Epoch time or time since system boot). The receiving end can infer timestamp
-   * format (since 1.1.1970 or since system boot) by checking for the magnitude of the number.
+   * Timestamp (UNIX Epoch time or time since system boot). The receiving end can infer timestamp format
+   * (since 1.1.1970 or since system boot) by checking for the magnitude of the number.
    */
   timeUsec: uint64_t
   /**
@@ -13105,13 +13057,13 @@ export class OrbitExecutionStatus extends MavLinkData {
    */
   frame: MavFrame
   /**
-   * X coordinate of center point. Coordinate system depends on frame field: local = x position in
-   * meters * 1e4, global = latitude in degrees * 1e7.
+   * X coordinate of center point. Coordinate system depends on frame field: local = x position in meters
+   * * 1e4, global = latitude in degrees * 1e7.
    */
   x: int32_t
   /**
-   * Y coordinate of center point. Coordinate system depends on frame field: local = x position in
-   * meters * 1e4, global = latitude in degrees * 1e7.
+   * Y coordinate of center point. Coordinate system depends on frame field: local = x position in meters
+   * * 1e4, global = latitude in degrees * 1e7.
    */
   y: int32_t
   /**
@@ -13236,8 +13188,8 @@ export class GeneratorStatus extends MavLinkData {
    */
   powerGenerated: float
   /**
-   * Voltage of the bus seen at the generator, or battery bus if battery bus is controlled by
-   * generator and at a different voltage to main bus.
+   * Voltage of the bus seen at the generator, or battery bus if battery bus is controlled by generator
+   * and at a different voltage to main bus.
    */
   busVoltage: float
   /**
@@ -13249,8 +13201,7 @@ export class GeneratorStatus extends MavLinkData {
    */
   batCurrentSetpoint: float
   /**
-   * The temperature of the mechanical motor, fuel cell core or generator. INT16_MAX: field not
-   * provided.
+   * The temperature of the mechanical motor, fuel cell core or generator. INT16_MAX: field not provided.
    */
   generatorTemperature: int16_t
   /**
@@ -13308,19 +13259,19 @@ export class TimeEstimateToTarget extends MavLinkData {
   ]
 
   /**
-   * Estimated time to complete the vehicle's configured "safe return" action from its current
-   * position (e.g. RTL, Smart RTL, etc.). -1 indicates that the vehicle is landed, or that no time
-   * estimate available.
+   * Estimated time to complete the vehicle's configured "safe return" action from its current position
+   * (e.g. RTL, Smart RTL, etc.). -1 indicates that the vehicle is landed, or that no time estimate
+   * available.
    */
   safeReturn: int32_t
   /**
-   * Estimated time for vehicle to complete the LAND action from its current position. -1 indicates
-   * that the vehicle is landed, or that no time estimate available.
+   * Estimated time for vehicle to complete the LAND action from its current position. -1 indicates that
+   * the vehicle is landed, or that no time estimate available.
    */
   land: int32_t
   /**
-   * Estimated time for reaching/completing the currently active mission item. -1 means no time
-   * estimate available.
+   * Estimated time for reaching/completing the currently active mission item. -1 means no time estimate
+   * available.
    */
   missionNextItem: int32_t
   /**
@@ -13363,9 +13314,9 @@ export class Tunnel extends MavLinkData {
   /**
    * A code that identifies the content of the payload (0 for unknown, which is the default). If this
    * code is less than 32768, it is a 'registered' payload type and the corresponding code should be
-   * added to the MAV_TUNNEL_PAYLOAD_TYPE enum. Software creators can register blocks of types as
-   * needed. Codes greater than 32767 are considered local experiments and should not be checked in
-   * to any widely distributed codebase.
+   * added to the MAV_TUNNEL_PAYLOAD_TYPE enum. Software creators can register blocks of types as needed.
+   * Codes greater than 32767 are considered local experiments and should not be checked in to any widely
+   * distributed codebase.
    */
   payloadType: MavTunnelPayloadType
   /**
@@ -13373,8 +13324,8 @@ export class Tunnel extends MavLinkData {
    */
   payloadLength: uint8_t
   /**
-   * Variable length payload. The payload length is defined by payload_length. The entire content of
-   * this block is opaque unless you understand the encoding specified by payload_type.
+   * Variable length payload. The payload length is defined by payload_length. The entire content of this
+   * block is opaque unless you understand the encoding specified by payload_type.
    */
   payload: uint8_t[]
 }
@@ -13410,8 +13361,8 @@ export class OnboardComputerStatus extends MavLinkData {
   ]
 
   /**
-   * Timestamp (UNIX Epoch time or time since system boot). The receiving end can infer timestamp
-   * format (since 1.1.1970 or since system boot) by checking for the magnitude of the number.
+   * Timestamp (UNIX Epoch time or time since system boot). The receiving end can infer timestamp format
+   * (since 1.1.1970 or since system boot) by checking for the magnitude of the number.
    */
   timeUsec: uint64_t
   /**
@@ -13419,8 +13370,8 @@ export class OnboardComputerStatus extends MavLinkData {
    */
   uptime: uint32_t
   /**
-   * Type of the onboard computer: 0: Mission computer primary, 1: Mission computer backup 1, 2:
-   * Mission computer backup 2, 3: Compute node, 4-5: Compute spares, 6-9: Payload computers.
+   * Type of the onboard computer: 0: Mission computer primary, 1: Mission computer backup 1, 2: Mission
+   * computer backup 2, 3: Compute node, 4-5: Compute spares, 6-9: Payload computers.
    */
   type: uint8_t
   /**
@@ -13429,9 +13380,9 @@ export class OnboardComputerStatus extends MavLinkData {
    */
   cpuCores: uint8_t[]
   /**
-   * Combined CPU usage as the last 10 slices of 100 MS (a histogram). This allows to identify spikes
-   * in load that max out the system, but only for a short amount of time. A value of UINT8_MAX
-   * implies the field is unused.
+   * Combined CPU usage as the last 10 slices of 100 MS (a histogram). This allows to identify spikes in
+   * load that max out the system, but only for a short amount of time. A value of UINT8_MAX implies the
+   * field is unused.
    */
   cpuCombined: uint8_t[]
   /**
@@ -13440,9 +13391,9 @@ export class OnboardComputerStatus extends MavLinkData {
    */
   gpuCores: uint8_t[]
   /**
-   * Combined GPU usage as the last 10 slices of 100 MS (a histogram). This allows to identify spikes
-   * in load that max out the system, but only for a short amount of time. A value of UINT8_MAX
-   * implies the field is unused.
+   * Combined GPU usage as the last 10 slices of 100 MS (a histogram). This allows to identify spikes in
+   * load that max out the system, but only for a short amount of time. A value of UINT8_MAX implies the
+   * field is unused.
    */
   gpuCombined: uint8_t[]
   /**
@@ -13466,8 +13417,8 @@ export class OnboardComputerStatus extends MavLinkData {
    */
   ramTotal: uint32_t
   /**
-   * Storage type: 0: HDD, 1: SSD, 2: EMMC, 3: SD card (non-removable), 4: SD card (removable). A
-   * value of UINT32_MAX implies the field is unused.
+   * Storage type: 0: HDD, 1: SSD, 2: EMMC, 3: SD card (non-removable), 4: SD card (removable). A value
+   * of UINT32_MAX implies the field is unused.
    */
   storageType: uint32_t[]
   /**
@@ -13476,13 +13427,13 @@ export class OnboardComputerStatus extends MavLinkData {
    */
   storageUsage: uint32_t[]
   /**
-   * Total amount of storage space on the component system. A value of UINT32_MAX implies the field
-   * is unused.
+   * Total amount of storage space on the component system. A value of UINT32_MAX implies the field is
+   * unused.
    */
   storageTotal: uint32_t[]
   /**
-   * Link type: 0-9: UART, 10-19: Wired network, 20-29: Wifi, 30-39: Point-to-point proprietary,
-   * 40-49: Mesh proprietary
+   * Link type: 0-9: UART, 10-19: Wired network, 20-29: Wifi, 30-39: Point-to-point proprietary, 40-49:
+   * Mesh proprietary
    */
   linkType: uint32_t[]
   /**
@@ -13644,9 +13595,9 @@ export class Event extends MavLinkData {
    */
   sequence: uint16_t
   /**
-   * Log levels: 4 bits MSB: internal (for logging purposes), 4 bits LSB: external. Levels: Emergency
-   * = 0, Alert = 1, Critical = 2, Error = 3, Warning = 4, Notice = 5, Info = 6, Debug = 7, Protocol
-   * = 8, Disabled = 9
+   * Log levels: 4 bits MSB: internal (for logging purposes), 4 bits LSB: external. Levels: Emergency =
+   * 0, Alert = 1, Critical = 2, Error = 3, Warning = 4, Notice = 5, Info = 6, Debug = 7, Protocol = 8,
+   * Disabled = 9
    */
   logLevels: uint8_t
   /**
@@ -13771,9 +13722,9 @@ export class WheelDistance extends MavLinkData {
    */
   count: uint8_t
   /**
-   * Distance reported by individual wheel encoders. Forward rotations increase values, reverse
-   * rotations decrease them. Not all wheels will necessarily have wheel encoders; the mapping of
-   * encoders to wheel positions must be agreed/understood by the endpoints.
+   * Distance reported by individual wheel encoders. Forward rotations increase values, reverse rotations
+   * decrease them. Not all wheels will necessarily have wheel encoders; the mapping of encoders to wheel
+   * positions must be agreed/understood by the endpoints.
    */
   distance: double[]
 }
@@ -13874,8 +13825,8 @@ export class OpenDroneIdBasicId extends MavLinkData {
    */
   uaType: MavOdidUaType
   /**
-   * UAS (Unmanned Aircraft System) ID following the format specified by id_type. Shall be filled
-   * with nulls in the unused portion of the field.
+   * UAS (Unmanned Aircraft System) ID following the format specified by id_type. Shall be filled with
+   * nulls in the unused portion of the field.
    */
   uasId: uint8_t[]
 }
@@ -13928,18 +13879,18 @@ export class OpenDroneIdLocation extends MavLinkData {
    */
   status: MavOdidStatus
   /**
-   * Direction over ground (not heading, but direction of movement) measured clockwise from true
-   * North: 0 - 35999 centi-degrees. If unknown: 36100 centi-degrees.
+   * Direction over ground (not heading, but direction of movement) measured clockwise from true North: 0
+   * - 35999 centi-degrees. If unknown: 36100 centi-degrees.
    */
   direction: uint16_t
   /**
-   * Ground speed. Positive only. If unknown: 25500 cm/s. If speed is larger than 25425 cm/s, use
-   * 25425 cm/s.
+   * Ground speed. Positive only. If unknown: 25500 cm/s. If speed is larger than 25425 cm/s, use 25425
+   * cm/s.
    */
   speedHorizontal: uint16_t
   /**
-   * The vertical speed. Up is positive. If unknown: 6300 cm/s. If speed is larger than 6200 cm/s,
-   * use 6200 cm/s. If lower than -6200 cm/s, use -6200 cm/s.
+   * The vertical speed. Up is positive. If unknown: 6300 cm/s. If speed is larger than 6200 cm/s, use
+   * 6200 cm/s. If lower than -6200 cm/s, use -6200 cm/s.
    */
   speedVertical: int16_t
   /**
@@ -13951,8 +13902,8 @@ export class OpenDroneIdLocation extends MavLinkData {
    */
   longitude: int32_t
   /**
-   * The altitude calculated from the barometric pressue. Reference is against 29.92inHg or 1013.2mb.
-   * If unknown: -1000 m.
+   * The altitude calculated from the barometric pressue. Reference is against 29.92inHg or 1013.2mb. If
+   * unknown: -1000 m.
    */
   altitudeBarometric: float
   /**
@@ -13964,8 +13915,8 @@ export class OpenDroneIdLocation extends MavLinkData {
    */
   heightReference: MavOdidHeightRef
   /**
-   * The current height of the unmanned aircraft above the take-off location or the ground as
-   * indicated by height_reference. If unknown: -1000 m.
+   * The current height of the unmanned aircraft above the take-off location or the ground as indicated
+   * by height_reference. If unknown: -1000 m.
    */
   height: float
   /**
@@ -14051,13 +14002,12 @@ export class OpenDroneIdAuthentication extends MavLinkData {
    */
   length: uint8_t
   /**
-   * This field is only present for page 0. 32 bit Unix Timestamp in seconds since 00:00:00
-   * 01/01/2019.
+   * This field is only present for page 0. 32 bit Unix Timestamp in seconds since 00:00:00 01/01/2019.
    */
   timestamp: uint32_t
   /**
-   * Opaque authentication data. For page 0, the size is only 17 bytes. For other pages, the size is
-   * 23 bytes. Shall be filled with nulls in the unused portion of the field.
+   * Opaque authentication data. For page 0, the size is only 17 bytes. For other pages, the size is 23
+   * bytes. Shall be filled with nulls in the unused portion of the field.
    */
   authenticationData: uint8_t[]
 }
@@ -14098,8 +14048,8 @@ export class OpenDroneIdSelfId extends MavLinkData {
    */
   descriptionType: MavOdidDescType
   /**
-   * Text description or numeric value expressed as ASCII characters. Shall be filled with nulls in
-   * the unused portion of the field.
+   * Text description or numeric value expressed as ASCII characters. Shall be filled with nulls in the
+   * unused portion of the field.
    */
   description: char[]
 }
@@ -14217,8 +14167,8 @@ export class OpenDroneIdOperatorId extends MavLinkData {
    */
   operatorIdType: MavOdidOperatorIdType
   /**
-   * Text description or numeric value expressed as ASCII characters. Shall be filled with nulls in
-   * the unused portion of the field.
+   * Text description or numeric value expressed as ASCII characters. Shall be filled with nulls in the
+   * unused portion of the field.
    */
   operatorId: char[]
 }
@@ -14250,8 +14200,8 @@ export class OpenDroneIdMessagePack extends MavLinkData {
    */
   targetComponent: uint8_t
   /**
-   * This field must currently always be equal to 25 (bytes), since all encoded OpenDroneID messages
-   * are specificed to have this length.
+   * This field must currently always be equal to 25 (bytes), since all encoded OpenDroneID messages are
+   * specificed to have this length.
    */
   singleMessageSize: uint8_t
   /**
@@ -14259,8 +14209,8 @@ export class OpenDroneIdMessagePack extends MavLinkData {
    */
   msgPackSize: uint8_t
   /**
-   * Concatenation of encoded OpenDroneID messages. Shall be filled with nulls in the unused portion
-   * of the field.
+   * Concatenation of encoded OpenDroneID messages. Shall be filled with nulls in the unused portion of
+   * the field.
    */
   messages: uint8_t[]
 }
@@ -14407,7 +14357,7 @@ export const REGISTRY = {
   250: DebugVect,
   251: NamedValueFloat,
   252: NamedValueInt,
-  253: Statustext,
+  253: StatusText,
   254: Debug,
   256: SetupSigning,
   257: ButtonChange,

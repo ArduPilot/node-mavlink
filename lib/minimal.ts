@@ -83,8 +83,8 @@ export enum MavModeFlag {
   /**
    * 0b10000000 MAV safety set to armed. Motors are enabled / running / can start. Ready to fly.
    * Additional note: this flag is to be ignore when sent in the command MAV_CMD_DO_SET_MODE and
-   * MAV_CMD_COMPONENT_ARM_DISARM shall be used instead. The flag can still be used to report the
-   * armed state.
+   * MAV_CMD_COMPONENT_ARM_DISARM shall be used instead. The flag can still be used to report the armed
+   * state.
    */
   'SAFETY_ARMED'                                 = 128,
   'MANUAL_INPUT_ENABLED'                         = 64,
@@ -94,14 +94,14 @@ export enum MavModeFlag {
    */
   'HIL_ENABLED'                                  = 32,
   /**
-   * 0b00010000 system stabilizes electronically its attitude (and optionally position). It needs
-   * however further control inputs to move around.
+   * 0b00010000 system stabilizes electronically its attitude (and optionally position). It needs however
+   * further control inputs to move around.
    */
   'STABILIZE_ENABLED'                            = 16,
   'GUIDED_ENABLED'                               = 8,
   /**
-   * 0b00000100 autonomous mode enabled, system finds its own goal positions. Guided flag can be set
-   * or not, depends on the actual implementation.
+   * 0b00000100 autonomous mode enabled, system finds its own goal positions. Guided flag can be set or
+   * not, depends on the actual implementation.
    */
   'AUTO_ENABLED'                                 = 4,
   /**
@@ -137,8 +137,8 @@ export enum MavState {
   'ACTIVE'                                       = 4,
   'CRITICAL'                                     = 5,
   /**
-   * System is in a non-normal flight mode. It lost control over parts or over the whole airframe. It
-   * is in mayday and going down.
+   * System is in a non-normal flight mode. It lost control over parts or over the whole airframe. It is
+   * in mayday and going down.
    */
   'EMERGENCY'                                    = 6,
   'POWEROFF'                                     = 7,
@@ -156,10 +156,9 @@ export enum MavState {
  */
 export enum MavComponent {
   /**
-   * Target id (target_component) used to broadcast messages to all components of the receiving
-   * system. Components should attempt to process messages with this component ID and forward to
-   * components on any other interfaces. Note: This is not a valid *source* component id for a
-   * message.
+   * Target id (target_component) used to broadcast messages to all components of the receiving system.
+   * Components should attempt to process messages with this component ID and forward to components on
+   * any other interfaces. Note: This is not a valid *source* component id for a message.
    */
   'ALL'                                          = 0,
   /**
@@ -168,374 +167,374 @@ export enum MavComponent {
    */
   'AUTOPILOT1'                                   = 1,
   /**
-   * Id for a component on privately managed MAVLink network. Can be used for any purpose but may not
-   * be published by components outside of the private network.
+   * Id for a component on privately managed MAVLink network. Can be used for any purpose but may not be
+   * published by components outside of the private network.
    */
   'USER1'                                        = 25,
   /**
-   * Id for a component on privately managed MAVLink network. Can be used for any purpose but may not
-   * be published by components outside of the private network.
+   * Id for a component on privately managed MAVLink network. Can be used for any purpose but may not be
+   * published by components outside of the private network.
    */
   'USER2'                                        = 26,
   /**
-   * Id for a component on privately managed MAVLink network. Can be used for any purpose but may not
-   * be published by components outside of the private network.
+   * Id for a component on privately managed MAVLink network. Can be used for any purpose but may not be
+   * published by components outside of the private network.
    */
   'USER3'                                        = 27,
   /**
-   * Id for a component on privately managed MAVLink network. Can be used for any purpose but may not
-   * be published by components outside of the private network.
+   * Id for a component on privately managed MAVLink network. Can be used for any purpose but may not be
+   * published by components outside of the private network.
    */
   'USER4'                                        = 28,
   /**
-   * Id for a component on privately managed MAVLink network. Can be used for any purpose but may not
-   * be published by components outside of the private network.
+   * Id for a component on privately managed MAVLink network. Can be used for any purpose but may not be
+   * published by components outside of the private network.
    */
   'USER5'                                        = 29,
   /**
-   * Id for a component on privately managed MAVLink network. Can be used for any purpose but may not
-   * be published by components outside of the private network.
+   * Id for a component on privately managed MAVLink network. Can be used for any purpose but may not be
+   * published by components outside of the private network.
    */
   'USER6'                                        = 30,
   /**
-   * Id for a component on privately managed MAVLink network. Can be used for any purpose but may not
-   * be published by components outside of the private network.
+   * Id for a component on privately managed MAVLink network. Can be used for any purpose but may not be
+   * published by components outside of the private network.
    */
   'USER7'                                        = 31,
   /**
-   * Id for a component on privately managed MAVLink network. Can be used for any purpose but may not
-   * be published by components outside of the private network.
+   * Id for a component on privately managed MAVLink network. Can be used for any purpose but may not be
+   * published by components outside of the private network.
    */
   'USER8'                                        = 32,
   /**
-   * Id for a component on privately managed MAVLink network. Can be used for any purpose but may not
-   * be published by components outside of the private network.
+   * Id for a component on privately managed MAVLink network. Can be used for any purpose but may not be
+   * published by components outside of the private network.
    */
   'USER9'                                        = 33,
   /**
-   * Id for a component on privately managed MAVLink network. Can be used for any purpose but may not
-   * be published by components outside of the private network.
+   * Id for a component on privately managed MAVLink network. Can be used for any purpose but may not be
+   * published by components outside of the private network.
    */
   'USER10'                                       = 34,
   /**
-   * Id for a component on privately managed MAVLink network. Can be used for any purpose but may not
-   * be published by components outside of the private network.
+   * Id for a component on privately managed MAVLink network. Can be used for any purpose but may not be
+   * published by components outside of the private network.
    */
   'USER11'                                       = 35,
   /**
-   * Id for a component on privately managed MAVLink network. Can be used for any purpose but may not
-   * be published by components outside of the private network.
+   * Id for a component on privately managed MAVLink network. Can be used for any purpose but may not be
+   * published by components outside of the private network.
    */
   'USER12'                                       = 36,
   /**
-   * Id for a component on privately managed MAVLink network. Can be used for any purpose but may not
-   * be published by components outside of the private network.
+   * Id for a component on privately managed MAVLink network. Can be used for any purpose but may not be
+   * published by components outside of the private network.
    */
   'USER13'                                       = 37,
   /**
-   * Id for a component on privately managed MAVLink network. Can be used for any purpose but may not
-   * be published by components outside of the private network.
+   * Id for a component on privately managed MAVLink network. Can be used for any purpose but may not be
+   * published by components outside of the private network.
    */
   'USER14'                                       = 38,
   /**
-   * Id for a component on privately managed MAVLink network. Can be used for any purpose but may not
-   * be published by components outside of the private network.
+   * Id for a component on privately managed MAVLink network. Can be used for any purpose but may not be
+   * published by components outside of the private network.
    */
   'USER15'                                       = 39,
   /**
-   * Id for a component on privately managed MAVLink network. Can be used for any purpose but may not
-   * be published by components outside of the private network.
+   * Id for a component on privately managed MAVLink network. Can be used for any purpose but may not be
+   * published by components outside of the private network.
    */
   'USER16'                                       = 40,
   /**
-   * Id for a component on privately managed MAVLink network. Can be used for any purpose but may not
-   * be published by components outside of the private network.
+   * Id for a component on privately managed MAVLink network. Can be used for any purpose but may not be
+   * published by components outside of the private network.
    */
   'USER17'                                       = 41,
   /**
-   * Id for a component on privately managed MAVLink network. Can be used for any purpose but may not
-   * be published by components outside of the private network.
+   * Id for a component on privately managed MAVLink network. Can be used for any purpose but may not be
+   * published by components outside of the private network.
    */
   'USER18'                                       = 42,
   /**
-   * Id for a component on privately managed MAVLink network. Can be used for any purpose but may not
-   * be published by components outside of the private network.
+   * Id for a component on privately managed MAVLink network. Can be used for any purpose but may not be
+   * published by components outside of the private network.
    */
   'USER19'                                       = 43,
   /**
-   * Id for a component on privately managed MAVLink network. Can be used for any purpose but may not
-   * be published by components outside of the private network.
+   * Id for a component on privately managed MAVLink network. Can be used for any purpose but may not be
+   * published by components outside of the private network.
    */
   'USER20'                                       = 44,
   /**
-   * Id for a component on privately managed MAVLink network. Can be used for any purpose but may not
-   * be published by components outside of the private network.
+   * Id for a component on privately managed MAVLink network. Can be used for any purpose but may not be
+   * published by components outside of the private network.
    */
   'USER21'                                       = 45,
   /**
-   * Id for a component on privately managed MAVLink network. Can be used for any purpose but may not
-   * be published by components outside of the private network.
+   * Id for a component on privately managed MAVLink network. Can be used for any purpose but may not be
+   * published by components outside of the private network.
    */
   'USER22'                                       = 46,
   /**
-   * Id for a component on privately managed MAVLink network. Can be used for any purpose but may not
-   * be published by components outside of the private network.
+   * Id for a component on privately managed MAVLink network. Can be used for any purpose but may not be
+   * published by components outside of the private network.
    */
   'USER23'                                       = 47,
   /**
-   * Id for a component on privately managed MAVLink network. Can be used for any purpose but may not
-   * be published by components outside of the private network.
+   * Id for a component on privately managed MAVLink network. Can be used for any purpose but may not be
+   * published by components outside of the private network.
    */
   'USER24'                                       = 48,
   /**
-   * Id for a component on privately managed MAVLink network. Can be used for any purpose but may not
-   * be published by components outside of the private network.
+   * Id for a component on privately managed MAVLink network. Can be used for any purpose but may not be
+   * published by components outside of the private network.
    */
   'USER25'                                       = 49,
   /**
-   * Id for a component on privately managed MAVLink network. Can be used for any purpose but may not
-   * be published by components outside of the private network.
+   * Id for a component on privately managed MAVLink network. Can be used for any purpose but may not be
+   * published by components outside of the private network.
    */
   'USER26'                                       = 50,
   /**
-   * Id for a component on privately managed MAVLink network. Can be used for any purpose but may not
-   * be published by components outside of the private network.
+   * Id for a component on privately managed MAVLink network. Can be used for any purpose but may not be
+   * published by components outside of the private network.
    */
   'USER27'                                       = 51,
   /**
-   * Id for a component on privately managed MAVLink network. Can be used for any purpose but may not
-   * be published by components outside of the private network.
+   * Id for a component on privately managed MAVLink network. Can be used for any purpose but may not be
+   * published by components outside of the private network.
    */
   'USER28'                                       = 52,
   /**
-   * Id for a component on privately managed MAVLink network. Can be used for any purpose but may not
-   * be published by components outside of the private network.
+   * Id for a component on privately managed MAVLink network. Can be used for any purpose but may not be
+   * published by components outside of the private network.
    */
   'USER29'                                       = 53,
   /**
-   * Id for a component on privately managed MAVLink network. Can be used for any purpose but may not
-   * be published by components outside of the private network.
+   * Id for a component on privately managed MAVLink network. Can be used for any purpose but may not be
+   * published by components outside of the private network.
    */
   'USER30'                                       = 54,
   /**
-   * Id for a component on privately managed MAVLink network. Can be used for any purpose but may not
-   * be published by components outside of the private network.
+   * Id for a component on privately managed MAVLink network. Can be used for any purpose but may not be
+   * published by components outside of the private network.
    */
   'USER31'                                       = 55,
   /**
-   * Id for a component on privately managed MAVLink network. Can be used for any purpose but may not
-   * be published by components outside of the private network.
+   * Id for a component on privately managed MAVLink network. Can be used for any purpose but may not be
+   * published by components outside of the private network.
    */
   'USER32'                                       = 56,
   /**
-   * Id for a component on privately managed MAVLink network. Can be used for any purpose but may not
-   * be published by components outside of the private network.
+   * Id for a component on privately managed MAVLink network. Can be used for any purpose but may not be
+   * published by components outside of the private network.
    */
   'USER33'                                       = 57,
   /**
-   * Id for a component on privately managed MAVLink network. Can be used for any purpose but may not
-   * be published by components outside of the private network.
+   * Id for a component on privately managed MAVLink network. Can be used for any purpose but may not be
+   * published by components outside of the private network.
    */
   'USER34'                                       = 58,
   /**
-   * Id for a component on privately managed MAVLink network. Can be used for any purpose but may not
-   * be published by components outside of the private network.
+   * Id for a component on privately managed MAVLink network. Can be used for any purpose but may not be
+   * published by components outside of the private network.
    */
   'USER35'                                       = 59,
   /**
-   * Id for a component on privately managed MAVLink network. Can be used for any purpose but may not
-   * be published by components outside of the private network.
+   * Id for a component on privately managed MAVLink network. Can be used for any purpose but may not be
+   * published by components outside of the private network.
    */
   'USER36'                                       = 60,
   /**
-   * Id for a component on privately managed MAVLink network. Can be used for any purpose but may not
-   * be published by components outside of the private network.
+   * Id for a component on privately managed MAVLink network. Can be used for any purpose but may not be
+   * published by components outside of the private network.
    */
   'USER37'                                       = 61,
   /**
-   * Id for a component on privately managed MAVLink network. Can be used for any purpose but may not
-   * be published by components outside of the private network.
+   * Id for a component on privately managed MAVLink network. Can be used for any purpose but may not be
+   * published by components outside of the private network.
    */
   'USER38'                                       = 62,
   /**
-   * Id for a component on privately managed MAVLink network. Can be used for any purpose but may not
-   * be published by components outside of the private network.
+   * Id for a component on privately managed MAVLink network. Can be used for any purpose but may not be
+   * published by components outside of the private network.
    */
   'USER39'                                       = 63,
   /**
-   * Id for a component on privately managed MAVLink network. Can be used for any purpose but may not
-   * be published by components outside of the private network.
+   * Id for a component on privately managed MAVLink network. Can be used for any purpose but may not be
+   * published by components outside of the private network.
    */
   'USER40'                                       = 64,
   /**
-   * Id for a component on privately managed MAVLink network. Can be used for any purpose but may not
-   * be published by components outside of the private network.
+   * Id for a component on privately managed MAVLink network. Can be used for any purpose but may not be
+   * published by components outside of the private network.
    */
   'USER41'                                       = 65,
   /**
-   * Id for a component on privately managed MAVLink network. Can be used for any purpose but may not
-   * be published by components outside of the private network.
+   * Id for a component on privately managed MAVLink network. Can be used for any purpose but may not be
+   * published by components outside of the private network.
    */
   'USER42'                                       = 66,
   /**
-   * Id for a component on privately managed MAVLink network. Can be used for any purpose but may not
-   * be published by components outside of the private network.
+   * Id for a component on privately managed MAVLink network. Can be used for any purpose but may not be
+   * published by components outside of the private network.
    */
   'USER43'                                       = 67,
   'TELEMETRY_RADIO'                              = 68,
   /**
-   * Id for a component on privately managed MAVLink network. Can be used for any purpose but may not
-   * be published by components outside of the private network.
+   * Id for a component on privately managed MAVLink network. Can be used for any purpose but may not be
+   * published by components outside of the private network.
    */
   'USER45'                                       = 69,
   /**
-   * Id for a component on privately managed MAVLink network. Can be used for any purpose but may not
-   * be published by components outside of the private network.
+   * Id for a component on privately managed MAVLink network. Can be used for any purpose but may not be
+   * published by components outside of the private network.
    */
   'USER46'                                       = 70,
   /**
-   * Id for a component on privately managed MAVLink network. Can be used for any purpose but may not
-   * be published by components outside of the private network.
+   * Id for a component on privately managed MAVLink network. Can be used for any purpose but may not be
+   * published by components outside of the private network.
    */
   'USER47'                                       = 71,
   /**
-   * Id for a component on privately managed MAVLink network. Can be used for any purpose but may not
-   * be published by components outside of the private network.
+   * Id for a component on privately managed MAVLink network. Can be used for any purpose but may not be
+   * published by components outside of the private network.
    */
   'USER48'                                       = 72,
   /**
-   * Id for a component on privately managed MAVLink network. Can be used for any purpose but may not
-   * be published by components outside of the private network.
+   * Id for a component on privately managed MAVLink network. Can be used for any purpose but may not be
+   * published by components outside of the private network.
    */
   'USER49'                                       = 73,
   /**
-   * Id for a component on privately managed MAVLink network. Can be used for any purpose but may not
-   * be published by components outside of the private network.
+   * Id for a component on privately managed MAVLink network. Can be used for any purpose but may not be
+   * published by components outside of the private network.
    */
   'USER50'                                       = 74,
   /**
-   * Id for a component on privately managed MAVLink network. Can be used for any purpose but may not
-   * be published by components outside of the private network.
+   * Id for a component on privately managed MAVLink network. Can be used for any purpose but may not be
+   * published by components outside of the private network.
    */
   'USER51'                                       = 75,
   /**
-   * Id for a component on privately managed MAVLink network. Can be used for any purpose but may not
-   * be published by components outside of the private network.
+   * Id for a component on privately managed MAVLink network. Can be used for any purpose but may not be
+   * published by components outside of the private network.
    */
   'USER52'                                       = 76,
   /**
-   * Id for a component on privately managed MAVLink network. Can be used for any purpose but may not
-   * be published by components outside of the private network.
+   * Id for a component on privately managed MAVLink network. Can be used for any purpose but may not be
+   * published by components outside of the private network.
    */
   'USER53'                                       = 77,
   /**
-   * Id for a component on privately managed MAVLink network. Can be used for any purpose but may not
-   * be published by components outside of the private network.
+   * Id for a component on privately managed MAVLink network. Can be used for any purpose but may not be
+   * published by components outside of the private network.
    */
   'USER54'                                       = 78,
   /**
-   * Id for a component on privately managed MAVLink network. Can be used for any purpose but may not
-   * be published by components outside of the private network.
+   * Id for a component on privately managed MAVLink network. Can be used for any purpose but may not be
+   * published by components outside of the private network.
    */
   'USER55'                                       = 79,
   /**
-   * Id for a component on privately managed MAVLink network. Can be used for any purpose but may not
-   * be published by components outside of the private network.
+   * Id for a component on privately managed MAVLink network. Can be used for any purpose but may not be
+   * published by components outside of the private network.
    */
   'USER56'                                       = 80,
   /**
-   * Id for a component on privately managed MAVLink network. Can be used for any purpose but may not
-   * be published by components outside of the private network.
+   * Id for a component on privately managed MAVLink network. Can be used for any purpose but may not be
+   * published by components outside of the private network.
    */
   'USER57'                                       = 81,
   /**
-   * Id for a component on privately managed MAVLink network. Can be used for any purpose but may not
-   * be published by components outside of the private network.
+   * Id for a component on privately managed MAVLink network. Can be used for any purpose but may not be
+   * published by components outside of the private network.
    */
   'USER58'                                       = 82,
   /**
-   * Id for a component on privately managed MAVLink network. Can be used for any purpose but may not
-   * be published by components outside of the private network.
+   * Id for a component on privately managed MAVLink network. Can be used for any purpose but may not be
+   * published by components outside of the private network.
    */
   'USER59'                                       = 83,
   /**
-   * Id for a component on privately managed MAVLink network. Can be used for any purpose but may not
-   * be published by components outside of the private network.
+   * Id for a component on privately managed MAVLink network. Can be used for any purpose but may not be
+   * published by components outside of the private network.
    */
   'USER60'                                       = 84,
   /**
-   * Id for a component on privately managed MAVLink network. Can be used for any purpose but may not
-   * be published by components outside of the private network.
+   * Id for a component on privately managed MAVLink network. Can be used for any purpose but may not be
+   * published by components outside of the private network.
    */
   'USER61'                                       = 85,
   /**
-   * Id for a component on privately managed MAVLink network. Can be used for any purpose but may not
-   * be published by components outside of the private network.
+   * Id for a component on privately managed MAVLink network. Can be used for any purpose but may not be
+   * published by components outside of the private network.
    */
   'USER62'                                       = 86,
   /**
-   * Id for a component on privately managed MAVLink network. Can be used for any purpose but may not
-   * be published by components outside of the private network.
+   * Id for a component on privately managed MAVLink network. Can be used for any purpose but may not be
+   * published by components outside of the private network.
    */
   'USER63'                                       = 87,
   /**
-   * Id for a component on privately managed MAVLink network. Can be used for any purpose but may not
-   * be published by components outside of the private network.
+   * Id for a component on privately managed MAVLink network. Can be used for any purpose but may not be
+   * published by components outside of the private network.
    */
   'USER64'                                       = 88,
   /**
-   * Id for a component on privately managed MAVLink network. Can be used for any purpose but may not
-   * be published by components outside of the private network.
+   * Id for a component on privately managed MAVLink network. Can be used for any purpose but may not be
+   * published by components outside of the private network.
    */
   'USER65'                                       = 89,
   /**
-   * Id for a component on privately managed MAVLink network. Can be used for any purpose but may not
-   * be published by components outside of the private network.
+   * Id for a component on privately managed MAVLink network. Can be used for any purpose but may not be
+   * published by components outside of the private network.
    */
   'USER66'                                       = 90,
   /**
-   * Id for a component on privately managed MAVLink network. Can be used for any purpose but may not
-   * be published by components outside of the private network.
+   * Id for a component on privately managed MAVLink network. Can be used for any purpose but may not be
+   * published by components outside of the private network.
    */
   'USER67'                                       = 91,
   /**
-   * Id for a component on privately managed MAVLink network. Can be used for any purpose but may not
-   * be published by components outside of the private network.
+   * Id for a component on privately managed MAVLink network. Can be used for any purpose but may not be
+   * published by components outside of the private network.
    */
   'USER68'                                       = 92,
   /**
-   * Id for a component on privately managed MAVLink network. Can be used for any purpose but may not
-   * be published by components outside of the private network.
+   * Id for a component on privately managed MAVLink network. Can be used for any purpose but may not be
+   * published by components outside of the private network.
    */
   'USER69'                                       = 93,
   /**
-   * Id for a component on privately managed MAVLink network. Can be used for any purpose but may not
-   * be published by components outside of the private network.
+   * Id for a component on privately managed MAVLink network. Can be used for any purpose but may not be
+   * published by components outside of the private network.
    */
   'USER70'                                       = 94,
   /**
-   * Id for a component on privately managed MAVLink network. Can be used for any purpose but may not
-   * be published by components outside of the private network.
+   * Id for a component on privately managed MAVLink network. Can be used for any purpose but may not be
+   * published by components outside of the private network.
    */
   'USER71'                                       = 95,
   /**
-   * Id for a component on privately managed MAVLink network. Can be used for any purpose but may not
-   * be published by components outside of the private network.
+   * Id for a component on privately managed MAVLink network. Can be used for any purpose but may not be
+   * published by components outside of the private network.
    */
   'USER72'                                       = 96,
   /**
-   * Id for a component on privately managed MAVLink network. Can be used for any purpose but may not
-   * be published by components outside of the private network.
+   * Id for a component on privately managed MAVLink network. Can be used for any purpose but may not be
+   * published by components outside of the private network.
    */
   'USER73'                                       = 97,
   /**
-   * Id for a component on privately managed MAVLink network. Can be used for any purpose but may not
-   * be published by components outside of the private network.
+   * Id for a component on privately managed MAVLink network. Can be used for any purpose but may not be
+   * published by components outside of the private network.
    */
   'USER74'                                       = 98,
   /**
-   * Id for a component on privately managed MAVLink network. Can be used for any purpose but may not
-   * be published by components outside of the private network.
+   * Id for a component on privately managed MAVLink network. Can be used for any purpose but may not be
+   * published by components outside of the private network.
    */
   'USER75'                                       = 99,
   'CAMERA'                                       = 100,
@@ -579,8 +578,8 @@ export enum MavComponent {
   'MISSIONPLANNER'                               = 190,
   /**
    * Component that lives on the onboard computer (companion computer) and has some generic
-   * functionalities, such as settings system parameters and monitoring the status of some processes
-   * that don't directly speak mavlink and so on.
+   * functionalities, such as settings system parameters and monitoring the status of some processes that
+   * don't directly speak mavlink and so on.
    */
   'ONBOARD_COMPUTER'                             = 191,
   /**
@@ -626,13 +625,12 @@ export class Heartbeat extends MavLinkData {
 
   /**
    * Vehicle or component type. For a flight controller component the vehicle type (quadrotor,
-   * helicopter, etc.). For other components the component type (e.g. camera, gimbal, etc.). This
-   * should be used in preference to component id for identifying the component type.
+   * helicopter, etc.). For other components the component type (e.g. camera, gimbal, etc.). This should
+   * be used in preference to component id for identifying the component type.
    */
   type: MavType
   /**
-   * Autopilot type / class. Use MAV_AUTOPILOT_INVALID for components that are not flight
-   * controllers.
+   * Autopilot type / class. Use MAV_AUTOPILOT_INVALID for components that are not flight controllers.
    */
   autopilot: MavAutopilot
   /**

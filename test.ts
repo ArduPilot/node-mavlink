@@ -3,7 +3,8 @@
 import * as SerialPort from 'serialport'
 import {
   MavLinkPacket, MavLinkPacketSplitter, MavLinkPacketParser,
-  minimal, common, ardupilotmega
+  minimal, common, ardupilotmega,
+  dump,
 } from '.'
 
 const REGISTRY = {
