@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 
 import * as SerialPort from 'serialport'
+
 import {
   MavLinkPacket, MavLinkPacketSplitter, MavLinkPacketParser,
   minimal, common, ardupilotmega, uavionix, icarous,

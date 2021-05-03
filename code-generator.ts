@@ -5,6 +5,7 @@ import * as parser from 'xml2js'
 import { x25crc, dump } from './lib/mavlink'
 
 const snakeToCamel = s => s.replace(/([-_]\w)/g, g => g[1].toUpperCase());
+
 const snakeToPascal = s => {
   const camelCase = snakeToCamel(s);
   return camelCase[0].toUpperCase() + camelCase.substr(1);
@@ -384,12 +385,14 @@ function generate(obj: any, output: Writter) {
 
     // generate fields collection
     output.write('  static FIELDS = [')
+
+    // base fields go first; they are sorted from the largest fields to the smalles
+    // if the size is the same then the order from xml is preserved
     const fields = [...message.fields]
     fields.sort((f1, f2) => f2.fieldSize - f1.fieldSize)
 
     let offset = 0
 
-    // base fields go first
     fields
       .filter(field => !field.extension)
       .forEach(field => {
@@ -437,9 +440,9 @@ function generate(obj: any, output: Writter) {
   output.write()
 }
 
-const parts = [ 'minimal', 'common', 'ardupilotmega', 'uavionix', 'icarous' ]
-
 async function main() {
+  const parts = [ 'minimal', 'common', 'ardupilotmega', 'uavionix', 'icarous' ]
+
   for (let i = 0; i < parts.length; i++) {
     const part = parts[i]
     const imports = fs.readFileSync(`lib/${part}.imports.ts`)
