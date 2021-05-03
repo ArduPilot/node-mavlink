@@ -2524,7 +2524,7 @@ export class ChangeOperatorControl extends MavLinkData {
    * Password / Key, depending on version plaintext or encrypted. 25 or less characters, NULL terminated.
    * The characters may involve A-Z, a-z, 0-9, and "!?,.-"
    */
-  passkey: char[]
+  passkey: string
 }
 
 /**
@@ -2570,7 +2570,7 @@ export class AuthKey extends MavLinkData {
   /**
    * key
    */
-  key: char[]
+  key: string
 }
 
 /**
@@ -2699,7 +2699,7 @@ export class ParamAckTransaction extends MavLinkData {
    * termination (NULL) byte if the length is exactly 16 chars - applications have to provide 16+1 bytes
    * storage if the ID is stored as string
    */
-  paramId: char[]
+  paramId: string
   /**
    * Parameter value (new value if PARAM_ACCEPTED, current value otherwise)
    */
@@ -2746,7 +2746,7 @@ export class ParamRequestRead extends MavLinkData {
    * WITHOUT null termination (NULL) byte if the length is exactly 16 chars - applications have to
    * provide 16+1 bytes storage if the ID is stored as string
    */
-  paramId: char[]
+  paramId: string
   /**
    * Parameter index. Send -1 to use the param ID field as identifier (else the param id will be ignored)
    */
@@ -2799,7 +2799,7 @@ export class ParamValue extends MavLinkData {
    * WITHOUT null termination (NULL) byte if the length is exactly 16 chars - applications have to
    * provide 16+1 bytes storage if the ID is stored as string
    */
-  paramId: char[]
+  paramId: string
   /**
    * Onboard parameter value
    */
@@ -2854,7 +2854,7 @@ export class ParamSet extends MavLinkData {
    * WITHOUT null termination (NULL) byte if the length is exactly 16 chars - applications have to
    * provide 16+1 bytes storage if the ID is stored as string
    */
-  paramId: char[]
+  paramId: string
   /**
    * Onboard parameter value
    */
@@ -4191,7 +4191,7 @@ export class ParamMapRc extends MavLinkData {
    * WITHOUT null termination (NULL) byte if the length is exactly 16 chars - applications have to
    * provide 16+1 bytes storage if the ID is stored as string
    */
-  paramId: char[]
+  paramId: string
   /**
    * Parameter index. Send -1 to use the param ID field as identifier (else the param id will be
    * ignored), send -2 to disable any existing map for this rc_channel_index.
@@ -10105,7 +10105,7 @@ export class AdsbVehicle extends MavLinkData {
   /**
    * The callsign, 8+null
    */
-  callsign: char[]
+  callsign: string
   /**
    * ADSB emitter type.
    */
@@ -10271,7 +10271,7 @@ export class DebugVect extends MavLinkData {
   /**
    * Name
    */
-  name: char[]
+  name: string
   /**
    * Timestamp (UNIX Epoch time or time since system boot). The receiving end can infer timestamp format
    * (since 1.1.1970 or since system boot) by checking for the magnitude of the number.
@@ -10312,7 +10312,7 @@ export class NamedValueFloat extends MavLinkData {
   /**
    * Name of the debug variable
    */
-  name: char[]
+  name: string
   /**
    * Floating point value
    */
@@ -10340,7 +10340,7 @@ export class NamedValueInt extends MavLinkData {
   /**
    * Name of the debug variable
    */
-  name: char[]
+  name: string
   /**
    * Signed integer value
    */
@@ -10371,7 +10371,7 @@ export class StatusText extends MavLinkData {
   /**
    * Status text message, without null termination character
    */
-  text: char[]
+  text: string
   /**
    * Unique (opaque) identifier for this statustext message. May be used to reassemble a logical
    * long-statustext message from a sequence of chunks. A value of zero indicates this is the only chunk
@@ -10500,11 +10500,11 @@ export class PlayTune extends MavLinkData {
   /**
    * tune in board specific format
    */
-  tune: char[]
+  tune: string
   /**
    * tune extension (appended to tune)
    */
-  tune2: char[]
+  tune2: string
 }
 
 /**
@@ -10586,7 +10586,7 @@ export class CameraInformation extends MavLinkData {
    * indicated by the file extension .xml.xz (a GCS that implements the protocol must support
    * decompressing the file).
    */
-  camDefinitionUri: char[]
+  camDefinitionUri: string
 }
 
 /**
@@ -10690,7 +10690,7 @@ export class StorageInformation extends MavLinkData {
    * string. If it is exactly 32 characters long, add a terminating NULL. If this string is empty, the
    * generic type is shown to the user.
    */
-  name: char[]
+  name: string
 }
 
 /**
@@ -10809,7 +10809,7 @@ export class CameraImageCaptured extends MavLinkData {
   /**
    * URL of image taken. Either local storage or http://foo.jpg if camera provides an HTTP interface.
    */
-  fileUrl: char[]
+  fileUrl: string
 }
 
 /**
@@ -11062,12 +11062,12 @@ export class VideoStreamInformation extends MavLinkData {
   /**
    * Stream name.
    */
-  name: char[]
+  name: string
   /**
    * Video stream URI (TCP or RTSP URI ground station should connect to) or port number (UDP port ground
    * station should listen to).
    */
-  uri: char[]
+  uri: string
 }
 
 /**
@@ -11532,15 +11532,15 @@ export class GimbalDeviceInformation extends MavLinkData {
   /**
    * Name of the gimbal vendor.
    */
-  vendorName: char[]
+  vendorName: string
   /**
    * Name of the gimbal model.
    */
-  modelName: char[]
+  modelName: string
   /**
    * Custom name of the gimbal given to it by the user.
    */
-  customName: char[]
+  customName: string
   /**
    * Version of the gimbal firmware, encoded as: (Dev & 0xff) << 24 | (Patch & 0xff) << 16 | (Minor &
    * 0xff) << 8 | (Major & 0xff).
@@ -12007,11 +12007,11 @@ export class WifiConfigAp extends MavLinkData {
    * Name of Wi-Fi network (SSID). Blank to leave it unchanged when setting. Current SSID when sent back
    * as a response.
    */
-  ssid: char[]
+  ssid: string
   /**
    * Password. Blank for an open AP. MD5 hash when message is sent back as a response.
    */
-  password: char[]
+  password: string
   /**
    * WiFi Mode.
    */
@@ -12104,11 +12104,11 @@ export class AisVessel extends MavLinkData {
   /**
    * The vessel callsign
    */
-  callsign: char[]
+  callsign: string
   /**
    * The vessel name
    */
-  name: char[]
+  name: string
   /**
    * Time since last communication in seconds
    */
@@ -12200,7 +12200,7 @@ export class UavcanNodeInfo extends MavLinkData {
   /**
    * Node name string. For example, "sapog.px4.io".
    */
-  name: char[]
+  name: string
   /**
    * Hardware major version number.
    */
@@ -12255,7 +12255,7 @@ export class ParamExtRequestRead extends MavLinkData {
    * termination (NULL) byte if the length is exactly 16 chars - applications have to provide 16+1 bytes
    * storage if the ID is stored as string
    */
-  paramId: char[]
+  paramId: string
   /**
    * Parameter index. Set to -1 to use the Parameter ID field as identifier (else param_id will be
    * ignored)
@@ -12308,11 +12308,11 @@ export class ParamExtValue extends MavLinkData {
    * termination (NULL) byte if the length is exactly 16 chars - applications have to provide 16+1 bytes
    * storage if the ID is stored as string
    */
-  paramId: char[]
+  paramId: string
   /**
    * Parameter value
    */
-  paramValue: char[]
+  paramValue: string
   /**
    * Parameter type.
    */
@@ -12358,11 +12358,11 @@ export class ParamExtSet extends MavLinkData {
    * termination (NULL) byte if the length is exactly 16 chars - applications have to provide 16+1 bytes
    * storage if the ID is stored as string
    */
-  paramId: char[]
+  paramId: string
   /**
    * Parameter value
    */
-  paramValue: char[]
+  paramValue: string
   /**
    * Parameter type.
    */
@@ -12388,11 +12388,11 @@ export class ParamExtAck extends MavLinkData {
    * termination (NULL) byte if the length is exactly 16 chars - applications have to provide 16+1 bytes
    * storage if the ID is stored as string
    */
-  paramId: char[]
+  paramId: string
   /**
    * Parameter value (new value if PARAM_ACK_ACCEPTED, current value otherwise)
    */
-  paramValue: char[]
+  paramValue: string
   /**
    * Parameter type.
    */
@@ -12841,21 +12841,21 @@ export class CellularConfig extends MavLinkData {
   /**
    * PIN sent to the SIM card. Blank when PIN is disabled. Empty when message is sent back as a response.
    */
-  pin: char[]
+  pin: string
   /**
    * New PIN when changing the PIN. Blank to leave it unchanged. Empty when message is sent back as a
    * response.
    */
-  newPin: char[]
+  newPin: string
   /**
    * Name of the cellular APN. Blank to leave it unchanged. Current APN when sent back as a response.
    */
-  apn: char[]
+  apn: string
   /**
    * Required PUK code in case the user failed to authenticate 3 times with the PIN. Empty when message
    * is sent back as a response.
    */
-  puk: char[]
+  puk: string
   /**
    * Enable/disable roaming. 0: setting unchanged, 1: disabled, 2: enabled. Current setting when sent
    * back as a response.
@@ -13015,7 +13015,7 @@ export class DebugFloatArray extends MavLinkData {
   /**
    * Name, for human-friendly display in a Ground Control Station
    */
-  name: char[]
+  name: string
   /**
    * Unique ID used to discriminate between arrays
    */
@@ -13122,11 +13122,11 @@ export class SmartBatteryInfo extends MavLinkData {
   /**
    * Serial number in ASCII characters, 0 terminated. All 0: field not provided.
    */
-  serialNumber: char[]
+  serialNumber: string
   /**
    * Static device name. Encode as manufacturer and product names separated using an underscore.
    */
-  deviceName: char[]
+  deviceName: string
   /**
    * Battery weight. 0: field not provided.
    */
@@ -13483,7 +13483,7 @@ export class ComponentInformation extends MavLinkData {
    * Component definition URI for TYPE_GENERAL. This must be a MAVLink FTP URI and the file might be
    * compressed with xz.
    */
-  generalMetadataUri: char[]
+  generalMetadataUri: string
   /**
    * CRC32 of the TYPE_PERIPHERALS file (can be used by a GCS for file caching).
    */
@@ -13492,7 +13492,7 @@ export class ComponentInformation extends MavLinkData {
    * (Optional) Component definition URI for TYPE_PERIPHERALS. This must be a MAVLink FTP URI and the
    * file might be compressed with xz.
    */
-  peripheralsMetadataUri: char[]
+  peripheralsMetadataUri: string
 }
 
 /**
@@ -13524,7 +13524,7 @@ export class PlayTuneV2 extends MavLinkData {
   /**
    * Tune definition as a NULL-terminated string.
    */
-  tune: char[]
+  tune: string
 }
 
 /**
@@ -14051,7 +14051,7 @@ export class OpenDroneIdSelfId extends MavLinkData {
    * Text description or numeric value expressed as ASCII characters. Shall be filled with nulls in the
    * unused portion of the field.
    */
-  description: char[]
+  description: string
 }
 
 /**
@@ -14170,7 +14170,7 @@ export class OpenDroneIdOperatorId extends MavLinkData {
    * Text description or numeric value expressed as ASCII characters. Shall be filled with nulls in the
    * unused portion of the field.
    */
-  operatorId: char[]
+  operatorId: string
 }
 
 /**

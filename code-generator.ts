@@ -298,6 +298,9 @@ function generate(obj: any, output: Writter) {
           fieldSize: getTypeSize(field.$.type),
           itemType: extractArrayItemType(field.$.type),
         }
+        if (entry.type === 'char[]') {
+          entry.type = 'string'
+        }
         message.fields.push(entry)
       }
     })

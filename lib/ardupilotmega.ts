@@ -2682,7 +2682,7 @@ export class DeviceOpRead extends MavLinkData {
   /**
    * Name of device on bus (for SPI).
    */
-  busname: char[]
+  busname: string
   /**
    * First register to read.
    */
@@ -2787,7 +2787,7 @@ export class DeviceOpWrite extends MavLinkData {
   /**
    * Name of device on bus (for SPI).
    */
-  busname: char[]
+  busname: string
   /**
    * First register to write.
    */
@@ -3142,7 +3142,7 @@ export class OsdParamConfig extends MavLinkData {
    * WITHOUT null termination (NULL) byte if the length is exactly 16 chars - applications have to
    * provide 16+1 bytes storage if the ID is stored as string
    */
-  paramId: char[]
+  paramId: string
   /**
    * Config type.
    */
@@ -3250,7 +3250,7 @@ export class OsdParamShowConfigReply extends MavLinkData {
    * WITHOUT null termination (NULL) byte if the length is exactly 16 chars - applications have to
    * provide 16+1 bytes storage if the ID is stored as string
    */
-  paramId: char[]
+  paramId: string
   /**
    * Config type.
    */
