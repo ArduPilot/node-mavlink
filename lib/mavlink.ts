@@ -1,20 +1,8 @@
 import { Transform, TransformCallback } from 'stream'
+import { uint8_t, uint16_t } from './types'
+import { x25crc, dump } from './utils'
 import { MSG_ID_MAGIC_NUMBER } from './magic-numbers'
-
-import {
-  int8_t,
-  uint8_t,
-  uint16_t,
-  uint32_t,
-  uint64_t,
-  float,
-  double,
-} from './types'
-
-import {
-  x25crc,
-  dump,
-} from './utils'
+import { SERIALIZERS, DESERIALIZERS } from './serialization'
 
 export const MAVLINK_CHECKSUM_LENGTH = 0x02
 
@@ -61,167 +49,6 @@ export class MavLinkPacketField {
   }
 }
 
-const SERIALIZERS = {
-  // special types
-  'uint8_t_mavlink_version': (value: uint8_t, buffer: Buffer, offset: number) => buffer.writeUInt8(value, offset),
-
-  // singular types
-  'char'    : (value: int8_t, buffer: Buffer, offset: number) => buffer.writeUInt8(value, offset),
-  'int8_t'  : (value: int8_t, buffer: Buffer, offset: number) => buffer.writeUInt8(value, offset),
-  'uint8_t' : (value: uint8_t, buffer: Buffer, offset: number) => buffer.writeUInt8(value, offset),
-  'int16_t' : (value: uint16_t, buffer: Buffer, offset: number) => buffer.writeUInt16LE(value, offset),
-  'uint16_t': (value: uint16_t, buffer: Buffer, offset: number) => buffer.writeUInt16LE(value, offset),
-  'int32_t' : (value: uint32_t, buffer: Buffer, offset: number) => buffer.writeUInt32LE(value, offset),
-  'uint32_t': (value: uint32_t, buffer: Buffer, offset: number) => buffer.writeUInt32LE(value, offset),
-  'int64_t' : (value: uint64_t, buffer: Buffer, offset: number) => buffer.writeBigInt64LE(value, offset),
-  'uint64_t': (value: uint64_t, buffer: Buffer, offset: number) => buffer.writeBigUInt64LE(value, offset),
-  'float'   : (value: float, buffer: Buffer, offset: number) => buffer.writeFloatLE(value, offset),
-  'double'  : (value: double, buffer: Buffer, offset: number) => buffer.writeDoubleLE(value, offset),
-  
-  // array types
-  'char[]': (value: string, buffer: Buffer, offset: number, maxLen: number) => {
-    for (let i = 0; i < value.length && i < maxLen; i++) {
-      const code = value.charCodeAt(i)
-      buffer.writeUInt8(code, offset + i)
-    }
-  },
-  'int8[]': (value: uint8_t[], buffer: Buffer, offset: number, maxLen: number) => {
-    for (let i = 0; i < value.length && i < maxLen; i++) {
-      buffer.writeInt8(value[i], offset + i)
-    }
-  },
-  'uint8[]': (value: uint8_t[], buffer: Buffer, offset: number, maxLen: number) => {
-    for (let i = 0; i < value.length && i < maxLen; i++) {
-      buffer.writeUInt8(value[i], offset + i)
-    }
-  },
-  'int16[]': (value: uint16_t[], buffer: Buffer, offset: number, maxLen: number) => {
-    for (let i = 0; i < value.length && i < maxLen; i++) {
-      buffer.writeInt16LE(value[i], offset + i * 2)
-    }
-  },
-  'uint16[]': (value: uint16_t[], buffer: Buffer, offset: number, maxLen: number) => {
-    for (let i = 0; i < value.length && i < maxLen; i++) {
-      buffer.writeUInt16LE(value[i], offset + i * 2)
-    }
-  },
-  'int32[]': (value: uint32_t[], buffer: Buffer, offset: number, maxLen: number) => {
-    for (let i = 0; i < value.length && i < maxLen; i++) {
-      buffer.writeInt32LE(value[i], offset + i * 4)
-    }
-  },
-  'uint32[]': (value: uint32_t[], buffer: Buffer, offset: number, maxLen: number) => {
-    for (let i = 0; i < value.length && i < maxLen; i++) {
-      buffer.writeUInt32LE(value[i], offset + i * 4)
-    }
-  },
-  'int64[]': (value: uint64_t[], buffer: Buffer, offset: number, maxLen: number) => {
-    for (let i = 0; i < value.length && i < maxLen; i++) {
-      buffer.writeBigInt64LE(value[i], offset + i * 8)
-    }
-  },
-  'uint64[]': (value: uint64_t[], buffer: Buffer, offset: number, maxLen: number) => {
-    for (let i = 0; i < value.length && i < maxLen; i++) {
-      buffer.writeBigUInt64LE(value[i], offset + i * 8)
-    }
-  },
-  'float[]': (value: float[], buffer: Buffer, offset: number, maxLen: number) => {
-    for (let i = 0; i < value.length && i < maxLen; i++) {
-      buffer.writeFloatLE(value[i], offset + i * 4)
-    }
-  },
-  'double[]': (value: double[], buffer: Buffer, offset: number, maxLen: number) => {
-    for (let i = 0; i < value.length && i < maxLen; i++) {
-      buffer.writeDoubleLE(value[i], offset + i * 8)
-    }
-  },
-}
-
-/**
- * A dictionary containing functions that deserialize a certain value based on the field type
- */
-export const DESERIALIZERS = {
-  // special types
-  'uint8_t_mavlink_version': (buffer: Buffer, offset: number) => buffer.readUInt8(offset),
-
-  // singular types
-  'char'    : (buffer: Buffer, offset: number) => String.fromCharCode(buffer.readUInt8(offset)),
-  'int8_t'  : (buffer: Buffer, offset: number) => buffer.readInt8(offset),
-  'uint8_t' : (buffer: Buffer, offset: number) => buffer.readUInt8(offset),
-  'int16_t' : (buffer: Buffer, offset: number) => buffer.readInt16LE(offset),
-  'uint16_t': (buffer: Buffer, offset: number) => buffer.readUInt16LE(offset),
-  'int32_t' : (buffer: Buffer, offset: number) => buffer.readInt32LE(offset),
-  'uint32_t': (buffer: Buffer, offset: number) => buffer.readUInt32LE(offset),
-  'int64_t' : (buffer: Buffer, offset: number) => buffer.readBigInt64LE(offset),
-  'uint64_t': (buffer: Buffer, offset: number) => buffer.readBigUInt64LE(offset),
-  'float'   : (buffer: Buffer, offset: number) => buffer.readFloatLE(offset),
-  'double'  : (buffer: Buffer, offset: number) => buffer.readDoubleLE(offset),
-
-  // array types
-  'char[]': (buffer: Buffer, offset: number, length: number) => {
-    let result = ''
-    for (let i = 0; i < length; i++) {
-      const charCode = buffer.readUInt8(offset + i)
-      if (charCode !== 0) {
-        result += String.fromCharCode(charCode)
-      } else {
-        break
-      }
-    }
-    return result
-  },
-  'int8_t[]': (buffer: Buffer, offset: number, length: number) => {
-    const result = new Array<number>(length)
-    for (let i = 0; i < length; i++) result[i] = buffer.readInt8(offset + i)
-    return result
-  },
-  'uint8_t[]': (buffer: Buffer, offset: number, length: number) => {
-    const result = new Array<number>(length)
-    for (let i = 0; i < length; i++) result[i] = buffer.readUInt8(offset + i)
-    return result
-  },
-  'int16_t[]': (buffer: Buffer, offset: number, length: number) => {
-    const result = new Array<number>(length)
-    for (let i = 0; i < length; i++) result[i] = buffer.readInt16LE(offset + i * 2)
-    return result
-  },
-  'uint16_t[]': (buffer: Buffer, offset: number, length: number) => {
-    const result = new Array<number>(length)
-    for (let i = 0; i < length; i++) result[i] = buffer.readUInt16LE(offset + i * 2)
-    return result
-  },
-  'int32_t[]': (buffer: Buffer, offset: number, length: number) => {
-    const result = new Array<number>(length)
-    for (let i = 0; i < length; i++) result[i] = buffer.readInt32LE(offset + i * 4)
-    return result
-  },
-  'uint32_t[]': (buffer: Buffer, offset: number, length: number) => {
-    const result = new Array<number>(length)
-    for (let i = 0; i < length; i++) result[i] = buffer.readUInt32LE(offset + i * 4)
-    return result
-  },
-  'int64_t[]': (buffer: Buffer, offset: number, length: number) => {
-    const result = new Array<BigInt>(length)
-    for (let i = 0; i < length; i++) result[i] = buffer.readBigInt64LE(offset + i * 8)
-    return result
-  },
-  'uint64_t[]': (buffer: Buffer, offset: number, length: number) => {
-    const result = new Array<BigInt>(length)
-    for (let i = 0; i < length; i++) result[i] = buffer.readBigUInt64LE(offset + i * 8)
-    return result
-  },
-  'float[]': (buffer: Buffer, offset: number, length: number) => {
-    const result = new Array<number>(length)
-    for (let i = 0; i < length; i++) result[i] = buffer.readFloatLE(offset + i * 8)
-    return result
-  },
-  'double[]': (buffer: Buffer, offset: number, length: number) => {
-    const result = new Array<number>(length)
-    for (let i = 0; i < length; i++) result[i] = buffer.readFloatLE(offset + i * 8)
-    return result
-  },
-}
-
 /**
  * Base class for all data classes
  */
@@ -245,6 +72,12 @@ interface MavLinkDataConstructor<T extends MavLinkData> {
   new (): T
 }
 
+/**
+ * Base class for protocols
+ * 
+ * Implements common functionality like getting the CRC and deserializing
+ * data classes from the given payload buffer
+ */
 export abstract class MavLinkProtocol {
   static NAME = 'unknown'
   static START_BYTE = 0
@@ -258,7 +91,7 @@ export abstract class MavLinkProtocol {
   /**
    * Deserialize packet header
    */
-   abstract header(buffer): MavLinkPacketHeader
+  abstract header(buffer): MavLinkPacketHeader
 
   /**
    * Deserialize packet checksum
@@ -293,6 +126,9 @@ export abstract class MavLinkProtocol {
   }
 }
 
+/**
+ * Interface describing static fields of a protocol class
+ */
 interface MavLinkProtocolConstructor {
   NAME: string
   START_BYTE: number
@@ -300,7 +136,6 @@ interface MavLinkProtocolConstructor {
 
   new (): MavLinkProtocol
 }
-
 
 /**
  * MavLink Protocol V1
@@ -463,7 +298,6 @@ export class MavLinkPacket {
     readonly payload: Buffer = Buffer.from(new Uint8Array(255)),
     readonly crc: uint16_t = 0,
     readonly protocol: MavLinkProtocol,
-    readonly buffer: Buffer = null,
   ) {}
 }
 
@@ -549,10 +383,6 @@ export class MavLinkPacketSplitter extends Transform {
 
 /**
  * A transform stream that takes a buffer with data and converts it to MavLinkPacket object
- *
- * At this stage the buffer contains all the data but possibly truncated (MavLink protocol 2.0)
- * What this Transform does it reads all the common values and takes the buffer up to a length
- * that will allow reading values without checking the length of the buffer.
  */
 export class MavLinkPacketParser extends Transform {
   constructor(opts = {}) {
@@ -577,7 +407,7 @@ export class MavLinkPacketParser extends Transform {
     const payload = protocol.payload(chunk)
     const crc = protocol.crc(chunk)
 
-    const packet = new MavLinkPacket(header, payload, crc, protocol, chunk)
+    const packet = new MavLinkPacket(header, payload, crc, protocol)
 
     callback(null, packet)
   }

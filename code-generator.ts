@@ -104,7 +104,7 @@ class Writter {
 
 const magicNumbers = {}
 
-function generate(obj: any, output: Writter) {
+function generate(name: string, obj: any, output: Writter) {
   // ------------------------------------------------------------------------
   // ENUMS
   // ------------------------------------------------------------------------
@@ -439,7 +439,7 @@ function generate(obj: any, output: Writter) {
 
   // generate message registry
   output.write()
-  output.write('export const REGISTRY = {')
+  output.write(`export const REGISTRY = {`)
   messages.forEach(message => {
     output.write(`  ${message.id}: ${message.name},`)
   })
@@ -457,7 +457,7 @@ async function main() {
     const data = await parser.parseStringPromise(xml.toString(), { explicitChildren: true, preserveChildrenOrder: true })
     const output = new Writter()
     output.write(imports.toString())
-    generate(data, output)
+    generate(part, data, output)
     fs.writeFileSync(`./lib/${part}.ts`, output.lines.join('\n'))
   }
 

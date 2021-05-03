@@ -13,11 +13,11 @@ import { CommandInt, MavCmd, ParamRequestList, ParamRequestRead } from './lib/co
 import { MavLinkData, MavLinkProtocolV1, MavLinkProtocolV2 } from './lib/mavlink'
 
 const REGISTRY = {
-  ...minimal,
-  ...common,
-  ...ardupilotmega,
-  ...uavionix,
-  ...icarous,
+  ...minimal.REGISTRY,
+  ...common.REGISTRY,
+  ...ardupilotmega.REGISTRY,
+  ...uavionix.REGISTRY,
+  ...icarous.REGISTRY,
 }
 
 const port = new SerialPort('/dev/ttyACM0', { baudRate: 115200, autoOpen: true })
@@ -33,12 +33,11 @@ const reader = port
 reader.on('data', (packet: MavLinkPacket) => {
   const clazz = REGISTRY[packet.header.msgid]
   if (clazz) {
-    console.log('Received package sent with protocol', packet.protocol.constructor['NAME'], `(buffer length: ${packet.buffer.length})`)
     // dump(packet.buffer)
     const data = packet.protocol.data(packet.payload, clazz)
     // if (packet.header.msgid == 253) {
       const name = REGISTRY[packet.header.msgid].MSG_NAME
-      console.log(`${name} (sysid: ${packet.header.sysid}, compid: ${packet.header.compid}, seq: ${packet.header.seq}, plen: ${packet.header.payloadLength}) `)
+      console.log(`${name} (prot: ${packet.protocol.constructor['NAME']}, sysid: ${packet.header.sysid}, compid: ${packet.header.compid}, seq: ${packet.header.seq}, plen: ${packet.header.payloadLength})`)
       console.log(data)
     // }
   } else {
@@ -50,6 +49,7 @@ let seq = 0
 
 function send(msg: MavLinkData) {
   console.log('Sending', msg.constructor['MSG_NAME'], `(seq: ${seq}, magic: ${msg.constructor['MAGIC_NUMBER']})`, '...')
+
   return new Promise((resolve, reject) => {
     const buffer = new MavLinkProtocolV2().serialize(msg, seq++)
     seq &= seq
@@ -62,8 +62,6 @@ function send(msg: MavLinkData) {
     })
   })
 }
-
-// const sleep = ms => new Promise(resolve => setTimeout(resolve, ms))
 
 port.on('open', async () => {
   // await sleep(5000)

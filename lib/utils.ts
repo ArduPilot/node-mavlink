@@ -34,3 +34,7 @@ export function dump(buffer: Buffer, lineWidth = 28) {
     console.error(line.join(' '))
   }
 }
+
+export function sleep(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms))
+}
