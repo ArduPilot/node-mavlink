@@ -74,7 +74,7 @@ interface MavLinkDataConstructor<T extends MavLinkData> {
 
 /**
  * Base class for protocols
- * 
+ *
  * Implements common functionality like getting the CRC and deserializing
  * data classes from the given payload buffer
  */
@@ -85,7 +85,7 @@ export abstract class MavLinkProtocol {
 
   static SYS_ID: uint8_t = 254
   static COMP_ID: uint8_t = 1
-  
+
   /**
    * Serialize a message to a buffer
    */
@@ -105,7 +105,7 @@ export abstract class MavLinkProtocol {
 
   /**
    * Extract payload buffer
-   * 
+   *
    * The returned payload buffer needs to be long enough to read all
    * the fields, including extensions that are sometimes not being sent
    * from the transmitting system.
@@ -180,7 +180,7 @@ export class MavLinkProtocolV1 extends MavLinkProtocol {
     // serialize checksum
     const crc = x25crc(buffer, 1, 2, definition.MAGIC_NUMBER)
     buffer.writeUInt16LE(crc, buffer.length - 2)
-    
+
     return buffer
   }
 
@@ -218,7 +218,7 @@ export class MavLinkProtocolV2 extends MavLinkProtocol {
 
   static INCOMPATIBILITY_FLAGS: uint8_t = 0
   static COMPATIBILITY_FLAGS: uint8_t = 0
-  
+
   constructor(
     public sysid: uint8_t = MavLinkProtocol.SYS_ID,
     public compid: uint8_t = MavLinkProtocol.COMP_ID,
@@ -229,7 +229,7 @@ export class MavLinkProtocolV2 extends MavLinkProtocol {
   serialize(message: MavLinkData, seq: number): Buffer {
     const definition: MavLinkDataConstructor<MavLinkData> = <any>message.constructor
     const buffer = Buffer.from(new Uint8Array(MavLinkProtocolV2.PAYLOAD_OFFSET + definition.PAYLOAD_LENGTH + MAVLINK_CHECKSUM_LENGTH))
-    
+
     buffer.writeUInt8(MavLinkProtocolV2.START_BYTE, 0)
     buffer.writeUInt8(MavLinkProtocolV2.INCOMPATIBILITY_FLAGS, 2)
     buffer.writeUInt8(MavLinkProtocolV2.COMPATIBILITY_FLAGS, 3)
@@ -249,11 +249,11 @@ export class MavLinkProtocolV2 extends MavLinkProtocol {
     buffer.writeUInt8(payloadLength, 1)
 
     // slice out the message buffer
-    const result = buffer.slice(0, MavLinkProtocolV2.PAYLOAD_OFFSET + payloadLength + MAVLINK_CHECKSUM_LENGTH)    
-    
+    const result = buffer.slice(0, MavLinkProtocolV2.PAYLOAD_OFFSET + payloadLength + MAVLINK_CHECKSUM_LENGTH)
+
     const crc = x25crc(result, 1, 2, definition.MAGIC_NUMBER)
     result.writeUInt16LE(crc, result.length - 2)
-    
+
     return result
   }
 
@@ -266,16 +266,16 @@ export class MavLinkProtocolV2 extends MavLinkProtocol {
         break
       }
     }
-    
+
     return result - MavLinkProtocolV2.PAYLOAD_OFFSET
   }
-  
+
   header(buffer: Buffer): MavLinkPacketHeader {
     const startByte = buffer.readUInt8(0)
     if (startByte !== MavLinkProtocolV2.START_BYTE) {
       throw new Error(`Invalid start byte (expected: ${MavLinkProtocolV2.START_BYTE}, got ${startByte})`)
     }
-  
+
     const result = new MavLinkPacketHeader()
     result.magic = startByte
     result.payloadLength = buffer.readUInt8(1)
@@ -285,7 +285,7 @@ export class MavLinkProtocolV2 extends MavLinkProtocol {
     result.sysid = buffer.readUInt8(5)
     result.compid = buffer.readUInt8(6)
     result.msgid = buffer.readUIntLE(7, 3)
-    
+
     return result
   }
 
@@ -407,9 +407,9 @@ export class MavLinkPacketParser extends Transform {
         throw new Error(`Unknown protocol '${startByte.toString(16).padStart(2, '0')}'`)
     }
   }
-  
+
   _transform(chunk: Buffer, encoding, callback: TransformCallback) {
-    const protocol = this.getProtocol(chunk)    
+    const protocol = this.getProtocol(chunk)
     const header = protocol.header(chunk)
     const payload = protocol.payload(chunk)
     const crc = protocol.crc(chunk)
