@@ -63,10 +63,7 @@ reader.on('data', packet => {
 Sending messages is also very easy. One example that is very useful is to send the `REQUEST_PROTOCOL_VERSION` to switch to protocol version 2.
 
 ```
-import { MavLinkProtocolV2 } from 'node-mavlink'
-
-// MavLink requires that the messages are indexed
-let seq = 0
+import { MavLinkProtocolV2, send } from 'node-mavlink'
 
 // Create an instance of of the `CommandInt` class that will be the vessel
 // for containing the command data
@@ -74,13 +71,10 @@ const msg = new common.CommandInt()
 msg.command = common.MavCmd.REQUEST_PROTOCOL_VERSION
 msg.param1 = 1
 
-// Serialize the message using the v2 protocol
-const buffer = new MavLinkProtocolV2().serialize(msg, seq++)
-
-// Limit the sequence to be within the 0..255 range
-seq &= 255
-
-port.on('open', () => port.write(buffer))
+port.on('open', async () => {
+  // the port is open - we're ready to send data
+  await send(port, msg)
+})
 ```
 
 ## Interacting with other communication mediums
@@ -116,7 +110,7 @@ The _official_ firmware for setting up a UDP telemetry using ESP8266 is [MAVESP8
 To setup a stream that reads from a UDP socket isn't as easy as with TCP sockets (which are in a sense streams on their own) but is not hard at all because the library exposes the `MavEsp8266` class that encapsulates all of the hard work for you:
 
 ```
-import { MavEsp8266, common } from '.'
+import { MavEsp8266, common } from 'node-mavlink'
 
 async function main() {
   const port = new MavEsp8266()
@@ -124,7 +118,7 @@ async function main() {
   // start the communication
   await port.start()
 
-  // log incommint messages
+  // log incomming packets
   port.on('data', packet => {
     console.log(packet.debug())
   })
@@ -136,9 +130,9 @@ async function main() {
   message.targetComponent = 1
 
   // The default protocol (last parameter, absent here) is v1 which is
-  // good enough for testing. You can instantiate any other protocoland pass it
+  // good enough for testing. You can instantiate any other protocol and pass it
   // on to the `send` method.
-  // The send method is another utility method, very handy to have it provided
+  // The `send` method is another utility method, very handy to have it provided
   // by the library. It takes care of the sequence number and data serialization.
   await port.send(message)
 }
@@ -147,6 +141,22 @@ main()
 ```
 
 That's it! Easy as a lion :)
+
+## Utility functions
+
+The library exposes a few utility functions that make the life easier when writing application code
+
+#### `async waitFor(cb: Function, timeout: number, interval: number)`
+
+This function calls the `cb` callback periodically at the `interval` (default: 100ms) and if it returns a `truthy` value it will stop polling. If, however, the value is `falsy` for a longer period of time than the `timeout` (default: 10000ms) then it will throw a `Timeout` error.
+
+#### `async send(stream: Writable, msg: MavLinkData, protocol: MavLinkProtocol)`
+
+This function serializes the `msg` message using the provided `protocol` (default: `MavLinkProtocolV1`) and sends it to the `stream`. If the process is successful the method returns with the length of written data denoting that no error occured. However, if the process was not successful it will error out with the underlying error object returned on by the stream.
+
+#### `async sleep(ms: number)`
+
+This is a very handy utility function that asynchronously pauses for a given time (ms).
 
 ## Closing thoughts
 

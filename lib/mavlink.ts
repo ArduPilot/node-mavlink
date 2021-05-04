@@ -462,7 +462,7 @@ export async function send(stream: Writable, msg: MavLinkData, protocol: MavLink
     seq &= 255
     stream.write(buffer, err => {
       if (err) reject(err)
-      else resolve(true)
+      else resolve(buffer.length)
     })
   })
 }
