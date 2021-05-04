@@ -109,6 +109,34 @@ The rest is exactly the same. The TCP connection also is a stream so piping the 
 
 The default serial port speed for telemetry in Ardupilot is 57600 bauds. This means that in the user interface of the esp-link (accessible via a web page under the same IP address) you need to make sure the speed is properly set on the _µC Console_ tab. Just select the proper baudrate from the dropdown at the top of the page and you'll be all set. No reboot of the module required!
 
+### Using MAVESP8266 in UDP mode
+
+The _official_ firmware for setting up a UDP telemetry using ESP8266 is [MAVESP8266](https://ardupilot.org/copter/docs/common-esp8266-telemetry.html). This firmware exposes messages over UDP rather than TCP but has other advantages (see the documentation).
+
+To setup a stream that reads from a UDP socket isn't as easy as with TCP sockets (which are in a sense streams on their own) but is not hard at all:
+
+```
+import dgram from 'dgram'
+import { Stream } from 'stream'
+
+// create a UDP socket
+const socket = dgram.createSocket('udp4')
+
+// create a pass-through stream which emits the data as it is being written to it
+const port = new Stream.PassThrough()
+
+socket.on('message', msg => port.write(msg))
+socket.on('listening', () => {
+  console.log('Listening for packets')
+
+  // you're now ready to send messages to the controller
+})
+
+socket.bind(14550)
+```
+
+That's it! Easy as a lion :)
+
 ## Closing thoughts
 
 The original generated sources lack one very important aspect of a reusable library: documentation. Also, most of the time the names are more C-like than JavaScript-like.
