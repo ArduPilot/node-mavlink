@@ -80,7 +80,7 @@ const buffer = new MavLinkProtocolV2().serialize(msg, seq++)
 // Limit the sequence to be within the 0..255 range
 seq &= 255
 
-port.write(buffer)
+port.on('open', () => port.write(buffer))
 ```
 
 ## Interacting with other communication mediums
@@ -88,6 +88,22 @@ port.write(buffer)
 The splitter and parser work with generic streams. Of course the obvious choice for many use cases will be a serial port but the support doesn't end there.
 
 There are options for streams working over network (TCP or UDP), GSM network - pretty much anything that sends and receives data over Node.js `Stream`s.
+
+Here's an example for connecting to telemetry via TCP (for example using [esp-link](https://github.com/jeelabs/esp-link) and a cheap ESP8266 module)
+
+```
+import { connect } from 'net'
+
+// substitute 192.168.4.1 with the IP address of your module
+const port = connect({ host: '192.168.4.1', port: 2323 })
+
+port.on('connect', () => {
+  console.log('Connected!')
+  // here you can start sending commands
+})
+```
+
+The rest is exactly the same. The TCP connection also is a stream so piping the data through the `MavLinkPacketSplitter` and `MavLinkPacketParser` works as expected.
 
 ## Closing thoughts
 
