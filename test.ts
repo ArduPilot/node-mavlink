@@ -1,79 +1,100 @@
 #!/usr/bin/env node
 
-import * as SerialPort from 'serialport'
+import { MavEsp8266, common } from '.'
 
-import {
-  MavLinkPacket, MavLinkPacketSplitter, MavLinkPacketParser,
-  minimal, common, ardupilotmega, uavionix, icarous,
-  dump,
-} from '.'
+async function main() {
+  const port = new MavEsp8266()
 
-import { Heartbeat, MavAutopilot } from './lib/minimal'
-import { CommandInt, MavCmd, ParamRequestList, ParamRequestRead } from './lib/common'
-import { MavLinkData, MavLinkProtocolV1, MavLinkProtocolV2 } from './lib/mavlink'
+  // start the communication
+  await port.start()
 
-const REGISTRY = {
-  ...minimal.REGISTRY,
-  ...common.REGISTRY,
-  ...ardupilotmega.REGISTRY,
-  ...uavionix.REGISTRY,
-  ...icarous.REGISTRY,
+  // log incommint messages
+  port.on('data', packet => {
+    console.log(packet.debug())
+  })
+
+  // You're now ready to send messages to the controller using the socket
+  // let's request the list of parameters
+  const message = new common.ParamRequestList()
+  message.targetSystem = 1
+  message.targetComponent = 1
+
+  // The default protocol (last parameter, absent here) is v1 which is
+  // good enough for testing. You can instantiate any other protocoland pass it
+  // on to the `send` method.
+  // The send method is another utility method, very handy to have it provided
+  // by the library. It takes care of the sequence number and data serialization.
+  await port.send(message)
 }
 
-const port = new SerialPort('/dev/ttyACM0', { baudRate: 115200, autoOpen: true })
-const reader = port
+main()
+
+/*
+import { createSocket } from 'dgram'
+import { Stream } from 'stream'
+import { MavLinkPacketSplitter, MavLinkPacketParser, waitFor, send } from '.'
+import { common } from '.'
+
+// Create a UDP socket
+const socket = createSocket({ type: 'udp4', reuseAddr: true })
+
+// Create a pass-through stream which emits the data as it is being written to it.
+// It will be used to capture the UDP data and later on pass it on to the packet
+// splitter and parser
+const input = new Stream.PassThrough()
+
+// Controller ip (will be fetched from first received packet)
+let ip = ''
+
+// Send every buffer received via the socket to the passthrough buffer
+socket.on('message', (msg, meta) => {
+  // Store the remote ip address
+  if (ip === '') ip = meta.address
+  input.write(msg)
+})
+
+// Create an output stream to write data to the controller
+const output = new Stream.PassThrough()
+output.on('data', chunk => {
+  socket.send(chunk, 14555, ip)
+})
+
+// Create the reader as usual by piping the source stream through the splitter
+// and packet parser
+const reader = input
   .pipe(new MavLinkPacketSplitter())
   .pipe(new MavLinkPacketParser())
 
-// port.on('data', buffer => {
-//   console.log('Received buffer:')
-//   dump(buffer)
-// })
-  
-reader.on('data', (packet: MavLinkPacket) => {
-  const clazz = REGISTRY[packet.header.msgid]
-  if (clazz) {
-    // dump(packet.buffer)
-    const data = packet.protocol.data(packet.payload, clazz)
-    // if (packet.header.msgid == 253) {
-      const name = REGISTRY[packet.header.msgid].MSG_NAME
-      console.log(`${name} (prot: ${packet.protocol.constructor['NAME']}, sysid: ${packet.header.sysid}, compid: ${packet.header.compid}, seq: ${packet.header.seq}, plen: ${packet.header.payloadLength})`)
-      console.log(data)
-    // }
-  } else {
-    console.log('UNKNOWN MESSAGE', packet.header.msgid)
-  }
+// React to packet being retrieved.
+// This is the place where all your application-level logic will exist
+reader.on('data', packet => {
+  console.log(packet.debug())
 })
 
-let seq = 0
+socket.on('listening', async () => {
+  console.log('Listening for packets')
 
-function send(msg: MavLinkData) {
-  console.log('Sending', msg.constructor['MSG_NAME'], `(seq: ${seq}, magic: ${msg.constructor['MAGIC_NUMBER']})`, '...')
+  // First let's wait for the first heartbeat message to get the IP address
+  // `waitFor` is a handy utility method coming from the mavlink package!
+  // it takes a callback that if returns truthy value will end the wait
+  // If the callback didn't return a truthy value within the specified time
+  // it will error out with the message 'Timeout'
+  await waitFor(() => ip !== '')
 
-  return new Promise((resolve, reject) => {
-    const buffer = new MavLinkProtocolV2().serialize(msg, seq++)
-    seq &= seq
+  // You're now ready to send messages to the controller using the socket
+  // let's request the list of parameters
+  const message = new common.ParamRequestList()
+  message.targetSystem = 1
+  message.targetComponent = 1
 
-    dump(buffer)
-
-    port.write(buffer, err => {
-      if (err) reject(err)
-      else resolve(null)
-    })
-  })
-}
-
-port.on('open', async () => {
-  // await sleep(5000)
-  // await sendHeartbeat()
-  
-  // const msg = new ParamRequestList()
-  // msg.targetSystem = 1
-  // msg.targetComponent = 1
-  // await send(msg)
-  
-  const msg = new CommandInt()
-  msg.command = MavCmd.REQUEST_PROTOCOL_VERSION
-  msg.param1 = 1
-  await send(msg)  
+  // The default protocol (last parameter, absent here) is v1 which is
+  // good enough for testing. You can instantiate any other protocoland pass it
+  // on to the `send` method.
+  // The send method is another utility method, very handy to have it provided
+  // by the library. It takes care of the sequence number and data serialization.
+  await send(output, message)
 })
+
+// start listening for packages on the datagram socket
+socket.bind(14550)
+*/

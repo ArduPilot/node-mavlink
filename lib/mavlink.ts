@@ -1,4 +1,4 @@
-import { Transform, TransformCallback } from 'stream'
+import { Transform, TransformCallback, Writable } from 'stream'
 import { uint8_t, uint16_t } from './types'
 import { x25crc, dump } from './utils'
 import { MSG_ID_MAGIC_NUMBER } from './magic-numbers'
@@ -252,7 +252,7 @@ export class MavLinkProtocolV2 extends MavLinkProtocol {
     const result = buffer.slice(0, MavLinkProtocolV2.PAYLOAD_OFFSET + payloadLength + MAVLINK_CHECKSUM_LENGTH)
 
     const crc = x25crc(result, 1, 2, definition.MAGIC_NUMBER)
-    result.writeUInt16LE(crc, result.length - 2)
+    result.writeUInt16LE(crc, result.length - MAVLINK_CHECKSUM_LENGTH)
 
     return result
   }
@@ -260,9 +260,10 @@ export class MavLinkProtocolV2 extends MavLinkProtocol {
   private calculateTruncatedPayloadLength(buffer: Buffer): number {
     let result = buffer.length
 
-    for (let i = buffer.length - 1; i >= 0; i--) {
+    for (let i = buffer.length - MAVLINK_CHECKSUM_LENGTH - 1; i >= MavLinkProtocolV2.PAYLOAD_OFFSET; i--) {
+      result = i
       if (buffer[i] !== 0) {
-        result = i
+        result++
         break
       }
     }
@@ -306,6 +307,17 @@ export class MavLinkPacket {
     readonly crc: uint16_t = 0,
     readonly protocol: MavLinkProtocol,
   ) {}
+
+  debug() {
+    return 'Packet ('
+      + `proto: ${this.protocol.constructor['NAME']}, `
+      + `sysid: ${this.header.sysid}, `
+      + `compid: ${this.header.compid}, `
+      + `msgid: ${this.header.msgid}, `
+      + `seq: ${this.header.seq}, `
+      + `plen: ${this.header.payloadLength}`
+      + ')'
+  }
 }
 
 /**
@@ -418,4 +430,39 @@ export class MavLinkPacketParser extends Transform {
 
     callback(null, packet)
   }
+}
+
+export async function waitFor(cb, timeout = 10000, interval = 100) {
+  return new Promise((resolve, reject) => {
+    const timeoutTimer = setTimeout(() => {
+      cleanup()
+      reject('Timeout')
+    }, timeout)
+
+    const intervalTimer = setInterval(() => {
+      const result = cb()
+      if (result) {
+        cleanup()
+        resolve(result)
+      }
+    })
+
+    const cleanup = () => {
+      clearTimeout(timeoutTimer)
+      clearTimeout(intervalTimer)
+    }
+  })
+}
+
+let seq = 0
+
+export async function send(stream: Writable, msg: MavLinkData, protocol: MavLinkProtocol = new MavLinkProtocolV1()) {
+  return new Promise((resolve, reject) => {
+    const buffer = protocol.serialize(msg, seq++)
+    seq &= 255
+    stream.write(buffer, err => {
+      if (err) reject(err)
+      else resolve(true)
+    })
+  })
 }

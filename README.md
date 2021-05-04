@@ -113,26 +113,37 @@ The default serial port speed for telemetry in Ardupilot is 57600 bauds. This me
 
 The _official_ firmware for setting up a UDP telemetry using ESP8266 is [MAVESP8266](https://ardupilot.org/copter/docs/common-esp8266-telemetry.html). This firmware exposes messages over UDP rather than TCP but has other advantages (see the documentation).
 
-To setup a stream that reads from a UDP socket isn't as easy as with TCP sockets (which are in a sense streams on their own) but is not hard at all:
+To setup a stream that reads from a UDP socket isn't as easy as with TCP sockets (which are in a sense streams on their own) but is not hard at all because the library exposes the `MavEsp8266` class that encapsulates all of the hard work for you:
 
 ```
-import dgram from 'dgram'
-import { Stream } from 'stream'
+import { MavEsp8266, common } from '.'
 
-// create a UDP socket
-const socket = dgram.createSocket('udp4')
+async function main() {
+  const port = new MavEsp8266()
 
-// create a pass-through stream which emits the data as it is being written to it
-const port = new Stream.PassThrough()
+  // start the communication
+  await port.start()
 
-socket.on('message', msg => port.write(msg))
-socket.on('listening', () => {
-  console.log('Listening for packets')
+  // log incommint messages
+  port.on('data', packet => {
+    console.log(packet.debug())
+  })
 
-  // you're now ready to send messages to the controller
-})
+  // You're now ready to send messages to the controller using the socket
+  // let's request the list of parameters
+  const message = new common.ParamRequestList()
+  message.targetSystem = 1
+  message.targetComponent = 1
 
-socket.bind(14550)
+  // The default protocol (last parameter, absent here) is v1 which is
+  // good enough for testing. You can instantiate any other protocoland pass it
+  // on to the `send` method.
+  // The send method is another utility method, very handy to have it provided
+  // by the library. It takes care of the sequence number and data serialization.
+  await port.send(message)
+}
+
+main()
 ```
 
 That's it! Easy as a lion :)
