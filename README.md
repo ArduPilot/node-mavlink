@@ -105,6 +105,10 @@ port.on('connect', () => {
 
 The rest is exactly the same. The TCP connection also is a stream so piping the data through the `MavLinkPacketSplitter` and `MavLinkPacketParser` works as expected.
 
+### A short note to my future self and others about baudrates
+
+The default serial port speed for telemetry in Ardupilot is 57600 bauds. This means that in the user interface of the esp-link (accessible via a web page under the same IP address) you need to make sure the speed is properly set on the _µC Console_ tab. Just select the proper baudrate from the dropdown at the top of the page and you'll be all set. No reboot of the module required!
+
 ## Closing thoughts
 
 The original generated sources lack one very important aspect of a reusable library: documentation. Also, most of the time the names are more C-like than JavaScript-like.
