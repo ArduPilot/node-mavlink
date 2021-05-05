@@ -332,7 +332,7 @@ export class MavLinkProtocolV2 extends MavLinkProtocol {
 /**
  * MavLink packet signature definition
  */
- export class MavLinkPacketSignature {
+export class MavLinkPacketSignature {
   constructor(
     public readonly buffer: Buffer,
     public readonly linkId: uint8_t,
