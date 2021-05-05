@@ -14,10 +14,12 @@ async function main() {
   port.on('data', (packet: MavLinkPacket) => {
     console.log(packet.debug())
     if (packet.signature) {
-      console.log()
-      console.log(packet.signature.signature)
-      console.log(packet.signature.calculate('qwerty'))
-      console.log()
+      console.log(
+        'Signature check:',
+        `packet=${packet.signature.signature},`,
+        `calculated=${packet.signature.calculate('qwerty')}`,
+        `matches=${packet.signature.matches('qwerty')}`
+      )
     }
   })
 

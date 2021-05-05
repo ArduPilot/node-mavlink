@@ -354,6 +354,10 @@ export class MavLinkProtocolV2 extends MavLinkProtocol {
     return hash
   }
 
+  matches(secret: string) {
+    return this.calculate(secret) === this.signature
+  }
+
   toString() {
     return `linkid: ${this.linkId}, `
       + `timestamp ${this.timestamp}, `
