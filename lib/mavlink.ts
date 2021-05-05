@@ -110,7 +110,7 @@ export abstract class MavLinkProtocol {
    * the fields, including extensions that are sometimes not being sent
    * from the transmitting system.
    */
-  abstract payload(buffer: Buffer): Buffer
+  abstract payload(buffer: Buffer, header: MavLinkPacketHeader): Buffer
 
   /**
    * Deserialize payload into actual data class
@@ -201,8 +201,8 @@ export class MavLinkProtocolV1 extends MavLinkProtocol {
     return result
   }
 
-  payload(buffer: Buffer): Buffer {
-    const payload = buffer.slice(MavLinkProtocolV1.PAYLOAD_OFFSET, buffer.length - MAVLINK_CHECKSUM_LENGTH)
+  payload(buffer: Buffer, header: MavLinkPacketHeader): Buffer {
+    const payload = buffer.slice(MavLinkProtocolV1.PAYLOAD_OFFSET, header.payloadLength)
     const padding = Buffer.from(new Uint8Array(255 - payload.length))
     return Buffer.concat([ payload, padding ])
   }
@@ -290,8 +290,8 @@ export class MavLinkProtocolV2 extends MavLinkProtocol {
     return result
   }
 
-  payload(buffer: Buffer): Buffer {
-    const payload = buffer.slice(MavLinkProtocolV2.PAYLOAD_OFFSET, buffer.length - MAVLINK_CHECKSUM_LENGTH)
+  payload(buffer: Buffer, header: MavLinkPacketHeader): Buffer {
+    const payload = buffer.slice(MavLinkProtocolV2.PAYLOAD_OFFSET, header.payloadLength)
     const padding = Buffer.from(new Uint8Array(255 - payload.length))
     return Buffer.concat([ payload, padding ])
   }
@@ -302,6 +302,7 @@ export class MavLinkProtocolV2 extends MavLinkProtocol {
  */
 export class MavLinkPacket {
   constructor(
+    readonly buffer: Buffer,
     readonly header: MavLinkPacketHeader = new MavLinkPacketHeader(),
     readonly payload: Buffer = Buffer.from(new Uint8Array(255)),
     readonly crc: uint16_t = 0,
@@ -423,10 +424,10 @@ export class MavLinkPacketParser extends Transform {
   _transform(chunk: Buffer, encoding, callback: TransformCallback) {
     const protocol = this.getProtocol(chunk)
     const header = protocol.header(chunk)
-    const payload = protocol.payload(chunk)
+    const payload = protocol.payload(chunk, header)
     const crc = protocol.crc(chunk)
 
-    const packet = new MavLinkPacket(header, payload, crc, protocol)
+    const packet = new MavLinkPacket(chunk, header, payload, crc, protocol)
 
     callback(null, packet)
   }
