@@ -2,7 +2,6 @@
 
 import { MavEsp8266, common } from '.'
 import { MavLinkPacket } from './lib/mavlink'
-import { dump } from './lib/utils'
 
 async function main() {
   const port = new MavEsp8266()
@@ -10,7 +9,7 @@ async function main() {
   // start the communication
   await port.start()
 
-  // log incommint messages
+  // log incomming messages
   port.on('data', (packet: MavLinkPacket) => {
     console.log(packet.debug())
     if (packet.signature) {
