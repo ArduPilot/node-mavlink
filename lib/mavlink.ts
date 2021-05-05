@@ -99,9 +99,7 @@ export abstract class MavLinkProtocol {
   /**
    * Deserialize packet checksum
    */
-  crc(buffer): uint16_t {
-    return buffer.readUInt16LE(buffer.length - MAVLINK_CHECKSUM_LENGTH)
-  }
+  abstract crc(buffer): uint16_t;
 
   /**
    * Extract payload buffer
@@ -201,6 +199,14 @@ export class MavLinkProtocolV1 extends MavLinkProtocol {
     return result
   }
 
+  /**
+   * Deserialize packet checksum
+   */
+   crc(buffer: Buffer): uint16_t {
+    const plen = buffer.readUInt8(1)
+    return buffer.readUInt16LE(MavLinkProtocolV1.PAYLOAD_OFFSET + plen)
+  }
+
   payload(buffer: Buffer, header: MavLinkPacketHeader): Buffer {
     const payload = buffer.slice(MavLinkProtocolV1.PAYLOAD_OFFSET, header.payloadLength)
     const padding = Buffer.from(new Uint8Array(255 - payload.length))
@@ -215,9 +221,12 @@ export class MavLinkProtocolV2 extends MavLinkProtocol {
   static NAME = 'MAV_V2'
   static START_BYTE = 0xFD
   static PAYLOAD_OFFSET = 10
+  static SIGNATURE_LENGTH = 13
 
   static INCOMPATIBILITY_FLAGS: uint8_t = 0
   static COMPATIBILITY_FLAGS: uint8_t = 0
+
+  static readonly IFLAG_SIGNED = 0x01
 
   constructor(
     public sysid: uint8_t = MavLinkProtocol.SYS_ID,
@@ -290,10 +299,48 @@ export class MavLinkProtocolV2 extends MavLinkProtocol {
     return result
   }
 
+  /**
+   * Deserialize packet checksum
+   */
+  crc(buffer: Buffer): uint16_t {
+    const plen = buffer.readUInt8(1)
+    return buffer.readUInt16LE(MavLinkProtocolV2.PAYLOAD_OFFSET + plen)
+  }
+
   payload(buffer: Buffer, header: MavLinkPacketHeader): Buffer {
     const payload = buffer.slice(MavLinkProtocolV2.PAYLOAD_OFFSET, header.payloadLength)
     const padding = Buffer.from(new Uint8Array(255 - payload.length))
     return Buffer.concat([ payload, padding ])
+  }
+
+  signature(buffer: Buffer, header: MavLinkPacketHeader): MavLinkPacketSignature {
+    if (header.incompatibilityFlags & MavLinkProtocolV2.IFLAG_SIGNED) {
+      const signatureOffset = MavLinkProtocolV2.PAYLOAD_OFFSET + header.payloadLength
+      return new MavLinkPacketSignature(
+        buffer.readUInt8(signatureOffset),
+        buffer.readUIntLE(signatureOffset + 1, 6),
+        buffer.readUIntLE(signatureOffset + 7, 6),
+      )
+    } else {
+      return null
+    }
+  }
+}
+
+/**
+ * MavLink packet signature definition
+ */
+ export class MavLinkPacketSignature {
+  constructor(
+    public readonly linkId: uint8_t,
+    public readonly timestamp: number,
+    public readonly signature: number,
+  ) {}
+
+  toString() {
+    return `linkid: ${this.linkId}, `
+      + `timestamp ${this.timestamp}, `
+      + `signature ${this.signature}`
   }
 }
 
@@ -306,7 +353,8 @@ export class MavLinkPacket {
     readonly header: MavLinkPacketHeader = new MavLinkPacketHeader(),
     readonly payload: Buffer = Buffer.from(new Uint8Array(255)),
     readonly crc: uint16_t = 0,
-    readonly protocol: MavLinkProtocol,
+    readonly protocol: MavLinkProtocol = new MavLinkProtocolV1(),
+    readonly signature: MavLinkPacketSignature = null,
   ) {}
 
   debug() {
@@ -316,8 +364,14 @@ export class MavLinkPacket {
       + `compid: ${this.header.compid}, `
       + `msgid: ${this.header.msgid}, `
       + `seq: ${this.header.seq}, `
-      + `plen: ${this.header.payloadLength}`
+      + `plen: ${this.header.payloadLength}, `
+      + `crc: ${this.crc.toString(16).padStart(2, '0')}`
+      + this.signatureToString(this.signature)
       + ')'
+  }
+
+  private signatureToString(signature: MavLinkPacketSignature) {
+    return signature ? `, ${signature.toString()}` : ''
   }
 }
 
@@ -360,7 +414,11 @@ export class MavLinkPacketSplitter extends Transform {
 
       // check if the current buffer contains the entire message
       const payloadLength = this.buffer.readUInt8(1)
-      const expectedBufferLength = Protocol.PAYLOAD_OFFSET + payloadLength + MAVLINK_CHECKSUM_LENGTH
+      const expectedBufferLength = Protocol.PAYLOAD_OFFSET
+        + payloadLength
+        + MAVLINK_CHECKSUM_LENGTH
+        + (this.isV2Signed(this.buffer) ? MavLinkProtocolV2.SIGNATURE_LENGTH : 0)
+
       if (this.buffer.length < expectedBufferLength) {
         // current buffer is not fully retrieved yet - skipping
         break
@@ -378,7 +436,8 @@ export class MavLinkPacketSplitter extends Transform {
       const magic = MSG_ID_MAGIC_NUMBER[header.msgid]
       if (magic) {
         const crc = protocol.crc(buffer)
-        const crc2 = x25crc(buffer, 1, 2, magic)
+        const trim = this.isV2Signed(buffer) ? MavLinkProtocolV2.SIGNATURE_LENGTH + MAVLINK_CHECKSUM_LENGTH : MAVLINK_CHECKSUM_LENGTH
+        const crc2 = x25crc(buffer, 1, trim, magic)
         if (crc === crc2) {
           // CRC matches - accept this packet
           this.push(buffer)
@@ -398,6 +457,19 @@ export class MavLinkPacketSplitter extends Transform {
     }
 
     callback(null)
+  }
+
+  /**
+   * Checks if the buffer contains the entire message with signature
+   *
+   * @param buffer buffer with the message
+   */
+  private isV2Signed(buffer: Buffer) {
+    const protocol = buffer.readUInt8(0)
+    if (protocol === MavLinkProtocolV2.START_BYTE) {
+      const flags = buffer.readUInt8(2)
+      return !!(flags & MavLinkProtocolV2.IFLAG_SIGNED)
+    }
   }
 }
 
@@ -426,33 +498,12 @@ export class MavLinkPacketParser extends Transform {
     const header = protocol.header(chunk)
     const payload = protocol.payload(chunk, header)
     const crc = protocol.crc(chunk)
+    const signature = protocol instanceof MavLinkProtocolV2 ? protocol.signature(chunk, header) : null
 
-    const packet = new MavLinkPacket(chunk, header, payload, crc, protocol)
+    const packet = new MavLinkPacket(chunk, header, payload, crc, protocol, signature)
 
     callback(null, packet)
   }
-}
-
-export async function waitFor(cb, timeout = 10000, interval = 100) {
-  return new Promise((resolve, reject) => {
-    const timeoutTimer = setTimeout(() => {
-      cleanup()
-      reject('Timeout')
-    }, timeout)
-
-    const intervalTimer = setInterval(() => {
-      const result = cb()
-      if (result) {
-        cleanup()
-        resolve(result)
-      }
-    })
-
-    const cleanup = () => {
-      clearTimeout(timeoutTimer)
-      clearTimeout(intervalTimer)
-    }
-  })
 }
 
 let seq = 0

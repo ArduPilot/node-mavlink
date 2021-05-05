@@ -38,3 +38,25 @@ export function dump(buffer: Buffer, lineWidth = 28) {
 export function sleep(ms) {
   return new Promise(resolve => setTimeout(resolve, ms))
 }
+
+export async function waitFor(cb, timeout = 10000, interval = 100) {
+  return new Promise((resolve, reject) => {
+    const timeoutTimer = setTimeout(() => {
+      cleanup()
+      reject('Timeout')
+    }, timeout)
+
+    const intervalTimer = setInterval(() => {
+      const result = cb()
+      if (result) {
+        cleanup()
+        resolve(result)
+      }
+    })
+
+    const cleanup = () => {
+      clearTimeout(timeoutTimer)
+      clearTimeout(intervalTimer)
+    }
+  })
+}

@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 
 import { MavEsp8266, common } from '.'
+import { MavLinkPacket } from './lib/mavlink'
 
 async function main() {
   const port = new MavEsp8266()
@@ -9,7 +10,7 @@ async function main() {
   await port.start()
 
   // log incommint messages
-  port.on('data', packet => {
+  port.on('data', (packet: MavLinkPacket) => {
     console.log(packet.debug())
   })
 
@@ -24,7 +25,7 @@ async function main() {
   // on to the `send` method.
   // The send method is another utility method, very handy to have it provided
   // by the library. It takes care of the sequence number and data serialization.
-  await port.send(message)
+  // await port.send(message)
 }
 
 main()

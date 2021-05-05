@@ -1,10 +1,10 @@
 import { EventEmitter } from 'events'
 
 import { Socket, createSocket } from 'dgram'
-import { Stream, Writable, PassThrough } from 'stream'
+import { Writable, PassThrough } from 'stream'
 import { MavLinkPacketSplitter, MavLinkPacketParser } from './mavlink'
 import { MavLinkProtocol, MavLinkProtocolV1, MavLinkData } from './mavlink'
-import { waitFor } from './mavlink'
+import { waitFor } from './utils'
 
 /**
  * Encapsulation of communication with MavEsp8266
