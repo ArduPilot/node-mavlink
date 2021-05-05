@@ -142,6 +142,28 @@ main()
 
 That's it! Easy as a lion :)
 
+## Signed packages
+
+MavLink v2 introduces package signing. The way it currently works with Mission planner is you give it a pass phrase, Mission Planner encodes it using sha256 hashing algorithm and uses it as part of the signature calculation. Therefore if someone does not know the secret passphrase they won't be able to create packets that would seem to be comming from a source. It's a kind of security thing.
+
+The `node-mavlink` library introduced signature parsing in version 0.0.1-beta.10. The way to verify if a package can be trusted is as follows:
+
+```
+port.on('data', packet => {
+  if (packet.signature) {
+    if (packet.signature.matches('your-passphrase')) {
+      // signature valid
+    } else {
+      // signature not valid - possible fraud package detected
+    }
+  } else {
+    // packet is not signed
+  }
+}
+```
+
+What you do with that information is up to you. You can continue to process that package or you can drop it. The library imposes no restriction on packets with invalid signatures.
+
 ## Utility functions
 
 The library exposes a few utility functions that make the life easier when writing application code
