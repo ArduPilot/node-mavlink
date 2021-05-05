@@ -3082,7 +3082,7 @@ export class GpsRawInt extends MavLinkData {
    */
   cog: uint16_t
   /**
-   * Number of satellites visible. If unknown, set to 255
+   * Number of satellites visible. If unknown, set to UINT8_MAX
    */
   satellitesVisible: uint8_t
   /**
@@ -3106,7 +3106,7 @@ export class GpsRawInt extends MavLinkData {
    */
   hdgAcc: uint32_t
   /**
-   * Yaw in earth frame from north. Use 0 if this GPS does not provide yaw. Use 65535 if this GPS is
+   * Yaw in earth frame from north. Use 0 if this GPS does not provide yaw. Use UINT16_MAX if this GPS is
    * configured to provide yaw and is currently unable to provide it. Use 36000 for north.
    */
   yaw: uint16_t
@@ -3678,7 +3678,7 @@ export class RcChannelsScaled extends MavLinkData {
    */
   chan8Scaled: int16_t
   /**
-   * Receive signal strength indicator in device-dependent units/scale. Values: [0-254], 255:
+   * Receive signal strength indicator in device-dependent units/scale. Values: [0-254], UINT8_MAX:
    * invalid/unknown.
    */
   rssi: uint8_t
@@ -3751,7 +3751,7 @@ export class RcChannelsRaw extends MavLinkData {
    */
   chan8Raw: uint16_t
   /**
-   * Receive signal strength indicator in device-dependent units/scale. Values: [0-254], 255:
+   * Receive signal strength indicator in device-dependent units/scale. Values: [0-254], UINT8_MAX:
    * invalid/unknown.
    */
   rssi: uint8_t
@@ -4980,7 +4980,7 @@ export class RcChannels extends MavLinkData {
    */
   chan18Raw: uint16_t
   /**
-   * Receive signal strength indicator in device-dependent units/scale. Values: [0-254], 255:
+   * Receive signal strength indicator in device-dependent units/scale. Values: [0-254], UINT8_MAX:
    * invalid/unknown.
    */
   rssi: uint8_t
@@ -5569,8 +5569,8 @@ export class CommandAck extends MavLinkData {
   result: MavResult
   /**
    * WIP: Also used as result_param1, it can be set with an enum containing the errors reasons of why the
-   * command was denied, or the progress percentage when result is MAV_RESULT_IN_PROGRESS (255 if the
-   * progress is unknown).
+   * command was denied, or the progress percentage when result is MAV_RESULT_IN_PROGRESS (UINT8_MAX if
+   * the progress is unknown).
    */
   progress: uint8_t
   /**
@@ -6459,7 +6459,7 @@ export class HilRcInputsRaw extends MavLinkData {
    */
   chan12Raw: uint16_t
   /**
-   * Receive signal strength indicator in device-dependent units/scale. Values: [0-254], 255:
+   * Receive signal strength indicator in device-dependent units/scale. Values: [0-254], UINT8_MAX:
    * invalid/unknown.
    */
   rssi: uint8_t
@@ -7206,12 +7206,12 @@ export class RadioStatus extends MavLinkData {
 
   /**
    * Local (message sender) recieved signal strength indication in device-dependent units/scale. Values:
-   * [0-254], 255: invalid/unknown.
+   * [0-254], UINT8_MAX: invalid/unknown.
    */
   rssi: uint8_t
   /**
    * Remote (message receiver) signal strength indication in device-dependent units/scale. Values:
-   * [0-254], 255: invalid/unknown.
+   * [0-254], UINT8_MAX: invalid/unknown.
    */
   remrssi: uint8_t
   /**
@@ -7220,12 +7220,12 @@ export class RadioStatus extends MavLinkData {
   txbuf: uint8_t
   /**
    * Local background noise level. These are device dependent RSSI values (scale as approx 2x dB on SiK
-   * radios). Values: [0-254], 255: invalid/unknown.
+   * radios). Values: [0-254], UINT8_MAX: invalid/unknown.
    */
   noise: uint8_t
   /**
    * Remote background noise level. These are device dependent RSSI values (scale as approx 2x dB on SiK
-   * radios). Values: [0-254], 255: invalid/unknown.
+   * radios). Values: [0-254], UINT8_MAX: invalid/unknown.
    */
   remnoise: uint8_t
   /**
@@ -7384,7 +7384,7 @@ export class HilGps extends MavLinkData {
    */
   epv: uint16_t
   /**
-   * GPS ground speed. If unknown, set to: 65535
+   * GPS ground speed. If unknown, set to: UINT16_MAX
    */
   vel: uint16_t
   /**
@@ -7401,11 +7401,11 @@ export class HilGps extends MavLinkData {
   vd: int16_t
   /**
    * Course over ground (NOT heading, but direction of movement), 0.0..359.99 degrees. If unknown, set
-   * to: 65535
+   * to: UINT16_MAX
    */
   cog: uint16_t
   /**
-   * Number of satellites visible. If unknown, set to 255
+   * Number of satellites visible. If unknown, set to UINT8_MAX
    */
   satellitesVisible: uint8_t
   /**
@@ -7963,7 +7963,7 @@ export class Gps2Raw extends MavLinkData {
    */
   cog: uint16_t
   /**
-   * Number of satellites visible. If unknown, set to 255
+   * Number of satellites visible. If unknown, set to UINT8_MAX
    */
   satellitesVisible: uint8_t
   /**
@@ -7975,7 +7975,7 @@ export class Gps2Raw extends MavLinkData {
    */
   dgpsAge: uint32_t
   /**
-   * Yaw in earth frame from north. Use 0 if this GPS does not provide yaw. Use 65535 if this GPS is
+   * Yaw in earth frame from north. Use 0 if this GPS does not provide yaw. Use UINT16_MAX if this GPS is
    * configured to provide yaw and is currently unable to provide it. Use 36000 for north.
    */
   yaw: uint16_t
@@ -8436,7 +8436,7 @@ export class DistanceSensor extends MavLinkData {
    */
   orientation: MavSensorOrientation
   /**
-   * Measurement variance. Max standard deviation is 6cm. 255 if unknown.
+   * Measurement variance. Max standard deviation is 6cm. UINT8_MAX if unknown.
    */
   covariance: uint8_t
   /**
@@ -8970,7 +8970,7 @@ export class FollowTarget extends MavLinkData {
    */
   acc: float[]
   /**
-   * (1 0 0 0 for unknown)
+   * (0 0 0 0 for unknown)
    */
   attitudeQ: float[]
   /**
@@ -9974,7 +9974,7 @@ export class HighLatency extends MavLinkData {
    */
   climbRate: int8_t
   /**
-   * Number of satellites visible. If unknown, set to 255
+   * Number of satellites visible. If unknown, set to UINT8_MAX
    */
   gpsNsat: uint8_t
   /**
@@ -11346,7 +11346,7 @@ export class LoggingData extends MavLinkData {
   length: uint8_t
   /**
    * offset into data where first message starts. This can be used for recovery, when a previous message
-   * got lost (set to 255 if no start exists).
+   * got lost (set to UINT8_MAX if no start exists).
    */
   firstMessageOffset: uint8_t
   /**
@@ -11391,7 +11391,7 @@ export class LoggingDataAcked extends MavLinkData {
   length: uint8_t
   /**
    * offset into data where first message starts. This can be used for recovery, when a previous message
-   * got lost (set to 255 if no start exists).
+   * got lost (set to UINT8_MAX if no start exists).
    */
   firstMessageOffset: uint8_t
   /**
@@ -12695,7 +12695,7 @@ export class UavcanNodeInfo extends MavLinkData {
    */
   swVersionMinor: uint8_t
   /**
-   * Version control system (VCS) revision identifier (e.g. git short commit hash). Zero if unknown.
+   * Version control system (VCS) revision identifier (e.g. git short commit hash). 0 if unknown.
    */
   swVcsCommit: uint32_t
 }
