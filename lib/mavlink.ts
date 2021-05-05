@@ -1,4 +1,5 @@
 import { Transform, TransformCallback, Writable } from 'stream'
+import { createHmac } from 'crypto'
 import { uint8_t, uint16_t } from './types'
 import { x25crc, dump } from './utils'
 import { MSG_ID_MAGIC_NUMBER } from './magic-numbers'
@@ -317,6 +318,7 @@ export class MavLinkProtocolV2 extends MavLinkProtocol {
     if (header.incompatibilityFlags & MavLinkProtocolV2.IFLAG_SIGNED) {
       const signatureOffset = MavLinkProtocolV2.PAYLOAD_OFFSET + header.payloadLength
       return new MavLinkPacketSignature(
+        buffer,
         buffer.readUInt8(signatureOffset),
         buffer.readUIntLE(signatureOffset + 1, 6),
         buffer.readUIntLE(signatureOffset + 7, 6),
@@ -332,10 +334,19 @@ export class MavLinkProtocolV2 extends MavLinkProtocol {
  */
  export class MavLinkPacketSignature {
   constructor(
+    public readonly buffer: Buffer,
     public readonly linkId: uint8_t,
     public readonly timestamp: number,
     public readonly signature: number,
   ) {}
+
+  calculate(secret: string) {
+    return createHmac('sha256', secret)
+      .update(secret)
+      .update(this.buffer.slice(1, this.buffer.length - 6))
+      .digest('hex')
+      .substr(0, 15)
+  }
 
   toString() {
     return `linkid: ${this.linkId}, `
@@ -436,7 +447,9 @@ export class MavLinkPacketSplitter extends Transform {
       const magic = MSG_ID_MAGIC_NUMBER[header.msgid]
       if (magic) {
         const crc = protocol.crc(buffer)
-        const trim = this.isV2Signed(buffer) ? MavLinkProtocolV2.SIGNATURE_LENGTH + MAVLINK_CHECKSUM_LENGTH : MAVLINK_CHECKSUM_LENGTH
+        const trim = this.isV2Signed(buffer)
+          ? MavLinkProtocolV2.SIGNATURE_LENGTH + MAVLINK_CHECKSUM_LENGTH
+          : MAVLINK_CHECKSUM_LENGTH
         const crc2 = x25crc(buffer, 1, trim, magic)
         if (crc === crc2) {
           // CRC matches - accept this packet
@@ -498,7 +511,9 @@ export class MavLinkPacketParser extends Transform {
     const header = protocol.header(chunk)
     const payload = protocol.payload(chunk, header)
     const crc = protocol.crc(chunk)
-    const signature = protocol instanceof MavLinkProtocolV2 ? protocol.signature(chunk, header) : null
+    const signature = protocol instanceof MavLinkProtocolV2
+      ? protocol.signature(chunk, header)
+      : null
 
     const packet = new MavLinkPacket(chunk, header, payload, crc, protocol, signature)
 
