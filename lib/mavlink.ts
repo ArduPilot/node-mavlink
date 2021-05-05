@@ -334,12 +334,20 @@ export class MavLinkProtocolV2 extends MavLinkProtocol {
  */
 export class MavLinkPacketSignature {
   constructor(
-    public readonly buffer: Buffer,
+    public readonly packetBuffer: Buffer,
     public readonly linkId: uint8_t,
     public readonly timestamp: number,
     public readonly signature: string,
   ) {}
 
+  /**
+   * Calculates signature of the packet buffer using the provided secret.
+   * The secret is converted to a hash using the sha256 algorithm which matches
+   * the way Mission Planner creates keys.
+   *
+   * @param secret secret to generate the key
+   * @returns calculated signature value
+   */
   calculate(secret: string) {
     const key = createHash('sha256')
       .update(secret)
@@ -347,13 +355,21 @@ export class MavLinkPacketSignature {
 
     const hash = createHash('sha256')
       .update(key)
-      .update(this.buffer.slice(0, this.buffer.length - 6))
+      .update(this.packetBuffer.slice(0, this.packetBuffer.length - 6))
       .digest('hex')
       .substr(0, 12)
 
     return hash
   }
 
+  /**
+   * Checks the signature of the packet buffer against a given secret
+   * The secret is converted to a hash using the sha256 algorithm which matches
+   * the way Mission Planner creates keys.
+   *
+   * @param secret secret to generate the key
+   * @returns true if the signature matches, false otherwise
+   */
   matches(secret: string) {
     return this.calculate(secret) === this.signature
   }
