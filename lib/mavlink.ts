@@ -5,8 +5,6 @@ import { x25crc, dump } from './utils'
 import { MSG_ID_MAGIC_NUMBER } from './magic-numbers'
 import { SERIALIZERS, DESERIALIZERS } from './serialization'
 
-export const MAVLINK_CHECKSUM_LENGTH = 0x02
-
 /**
  * Header definition of the MavLink packet
  */
@@ -62,7 +60,10 @@ export abstract class MavLinkData {
   static FIELDS: MavLinkPacketField[] = []
 }
 
-interface MavLinkDataConstructor<T extends MavLinkData> {
+/**
+ * Interface describing static fields of a data classes
+ */
+ interface MavLinkDataConstructor<T extends MavLinkData> {
   // static fields overriden by descendants of MavLinkData
   MSG_ID: number
   MSG_NAME: string
@@ -83,6 +84,7 @@ export abstract class MavLinkProtocol {
   static NAME = 'unknown'
   static START_BYTE = 0
   static PAYLOAD_OFFSET = 0
+  static CHECKSUM_LENGTH = 2
 
   static SYS_ID: uint8_t = 254
   static COMP_ID: uint8_t = 1
@@ -129,7 +131,7 @@ export abstract class MavLinkProtocol {
 }
 
 /**
- * Interface describing static fields of a protocol class
+ * Interface describing static fields of a protocol classes
  */
 interface MavLinkProtocolConstructor {
   NAME: string
@@ -159,7 +161,7 @@ export class MavLinkProtocolV1 extends MavLinkProtocol {
 
   serialize(message: MavLinkData, seq: number): Buffer {
     const definition: MavLinkDataConstructor<MavLinkData> = <any>message.constructor
-    const buffer = Buffer.from(new Uint8Array(MavLinkProtocolV1.PAYLOAD_OFFSET + definition.PAYLOAD_LENGTH + MAVLINK_CHECKSUM_LENGTH))
+    const buffer = Buffer.from(new Uint8Array(MavLinkProtocolV1.PAYLOAD_OFFSET + definition.PAYLOAD_LENGTH + MavLinkProtocol.CHECKSUM_LENGTH))
 
     // serialize header
     buffer.writeUInt8(MavLinkProtocolV1.START_BYTE, 0)
@@ -238,7 +240,7 @@ export class MavLinkProtocolV2 extends MavLinkProtocol {
 
   serialize(message: MavLinkData, seq: number): Buffer {
     const definition: MavLinkDataConstructor<MavLinkData> = <any>message.constructor
-    const buffer = Buffer.from(new Uint8Array(MavLinkProtocolV2.PAYLOAD_OFFSET + definition.PAYLOAD_LENGTH + MAVLINK_CHECKSUM_LENGTH))
+    const buffer = Buffer.from(new Uint8Array(MavLinkProtocolV2.PAYLOAD_OFFSET + definition.PAYLOAD_LENGTH + MavLinkProtocol.CHECKSUM_LENGTH))
 
     buffer.writeUInt8(MavLinkProtocolV2.START_BYTE, 0)
     buffer.writeUInt8(MavLinkProtocolV2.INCOMPATIBILITY_FLAGS, 2)
@@ -259,10 +261,10 @@ export class MavLinkProtocolV2 extends MavLinkProtocol {
     buffer.writeUInt8(payloadLength, 1)
 
     // slice out the message buffer
-    const result = buffer.slice(0, MavLinkProtocolV2.PAYLOAD_OFFSET + payloadLength + MAVLINK_CHECKSUM_LENGTH)
+    const result = buffer.slice(0, MavLinkProtocolV2.PAYLOAD_OFFSET + payloadLength + MavLinkProtocol.CHECKSUM_LENGTH)
 
     const crc = x25crc(result, 1, 2, definition.MAGIC_NUMBER)
-    result.writeUInt16LE(crc, result.length - MAVLINK_CHECKSUM_LENGTH)
+    result.writeUInt16LE(crc, result.length - MavLinkProtocol.CHECKSUM_LENGTH)
 
     return result
   }
@@ -270,7 +272,7 @@ export class MavLinkProtocolV2 extends MavLinkProtocol {
   private calculateTruncatedPayloadLength(buffer: Buffer): number {
     let result = buffer.length
 
-    for (let i = buffer.length - MAVLINK_CHECKSUM_LENGTH - 1; i >= MavLinkProtocolV2.PAYLOAD_OFFSET; i--) {
+    for (let i = buffer.length - MavLinkProtocol.CHECKSUM_LENGTH - 1; i >= MavLinkProtocolV2.PAYLOAD_OFFSET; i--) {
       result = i
       if (buffer[i] !== 0) {
         result++
@@ -316,7 +318,7 @@ export class MavLinkProtocolV2 extends MavLinkProtocol {
 
   signature(buffer: Buffer, header: MavLinkPacketHeader): MavLinkPacketSignature {
     if (header.incompatibilityFlags & MavLinkProtocolV2.IFLAG_SIGNED) {
-      const signatureOffset = MavLinkProtocolV2.PAYLOAD_OFFSET + header.payloadLength + MAVLINK_CHECKSUM_LENGTH
+      const signatureOffset = MavLinkProtocolV2.PAYLOAD_OFFSET + header.payloadLength + MavLinkProtocol.CHECKSUM_LENGTH
       return new MavLinkPacketSignature(
         buffer,
         buffer.readUInt8(signatureOffset),
@@ -444,7 +446,7 @@ export class MavLinkPacketSplitter extends Transform {
       }
 
       // check if the buffer contains at least the minumum size of data
-      if (this.buffer.length < Protocol.PAYLOAD_OFFSET + MAVLINK_CHECKSUM_LENGTH) {
+      if (this.buffer.length < Protocol.PAYLOAD_OFFSET + MavLinkProtocol.CHECKSUM_LENGTH) {
         // current buffer shorter than the shortest message - skipping
         break
       }
@@ -453,7 +455,7 @@ export class MavLinkPacketSplitter extends Transform {
       const payloadLength = this.buffer.readUInt8(1)
       const expectedBufferLength = Protocol.PAYLOAD_OFFSET
         + payloadLength
-        + MAVLINK_CHECKSUM_LENGTH
+        + MavLinkProtocol.CHECKSUM_LENGTH
         + (this.isV2Signed(this.buffer) ? MavLinkProtocolV2.SIGNATURE_LENGTH : 0)
 
       if (this.buffer.length < expectedBufferLength) {
@@ -474,8 +476,8 @@ export class MavLinkPacketSplitter extends Transform {
       if (magic) {
         const crc = protocol.crc(buffer)
         const trim = this.isV2Signed(buffer)
-          ? MavLinkProtocolV2.SIGNATURE_LENGTH + MAVLINK_CHECKSUM_LENGTH
-          : MAVLINK_CHECKSUM_LENGTH
+          ? MavLinkProtocolV2.SIGNATURE_LENGTH + MavLinkProtocol.CHECKSUM_LENGTH
+          : MavLinkProtocol.CHECKSUM_LENGTH
         const crc2 = x25crc(buffer, 1, trim, magic)
         if (crc === crc2) {
           // CRC matches - accept this packet
