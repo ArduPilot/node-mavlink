@@ -2,6 +2,7 @@
 
 import { MavEsp8266, common } from '.'
 import { MavLinkPacket } from './lib/mavlink'
+import { dump } from './lib/utils'
 
 async function main() {
   const port = new MavEsp8266()
@@ -12,6 +13,12 @@ async function main() {
   // log incommint messages
   port.on('data', (packet: MavLinkPacket) => {
     console.log(packet.debug())
+    if (packet.signature) {
+      console.log()
+      console.log(packet.signature.signature)
+      console.log(packet.signature.calculate('qwerty'))
+      console.log()
+    }
   })
 
   // You're now ready to send messages to the controller using the socket

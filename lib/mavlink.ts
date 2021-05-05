@@ -1,5 +1,5 @@
 import { Transform, TransformCallback, Writable } from 'stream'
-import { createHmac } from 'crypto'
+import { createHash } from 'crypto'
 import { uint8_t, uint16_t } from './types'
 import { x25crc, dump } from './utils'
 import { MSG_ID_MAGIC_NUMBER } from './magic-numbers'
@@ -316,12 +316,12 @@ export class MavLinkProtocolV2 extends MavLinkProtocol {
 
   signature(buffer: Buffer, header: MavLinkPacketHeader): MavLinkPacketSignature {
     if (header.incompatibilityFlags & MavLinkProtocolV2.IFLAG_SIGNED) {
-      const signatureOffset = MavLinkProtocolV2.PAYLOAD_OFFSET + header.payloadLength
+      const signatureOffset = MavLinkProtocolV2.PAYLOAD_OFFSET + header.payloadLength + MAVLINK_CHECKSUM_LENGTH
       return new MavLinkPacketSignature(
         buffer,
         buffer.readUInt8(signatureOffset),
         buffer.readUIntLE(signatureOffset + 1, 6),
-        buffer.readUIntLE(signatureOffset + 7, 6),
+        buffer.slice(signatureOffset + 7, buffer.length).toString('hex'),
       )
     } else {
       return null
@@ -337,15 +337,21 @@ export class MavLinkProtocolV2 extends MavLinkProtocol {
     public readonly buffer: Buffer,
     public readonly linkId: uint8_t,
     public readonly timestamp: number,
-    public readonly signature: number,
+    public readonly signature: string,
   ) {}
 
   calculate(secret: string) {
-    return createHmac('sha256', secret)
+    const key = createHash('sha256')
       .update(secret)
-      .update(this.buffer.slice(1, this.buffer.length - 6))
+      .digest()
+
+    const hash = createHash('sha256')
+      .update(key)
+      .update(this.buffer.slice(0, this.buffer.length - 6))
       .digest('hex')
-      .substr(0, 15)
+      .substr(0, 12)
+
+    return hash
   }
 
   toString() {
