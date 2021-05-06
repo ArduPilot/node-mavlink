@@ -252,14 +252,25 @@ export enum MavlinkDataStreamType {
 }
 
 /**
- * FENCE_ACTION
+ * Actions following geofence breach.
  */
 export enum FenceAction {
   'NONE'                                           = 0,
+  /**
+   * Fly to geofence MAV_CMD_NAV_FENCE_RETURN_POINT in GUIDED mode. Note: This action is only supported
+   * by ArduPlane, and may not be supported in all versions.
+   */
   'GUIDED'                                         = 1,
   'REPORT'                                         = 2,
+  /**
+   * Fly to geofence MAV_CMD_NAV_FENCE_RETURN_POINT with manual throttle control in GUIDED mode. Note:
+   * This action is only supported by ArduPlane, and may not be supported in all versions.
+   */
   'GUIDED_THR_PASS'                                = 3,
   'RTL'                                            = 4,
+  'HOLD'                                           = 5,
+  'TERMINATE'                                      = 6,
+  'LAND'                                           = 7,
 }
 
 /**
@@ -13584,7 +13595,7 @@ export class OrbitExecutionStatus extends MavLinkData {
 export class SmartBatteryInfo extends MavLinkData {
   static MSG_ID = 370
   static MSG_NAME = 'SMART_BATTERY_INFO'
-  static PAYLOAD_LENGTH = 87
+  static PAYLOAD_LENGTH = 109
   static MAGIC_NUMBER = 75
 
   static FIELDS = [
@@ -13600,6 +13611,11 @@ export class SmartBatteryInfo extends MavLinkData {
     new MavLinkPacketField('type', 20, false, 1, 'uint8_t'),
     new MavLinkPacketField('serialNumber', 21, false, 1, 'char[]', 16),
     new MavLinkPacketField('deviceName', 37, false, 1, 'char[]', 50),
+    new MavLinkPacketField('chargingMaximumVoltage', 87, true, 2, 'uint16_t'),
+    new MavLinkPacketField('cellsInSeries', 89, true, 1, 'uint8_t'),
+    new MavLinkPacketField('dischargeMaximumCurrent', 90, true, 4, 'uint32_t'),
+    new MavLinkPacketField('dischargeMaximumBurstCurrent', 94, true, 4, 'uint32_t'),
+    new MavLinkPacketField('manufactureDate', 98, true, 1, 'char[]', 11),
   ]
 
   /**
@@ -13631,7 +13647,8 @@ export class SmartBatteryInfo extends MavLinkData {
    */
   serialNumber: string
   /**
-   * Static device name. Encode as manufacturer and product names separated using an underscore.
+   * Static device name in ASCII characters, 0 terminated. All 0: field not provided. Encode as
+   * manufacturer name then product name separated using an underscore.
    */
   deviceName: string
   /**
@@ -13650,6 +13667,26 @@ export class SmartBatteryInfo extends MavLinkData {
    * Minimum per-cell voltage when resting. If not supplied set to UINT16_MAX value.
    */
   restingMinimumVoltage: uint16_t
+  /**
+   * Maximum per-cell voltage when charged. 0: field not provided.
+   */
+  chargingMaximumVoltage: uint16_t
+  /**
+   * Number of battery cells in series. 0: field not provided.
+   */
+  cellsInSeries: uint8_t
+  /**
+   * Maximum pack discharge current. 0: field not provided.
+   */
+  dischargeMaximumCurrent: uint32_t
+  /**
+   * Maximum pack discharge burst current. 0: field not provided.
+   */
+  dischargeMaximumBurstCurrent: uint32_t
+  /**
+   * Manufacture date (DD/MM/YYYY) in ASCII characters, 0 terminated. All 0: field not provided.
+   */
+  manufactureDate: string
 }
 
 /**
