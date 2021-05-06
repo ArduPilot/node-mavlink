@@ -1,28 +1,19 @@
 #!/usr/bin/env -S npx ts-node
 
 import { MavEsp8266, common } from '..'
-import { MavLinkPacket, MavLinkPacketSignature } from '..'
+import { MavLinkPacket } from '..'
 
 async function main() {
   const port = new MavEsp8266()
 
   // start the communication
+  // After this line we have received at least one heartbeat message so we
+  // know what is the remote IP address to send the messages to
   await port.start()
-
-  // calculate secret key
-  const key = MavLinkPacketSignature.key('qwerty')
 
   // log incomming messages
   port.on('data', (packet: MavLinkPacket) => {
     console.log(packet.debug())
-    if (packet.signature) {
-      console.log(
-        'Signature check:',
-        `packet=${packet.signature.signature},`,
-        `calculated=${packet.signature.calculate(key)}`,
-        `matches=${packet.signature.matches(key)}`
-      )
-    }
   })
 
   // You're now ready to send messages to the controller using the socket
