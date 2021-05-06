@@ -67,6 +67,15 @@ export class MavEsp8266 extends EventEmitter {
   send(msg: MavLinkData, protocol: MavLinkProtocol = new MavLinkProtocolV1()) {
     const buffer = protocol.serialize(msg, this.seq++)
     this.seq &= 255
+    this.sendBuffer(buffer)
+  }
+
+  /**
+   * Send raw buffer over the socket. Useful for sending signed packages
+   *
+   * @param buffer buffer to send
+   */
+  sendBuffer(buffer: Buffer) {
     this.socket.send(buffer, this.sendPort, this.ip)
   }
 
