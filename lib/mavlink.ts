@@ -343,18 +343,26 @@ export class MavLinkPacketSignature {
   ) {}
 
   /**
+   * Calculate key based on secret passphrase
+   *
+   * @param passphrase secret to generate the key
+   * @returns key as a buffer
+   */
+  static key(passphrase: string) {
+    return createHash('sha256')
+      .update(passphrase)
+      .digest()
+  }
+
+  /**
    * Calculates signature of the packet buffer using the provided secret.
    * The secret is converted to a hash using the sha256 algorithm which matches
    * the way Mission Planner creates keys.
    *
-   * @param secret secret to generate the key
+   * @param key the secret key (Buffer)
    * @returns calculated signature value
    */
-  calculate(secret: string) {
-    const key = createHash('sha256')
-      .update(secret)
-      .digest()
-
+  calculate(key: Buffer) {
     const hash = createHash('sha256')
       .update(key)
       .update(this.packetBuffer.slice(0, this.packetBuffer.length - 6))
@@ -369,11 +377,11 @@ export class MavLinkPacketSignature {
    * The secret is converted to a hash using the sha256 algorithm which matches
    * the way Mission Planner creates keys.
    *
-   * @param secret secret to generate the key
+   * @param key key
    * @returns true if the signature matches, false otherwise
    */
-  matches(secret: string) {
-    return this.calculate(secret) === this.signature
+  matches(key: Buffer) {
+    return this.calculate(key) === this.signature
   }
 
   toString() {

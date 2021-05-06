@@ -1,13 +1,16 @@
 #!/usr/bin/env node
 
 import { MavEsp8266, common } from '.'
-import { MavLinkPacket } from './lib/mavlink'
+import { MavLinkPacket, MavLinkPacketSignature } from './lib/mavlink'
 
 async function main() {
   const port = new MavEsp8266()
 
   // start the communication
   await port.start()
+
+  // calculate secret key
+  const key = MavLinkPacketSignature.key('qwerty')
 
   // log incomming messages
   port.on('data', (packet: MavLinkPacket) => {
@@ -16,8 +19,8 @@ async function main() {
       console.log(
         'Signature check:',
         `packet=${packet.signature.signature},`,
-        `calculated=${packet.signature.calculate('qwerty')}`,
-        `matches=${packet.signature.matches('qwerty')}`
+        `calculated=${packet.signature.calculate(key)}`,
+        `matches=${packet.signature.matches(key)}`
       )
     }
   })

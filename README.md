@@ -149,9 +149,14 @@ MavLink v2 introduces package signing. The way it currently works with Mission p
 The `node-mavlink` library introduced signature parsing in version 0.0.1-beta.10. The way to verify if a package can be trusted is as follows:
 
 ```
+// calculate secret key (change 'qwerty' to your secret phrase)
+const key = MavLinkPacketSignature.key('qwerty')
+
+// log incomming messages
 port.on('data', packet => {
+  console.log(packet.debug())
   if (packet.signature) {
-    if (packet.signature.matches('your-passphrase')) {
+    if (packet.signature.matches(key)) {
       // signature valid
     } else {
       // signature not valid - possible fraud package detected
@@ -159,7 +164,7 @@ port.on('data', packet => {
   } else {
     // packet is not signed
   }
-}
+})
 ```
 
 What you do with that information is up to you. You can continue to process that package or you can drop it. The library imposes no restriction on packets with invalid signatures.
