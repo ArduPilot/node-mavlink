@@ -3,7 +3,7 @@ import { EventEmitter } from 'events'
 import { Socket, createSocket } from 'dgram'
 import { Writable, PassThrough } from 'stream'
 import { MavLinkPacketSplitter, MavLinkPacketParser } from './mavlink'
-import { MavLinkProtocol, MavLinkProtocolV1, MavLinkData } from './mavlink'
+import { MavLinkProtocol, MavLinkProtocolV2, MavLinkData } from './mavlink'
 import { waitFor } from './utils'
 
 /**
@@ -64,7 +64,7 @@ export class MavEsp8266 extends EventEmitter {
    * @param msg message to send
    * @param protocol protocol used to encode the buffer (default: MavLinkProtocolV1)
    */
-  send(msg: MavLinkData, protocol: MavLinkProtocol = new MavLinkProtocolV1()) {
+  send(msg: MavLinkData, protocol: MavLinkProtocol = new MavLinkProtocolV2()) {
     const buffer = protocol.serialize(msg, this.seq++)
     this.seq &= 255
     this.sendBuffer(buffer)
