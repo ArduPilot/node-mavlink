@@ -46,8 +46,6 @@ async function main() {
   message.targetSystem = 1
   message.targetComponent = 1
 
-  // The default protocol (last parameter, absent here) is v2 because of message
-  // being signed (v1 does not support message signing).
   // The `sendSigned` method is another utility method, very handy to have it
   // provided by the library. It takes care of the sequence number and data
   // serialization.

@@ -34,7 +34,7 @@ async function main() {
   message.targetComponent = 1
 
   // The default protocol (last parameter, absent here) is v1 which is
-  // good enough for testing. You can instantiate any other protocoland pass it
+  // good enough for testing. You can instantiate any other protocol and pass it
   // on to the `send` method.
   // The send method is another utility method, very handy to have it provided
   // by the library. It takes care of the sequence number and data serialization.
