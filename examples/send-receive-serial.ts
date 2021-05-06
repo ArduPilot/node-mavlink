@@ -1,7 +1,7 @@
 #!/usr/bin/env -S npx ts-node
 
 import * as SerialPort from 'serialport'
-import { MavLinkPacketSplitter, MavLinkPacketParser, waitFor, send, sendSigned } from '..'
+import { MavLinkPacketSplitter, MavLinkPacketParser, waitFor, send } from '..'
 import { common } from '..'
 
 async function main() {
@@ -38,7 +38,7 @@ async function main() {
   // on to the `send` method.
   // The send method is another utility method, very handy to have it provided
   // by the library. It takes care of the sequence number and data serialization.
-  await sendSigned(port, message, key, )
+  await send(port, message)
 }
 
 main()
