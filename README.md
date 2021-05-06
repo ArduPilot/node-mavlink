@@ -73,7 +73,7 @@ msg.param1 = 1
 
 port.on('open', async () => {
   // the port is open - we're ready to send data
-  await send(port, msg)
+  await send(port, msg, new MavLinkProtocolV2())
 })
 ```
 
