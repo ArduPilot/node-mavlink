@@ -151,6 +151,8 @@ MavLink v2 introduces package signing. The way it currently works with Mission p
 The `node-mavlink` library introduced signature parsing in version 0.0.1-beta.10. The way to verify if a package can be trusted is as follows:
 
 ```
+import { MavLinkPacketSignature } from 'node-mavlink'
+
 // calculate secret key (change 'qwerty' to your secret phrase)
 const key = MavLinkPacketSignature.key('qwerty')
 
