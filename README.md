@@ -181,6 +181,15 @@ This function calls the `cb` callback periodically at the `interval` (default: 1
 
 This function serializes the `msg` message using the provided `protocol` (default: `MavLinkProtocolV1`) and sends it to the `stream`. If the process is successful the method returns with the length of written data denoting that no error occured. However, if the process was not successful it will error out with the underlying error object returned on by the stream.
 
+#### `async sendSigned(stream: Writable, msg: MavLinkData, key: Buffer, linkId: uint8_t, sysid: uint8_t, compid: uint8_t)`
+
+This is a similar function to `send` but does so using MavLink v2 protocol and signs the message.
+
+The default values for some parameters are as follows:
+- `linkId` = 1
+- `sysid` = 254
+- `compid` = 1
+
 #### `async sleep(ms: number)`
 
 This is a very handy utility function that asynchronously pauses for a given time (ms).
