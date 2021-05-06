@@ -129,9 +129,8 @@ async function main() {
   message.targetSystem = 1
   message.targetComponent = 1
 
-  // The default protocol (last parameter, absent here) is v1 which is
-  // good enough for testing. You can instantiate any other protocol and pass it
-  // on to the `send` method.
+  // The protocol (last parameter, absent here) is v2 which
+  // is the default for MAVESP8266.
   // The `send` method is another utility method, very handy to have it provided
   // by the library. It takes care of the sequence number and data serialization.
   await port.send(message)
