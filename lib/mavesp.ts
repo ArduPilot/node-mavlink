@@ -63,8 +63,8 @@ export class MavEsp8266 extends EventEmitter {
    * Send a packet
    *
    * @param msg message to send
-   * @param sysid target system id
-   * @param compid target component id
+   * @param sysid system id
+   * @param compid component id
    */
   send(msg: MavLinkData, sysid: uint8_t = MavLinkProtocol.SYS_ID, compid: uint8_t = MavLinkProtocol.COMP_ID) {
     const protocol = new MavLinkProtocolV2(sysid, compid)
@@ -77,8 +77,8 @@ export class MavEsp8266 extends EventEmitter {
    * Send a signed packet
    *
    * @param msg message to send
-   * @param sysid target system id
-   * @param compid target component id
+   * @param sysid system id
+   * @param compid component id
    * @param linkId link id for the signature
    */
   sendSigned(msg: MavLinkData, key: Buffer, linkId: uint8_t = 1, sysid: uint8_t = MavLinkProtocol.SYS_ID, compid: uint8_t = MavLinkProtocol.COMP_ID) {

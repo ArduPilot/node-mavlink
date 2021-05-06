@@ -645,8 +645,8 @@ export async function send(stream: Writable, msg: MavLinkData, protocol: MavLink
  * @param msg message to serialize and send
  * @param key key to sign the message with
  * @param linkId link id for the signature
- * @param sysid target system id
- * @param compid target component id
+ * @param sysid system id
+ * @param compid component id
  * @returns number of bytes sent
  */
 export async function sendSigned(stream: Writable, msg: MavLinkData, key: Buffer, linkId: uint8_t = 1, sysid: uint8_t = MavLinkProtocol.SYS_ID, compid: uint8_t = MavLinkProtocol.COMP_ID) {
