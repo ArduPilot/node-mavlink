@@ -2,7 +2,11 @@
 
 import * as SerialPort from 'serialport'
 import { MavLinkPacketSplitter, MavLinkPacketParser } from '..'
-import { common, waitFor, send } from '..'
+import { MavLinkPacket, MavLinkPacketSignature } from '..'
+import { common, waitFor, sendSigned } from '..'
+
+// Use your own secret passphrase in place of 'qwerty'
+const key = MavLinkPacketSignature.key('qwerty')
 
 async function main() {
   // Create an output stream to write data to the controller
@@ -19,9 +23,18 @@ async function main() {
 
   // React to packet being retrieved.
   // This is the place where all your application-level logic will exist
-  reader.on('data', packet => {
+  reader.on('data', (packet: MavLinkPacket) => {
     online = true
     console.log(packet.debug())
+    if (packet.signature) {
+      if (packet.signature.matches(key)) {
+        console.log('Signature check OK')
+      } else {
+        console.log('Signature check FAILED - possible fraud package detected')
+      }
+    } else {
+      console.log('Packet not signed')
+    }
   })
 
   // Wait for the remote system to be available
@@ -33,12 +46,12 @@ async function main() {
   message.targetSystem = 1
   message.targetComponent = 1
 
-  // The default protocol (last parameter, absent here) is v1 which is
-  // good enough for testing. You can instantiate any other protocoland pass it
-  // on to the `send` method.
-  // The send method is another utility method, very handy to have it provided
-  // by the library. It takes care of the sequence number and data serialization.
-  await send(port, message)
+  // The default protocol (last parameter, absent here) is v2 because of message
+  // being signed (v1 does not support message signing).
+  // The `sendSigned` method is another utility method, very handy to have it
+  // provided by the library. It takes care of the sequence number and data
+  // serialization.
+  await sendSigned(port, message, key)
 }
 
 main()
