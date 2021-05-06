@@ -16,7 +16,7 @@ $ npm install --save node-mavlink serialport
 
 Once you've done it you can start using it. First you'll need a serial port that can parse messages one by one. Please note that since we're using ECMAScript modules the file name should end with `.mjs` extension (e.g. `test.mjs`)
 
-```
+```javascript
 import SerialPort from 'serialport'
 import { MavLinkPacketSplitter, MavLinkPacketParser } from 'node-mavlink'
 
@@ -37,7 +37,7 @@ That's it! That is all it takes to read the raw data. But it doesn't end there -
 
 Each message consists of multiple fields that contain specific data. Parsing the data is also very easy.
 
-```
+```javascript
 import { minimal, common, ardupilotmega, uavionix, icarous } from 'node-mavlink'
 
 // create a registry of mappings between a message id and a data class
@@ -62,7 +62,7 @@ reader.on('data', packet => {
 
 Sending messages is also very easy. One example that is very useful is to send the `REQUEST_PROTOCOL_VERSION` to switch to protocol version 2.
 
-```
+```javascript
 import { MavLinkProtocolV2, send } from 'node-mavlink'
 
 // Create an instance of of the `CommandInt` class that will be the vessel
@@ -85,7 +85,7 @@ There are options for streams working over network (TCP or UDP), GSM network - p
 
 Here's an example for connecting to telemetry via TCP (for example using [esp-link](https://github.com/jeelabs/esp-link) and a cheap ESP8266 module)
 
-```
+```javascript
 import { connect } from 'net'
 
 // substitute 192.168.4.1 with the IP address of your module
@@ -109,7 +109,7 @@ The _official_ firmware for setting up a UDP telemetry using ESP8266 is [MAVESP8
 
 To setup a stream that reads from a UDP socket isn't as easy as with TCP sockets (which are in a sense streams on their own) but is not hard at all because the library exposes the `MavEsp8266` class that encapsulates all of the hard work for you:
 
-```
+```javascript
 import { MavEsp8266, common } from 'node-mavlink'
 
 async function main() {
@@ -150,7 +150,7 @@ MavLink v2 introduces package signing. The way it currently works with Mission p
 
 The `node-mavlink` library introduced signature parsing in version 0.0.1-beta.10. The way to verify if a package can be trusted is as follows:
 
-```
+```javascript
 import { MavLinkPacketSignature } from 'node-mavlink'
 
 // calculate secret key (change 'qwerty' to your secret phrase)
@@ -179,7 +179,7 @@ First we need to learn how to create a secure key. As mentioned before the key i
 
 To do the same using this library:
 
-```
+```javascript
 import { MavLinkPacketSignature } from 'node-mavlink'
 
 const key = MavLinkPacketSignature.key('your very secret passphrase')
@@ -187,7 +187,7 @@ const key = MavLinkPacketSignature.key('your very secret passphrase')
 
 Now that we have the key ready we can send signed packages. Let's use the `ParamRequestList` as an example:
 
-```
+```javascript
 import { common, sendSigned } from 'node-mavlink'
 
 async function requestParameterList() {
