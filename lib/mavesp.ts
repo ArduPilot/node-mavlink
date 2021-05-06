@@ -70,7 +70,7 @@ export class MavEsp8266 extends EventEmitter {
     const protocol = new MavLinkProtocolV2(sysid, compid)
     const buffer = protocol.serialize(msg, this.seq++)
     this.seq &= 255
-    this.socket.send(buffer, this.sendPort, this.ip)
+    this.sendBuffer(buffer)
   }
 
   /**
@@ -86,7 +86,16 @@ export class MavEsp8266 extends EventEmitter {
     const b1 = protocol.serialize(msg, this.seq++)
     this.seq &= 255
     const b2 = protocol.sign(b1, linkId, key)
-    this.socket.send(b2, this.sendPort, this.ip)
+    this.sendBuffer(b2)
+  }
+
+  /**
+   * Send raw data over the socket. Useful for custom implementation of data sending
+   *
+   * @param buffer buffer to send
+   */
+  sendBuffer(buffer: Buffer) {
+    this.socket.send(buffer, this.sendPort, this.ip)
   }
 
   private processIncommingUDPData(buffer, metadata) {
