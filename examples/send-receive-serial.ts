@@ -1,7 +1,7 @@
 #!/usr/bin/env -S npx ts-node
 
 import * as SerialPort from 'serialport'
-import { MavLinkPacketSplitter, MavLinkPacketParser } from '..'
+import { MavLinkPacketSplitter, MavLinkPacketParser, MavLinkPacket } from '..'
 import { common, waitFor, send } from '..'
 
 async function main() {
@@ -19,7 +19,7 @@ async function main() {
 
   // React to packet being retrieved.
   // This is the place where all your application-level logic will exist
-  reader.on('data', packet => {
+  reader.on('data', (packet: MavLinkPacket) => {
     online = true
     console.log(packet.debug())
   })
