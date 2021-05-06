@@ -146,6 +146,8 @@ That's it! Easy as a lion :)
 
 MavLink v2 introduces package signing. The way it currently works with Mission planner is you give it a pass phrase, Mission Planner encodes it using sha256 hashing algorithm and uses it as part of the signature calculation. Therefore if someone does not know the secret passphrase they won't be able to create packets that would seem to be comming from a source. It's a kind of security thing.
 
+### Reading signature
+
 The `node-mavlink` library introduced signature parsing in version 0.0.1-beta.10. The way to verify if a package can be trusted is as follows:
 
 ```
@@ -168,6 +170,34 @@ port.on('data', packet => {
 ```
 
 What you do with that information is up to you. You can continue to process that package or you can drop it. The library imposes no restriction on packets with invalid signatures.
+
+### Sending signed packages
+
+First we need to learn how to create a secure key. As mentioned before the key in Mission Planner is created by calculating an SHA256 checksum over a secret phrase that you can specify and then taking the first 6 bytes of it.
+
+To do the same using this library:
+
+```
+import { MavLinkPacketSignature } from 'node-mavlink'
+
+const key = MavLinkPacketSignature.key('your very secret passphrase')
+```
+
+Now that we have the key ready we can send signed packages. Let's use the `ParamRequestList` as an example:
+
+```
+import { common, sendSigned } from 'node-mavlink'
+
+async function requestParameterList() {
+  const message = new common.ParamRequestList()
+  message.targetSystem = 1
+  message.targetComponent = 1
+
+  await sendSigned(port, message, key)
+}
+```
+
+If you're using the `MavEsp8266` class for communicating over UDP it also exposes the `sendSigned()` method with the same signature.
 
 ## Utility functions
 
