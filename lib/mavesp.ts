@@ -2,9 +2,10 @@ import { EventEmitter } from 'events'
 
 import { Socket, createSocket } from 'dgram'
 import { Writable, PassThrough } from 'stream'
-import { MavLinkPacketSplitter, MavLinkPacketParser } from './mavlink'
+import { MavLinkPacketSplitter, MavLinkPacketParser, MavLinkPacketSignature } from './mavlink'
 import { MavLinkProtocol, MavLinkProtocolV2, MavLinkData } from './mavlink'
 import { waitFor } from './utils'
+import { uint8_t } from './types'
 
 /**
  * Encapsulation of communication with MavEsp8266
@@ -62,21 +63,30 @@ export class MavEsp8266 extends EventEmitter {
    * Send a packet
    *
    * @param msg message to send
-   * @param protocol protocol used to encode the buffer (default: MavLinkProtocolV1)
+   * @param sysid target system id
+   * @param compid target component id
    */
-  send(msg: MavLinkData, protocol: MavLinkProtocol = new MavLinkProtocolV2()) {
+  send(msg: MavLinkData, sysid: uint8_t = MavLinkProtocol.SYS_ID, compid: uint8_t = MavLinkProtocol.COMP_ID) {
+    const protocol = new MavLinkProtocolV2(sysid, compid)
     const buffer = protocol.serialize(msg, this.seq++)
     this.seq &= 255
-    this.sendBuffer(buffer)
+    this.socket.send(buffer, this.sendPort, this.ip)
   }
 
   /**
-   * Send raw buffer over the socket. Useful for sending signed packages
+   * Send a signed packet
    *
-   * @param buffer buffer to send
+   * @param msg message to send
+   * @param sysid target system id
+   * @param compid target component id
+   * @param linkId link id for the signature
    */
-  sendBuffer(buffer: Buffer) {
-    this.socket.send(buffer, this.sendPort, this.ip)
+  sendSigned(msg: MavLinkData, key: Buffer, linkId: uint8_t = 1, sysid: uint8_t = MavLinkProtocol.SYS_ID, compid: uint8_t = MavLinkProtocol.COMP_ID) {
+    const protocol = new MavLinkProtocolV2(sysid, compid, MavLinkProtocolV2.IFLAG_SIGNED)
+    const b1 = protocol.serialize(msg, this.seq++)
+    this.seq &= 255
+    const b2 = protocol.sign(b1, linkId, key)
+    this.socket.send(b2, this.sendPort, this.ip)
   }
 
   private processIncommingUDPData(buffer, metadata) {

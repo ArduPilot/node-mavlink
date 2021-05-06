@@ -234,6 +234,8 @@ export class MavLinkProtocolV2 extends MavLinkProtocol {
   constructor(
     public sysid: uint8_t = MavLinkProtocol.SYS_ID,
     public compid: uint8_t = MavLinkProtocol.COMP_ID,
+    public incompatibilityFlags: uint8_t = MavLinkProtocolV2.INCOMPATIBILITY_FLAGS,
+    public compatibilityFlags: uint8_t = MavLinkProtocolV2.COMPATIBILITY_FLAGS,
   ) {
     super()
   }
@@ -243,8 +245,8 @@ export class MavLinkProtocolV2 extends MavLinkProtocol {
     const buffer = Buffer.from(new Uint8Array(MavLinkProtocolV2.PAYLOAD_OFFSET + definition.PAYLOAD_LENGTH + MavLinkProtocol.CHECKSUM_LENGTH))
 
     buffer.writeUInt8(MavLinkProtocolV2.START_BYTE, 0)
-    buffer.writeUInt8(MavLinkProtocolV2.INCOMPATIBILITY_FLAGS, 2)
-    buffer.writeUInt8(MavLinkProtocolV2.COMPATIBILITY_FLAGS, 3)
+    buffer.writeUInt8(this.incompatibilityFlags, 2)
+    buffer.writeUInt8(this.compatibilityFlags, 3)
     buffer.writeUInt8(seq, 4)
     buffer.writeUInt8(this.sysid, 5)
     buffer.writeUInt8(this.compid, 6)
@@ -617,6 +619,14 @@ export class MavLinkPacketParser extends Transform {
 
 let seq = 0
 
+/**
+ * Send a packet to the stream
+ *
+ * @param stream Stream to send the data to
+ * @param msg message to serialize and send
+ * @param protocol protocol to use (default: MavLinkProtocolV1)
+ * @returns number of bytes sent
+ */
 export async function send(stream: Writable, msg: MavLinkData, protocol: MavLinkProtocol = new MavLinkProtocolV1()) {
   return new Promise((resolve, reject) => {
     const buffer = protocol.serialize(msg, seq++)
@@ -624,6 +634,30 @@ export async function send(stream: Writable, msg: MavLinkData, protocol: MavLink
     stream.write(buffer, err => {
       if (err) reject(err)
       else resolve(buffer.length)
+    })
+  })
+}
+
+/**
+ * Send a signed packet to the stream. Signed packets are always V2 protocol
+ *
+ * @param stream Stream to send the data to
+ * @param msg message to serialize and send
+ * @param key key to sign the message with
+ * @param linkId link id for the signature
+ * @param sysid target system id
+ * @param compid target component id
+ * @returns number of bytes sent
+ */
+export async function sendSigned(stream: Writable, msg: MavLinkData, key: Buffer, linkId: uint8_t = 1, sysid: uint8_t = MavLinkProtocol.SYS_ID, compid: uint8_t = MavLinkProtocol.COMP_ID) {
+  return new Promise((resolve, reject) => {
+    const protocol = new MavLinkProtocolV2(sysid, compid, MavLinkProtocolV2.IFLAG_SIGNED)
+    const b1 = protocol.serialize(msg, seq++)
+    seq &= 255
+    const b2 = protocol.sign(b1, linkId, key)
+    stream.write(b2, err => {
+      if (err) reject(err)
+      else resolve(b2.length)
     })
   })
 }
