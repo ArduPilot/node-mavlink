@@ -111,7 +111,7 @@ export abstract class MavLinkProtocol {
    * the fields, including extensions that are sometimes not being sent
    * from the transmitting system.
    */
-  abstract payload(buffer: Buffer, header: MavLinkPacketHeader): Buffer
+  abstract payload(buffer: Buffer): Buffer
 
   /**
    * Deserialize payload into actual data class
@@ -210,8 +210,9 @@ export class MavLinkProtocolV1 extends MavLinkProtocol {
     return buffer.readUInt16LE(MavLinkProtocolV1.PAYLOAD_OFFSET + plen)
   }
 
-  payload(buffer: Buffer, header: MavLinkPacketHeader): Buffer {
-    const payload = buffer.slice(MavLinkProtocolV1.PAYLOAD_OFFSET, header.payloadLength)
+  payload(buffer: Buffer): Buffer {
+    const plen = buffer.readUInt8(1)
+    const payload = buffer.slice(MavLinkProtocolV1.PAYLOAD_OFFSET, plen)
     const padding = Buffer.from(new Uint8Array(255 - payload.length))
     return Buffer.concat([ payload, padding ])
   }
@@ -224,7 +225,6 @@ export class MavLinkProtocolV2 extends MavLinkProtocol {
   static NAME = 'MAV_V2'
   static START_BYTE = 0xFD
   static PAYLOAD_OFFSET = 10
-  static SIGNATURE_LENGTH = 13
 
   static INCOMPATIBILITY_FLAGS: uint8_t = 0
   static COMPATIBILITY_FLAGS: uint8_t = 0
@@ -310,21 +310,16 @@ export class MavLinkProtocolV2 extends MavLinkProtocol {
     return buffer.readUInt16LE(MavLinkProtocolV2.PAYLOAD_OFFSET + plen)
   }
 
-  payload(buffer: Buffer, header: MavLinkPacketHeader): Buffer {
-    const payload = buffer.slice(MavLinkProtocolV2.PAYLOAD_OFFSET, header.payloadLength)
+  payload(buffer: Buffer): Buffer {
+    const plen = buffer.readUInt8(1)
+    const payload = buffer.slice(MavLinkProtocolV2.PAYLOAD_OFFSET, plen)
     const padding = Buffer.from(new Uint8Array(255 - payload.length))
     return Buffer.concat([ payload, padding ])
   }
 
   signature(buffer: Buffer, header: MavLinkPacketHeader): MavLinkPacketSignature {
     if (header.incompatibilityFlags & MavLinkProtocolV2.IFLAG_SIGNED) {
-      const signatureOffset = MavLinkProtocolV2.PAYLOAD_OFFSET + header.payloadLength + MavLinkProtocol.CHECKSUM_LENGTH
-      return new MavLinkPacketSignature(
-        buffer,
-        buffer.readUInt8(signatureOffset),
-        buffer.readUIntLE(signatureOffset + 1, 6),
-        buffer.slice(signatureOffset + 7, buffer.length).toString('hex'),
-      )
+      return new MavLinkPacketSignature(buffer)
     } else {
       return null
     }
@@ -335,12 +330,7 @@ export class MavLinkProtocolV2 extends MavLinkProtocol {
  * MavLink packet signature definition
  */
 export class MavLinkPacketSignature {
-  constructor(
-    public readonly packetBuffer: Buffer,
-    public readonly linkId: uint8_t,
-    public readonly timestamp: number,
-    public readonly signature: string,
-  ) {}
+  static SIGNATURE_LENGTH = 13
 
   /**
    * Calculate key based on secret passphrase
@@ -354,6 +344,54 @@ export class MavLinkPacketSignature {
       .digest()
   }
 
+  constructor(private readonly buffer: Buffer) {}
+
+  private get offset() {
+    return this.buffer.length - MavLinkPacketSignature.SIGNATURE_LENGTH
+  }
+
+  /**
+   * Get the linkId from signature
+   */
+  get linkId() {
+    return this.buffer.readUInt8(this.offset)
+  }
+
+  /**
+   * Set the linkId in signature
+   */
+  set linkId(value: uint8_t) {
+    this.buffer.writeUInt8(this.offset)
+  }
+
+  /**
+   * Get the timestamp from signature
+   */
+  get timestamp() {
+    return this.buffer.readUIntLE(this.offset + 1, 6)
+  }
+
+  /**
+   * Set the linkId in signature
+   */
+  set timestamp(value: number) {
+    this.buffer.writeUIntLE(value, this.offset + 1, 6)
+  }
+
+  /**
+   * Get the signature from signature
+   */
+  get signature() {
+    return this.buffer.slice(this.offset + 7, this.offset + 7 + 6).toString('hex')
+  }
+
+  /**
+   * Set the signature in signature
+   */
+  set signature(value: string) {
+    this.buffer.write(value, this.offset + 7, 'hex')
+  }
+
   /**
    * Calculates signature of the packet buffer using the provided secret.
    * The secret is converted to a hash using the sha256 algorithm which matches
@@ -365,7 +403,7 @@ export class MavLinkPacketSignature {
   calculate(key: Buffer) {
     const hash = createHash('sha256')
       .update(key)
-      .update(this.packetBuffer.slice(0, this.packetBuffer.length - 6))
+      .update(this.buffer.slice(0, this.buffer.length - 6))
       .digest('hex')
       .substr(0, 12)
 
@@ -385,9 +423,7 @@ export class MavLinkPacketSignature {
   }
 
   toString() {
-    return `linkid: ${this.linkId}, `
-      + `timestamp ${this.timestamp}, `
-      + `signature ${this.signature}`
+    return `linkid: ${this.linkId}, timestamp ${this.timestamp}, signature ${this.signature}`
   }
 }
 
@@ -464,7 +500,7 @@ export class MavLinkPacketSplitter extends Transform {
       const expectedBufferLength = Protocol.PAYLOAD_OFFSET
         + payloadLength
         + MavLinkProtocol.CHECKSUM_LENGTH
-        + (this.isV2Signed(this.buffer) ? MavLinkProtocolV2.SIGNATURE_LENGTH : 0)
+        + (this.isV2Signed(this.buffer) ? MavLinkPacketSignature.SIGNATURE_LENGTH : 0)
 
       if (this.buffer.length < expectedBufferLength) {
         // current buffer is not fully retrieved yet - skipping
@@ -484,7 +520,7 @@ export class MavLinkPacketSplitter extends Transform {
       if (magic) {
         const crc = protocol.crc(buffer)
         const trim = this.isV2Signed(buffer)
-          ? MavLinkProtocolV2.SIGNATURE_LENGTH + MavLinkProtocol.CHECKSUM_LENGTH
+          ? MavLinkPacketSignature.SIGNATURE_LENGTH + MavLinkProtocol.CHECKSUM_LENGTH
           : MavLinkProtocol.CHECKSUM_LENGTH
         const crc2 = x25crc(buffer, 1, trim, magic)
         if (crc === crc2) {
@@ -545,7 +581,7 @@ export class MavLinkPacketParser extends Transform {
   _transform(chunk: Buffer, encoding, callback: TransformCallback) {
     const protocol = this.getProtocol(chunk)
     const header = protocol.header(chunk)
-    const payload = protocol.payload(chunk, header)
+    const payload = protocol.payload(chunk)
     const crc = protocol.crc(chunk)
     const signature = protocol instanceof MavLinkProtocolV2
       ? protocol.signature(chunk, header)
