@@ -269,6 +269,28 @@ export class MavLinkProtocolV2 extends MavLinkProtocol {
     return result
   }
 
+  /**
+   * Create a signed package buffer
+   *
+   * @param buffer buffer with the original, unsigned package
+   * @param linkId id of the link
+   * @param key key to sign the package with
+   * @returns signed package
+   */
+  sign(buffer: Buffer, linkId: number, key: Buffer) {
+    const result = Buffer.concat([
+      buffer,
+      Buffer.from(new Uint8Array(MavLinkPacketSignature.SIGNATURE_LENGTH))
+    ])
+
+    const signer = new MavLinkPacketSignature(result)
+    signer.linkId = linkId
+    signer.timestamp = Date.now()
+    signer.signature = signer.calculate(key)
+
+    return result
+  }
+
   private calculateTruncatedPayloadLength(buffer: Buffer): number {
     let result = buffer.length
 

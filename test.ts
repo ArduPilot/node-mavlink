@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 import { MavEsp8266, common } from '.'
-import { MavLinkPacket, MavLinkPacketSignature } from './lib/mavlink'
+import { MavLinkPacket, MavLinkPacketSignature, MavLinkProtocolV2 } from './lib/mavlink'
 
 async function main() {
   const port = new MavEsp8266()
@@ -30,6 +30,12 @@ async function main() {
   const message = new common.ParamRequestList()
   message.targetSystem = 1
   message.targetComponent = 1
+
+  // example how to create a signed packet
+  const protocol = new MavLinkProtocolV2()
+  const b1 = protocol.serialize(message, 1)
+  const b2 = protocol.sign(b1, 1, key)
+  console.log(b2)
 
   // The default protocol (last parameter, absent here) is v1 which is
   // good enough for testing. You can instantiate any other protocoland pass it
