@@ -464,6 +464,11 @@ export class MavLinkPacket {
     readonly signature: MavLinkPacketSignature = null,
   ) {}
 
+  /**
+   * Debug information about the packet
+   *
+   * @returns string representing debug information about a packet
+   */
   debug() {
     return 'Packet ('
       + `proto: ${this.protocol.constructor['NAME']}, `
