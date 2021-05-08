@@ -492,6 +492,14 @@ export class MavLinkPacket {
  */
 export class MavLinkPacketSplitter extends Transform {
   private buffer = Buffer.from([])
+  private verbose = false
+  private _unknownPackagesCount = 0
+  private _invalidPackagesCount = 0
+
+  constructor(opts = {}, verbose = false) {
+    super(opts)
+    this.verbose = verbose
+  }
 
   _transform(chunk: Buffer, encoding, callback: TransformCallback) {
     this.buffer = Buffer.concat([ this.buffer, chunk ])
@@ -557,16 +565,22 @@ export class MavLinkPacketSplitter extends Transform {
           this.push(buffer)
         } else {
           // CRC mismatch - skip packet
-          console.error(
-            'CRC error; expected', crc2, `(0x${crc2.toString(16).padStart(4, '0')})`,
-            'got', crc, `(0x${crc.toString(16).padStart(4, '0')})`,
-            '; msgid:', header.msgid, ', magic:', magic
-          )
-          dump(buffer)
+          this._invalidPackagesCount++
+          if (this.verbose) {
+            console.error(
+              'CRC error; expected', crc2, `(0x${crc2.toString(16).padStart(4, '0')})`,
+              'got', crc, `(0x${crc.toString(16).padStart(4, '0')})`,
+              '; msgid:', header.msgid, ', magic:', magic
+            )
+            dump(buffer)
+          }
         }
       } else {
         // this meessage has not been generated - ignoring
-        console.error(`Unknown message with id ${header.msgid} (magic number not found) - skipping`)
+        this._unknownPackagesCount++
+        if (this.verbose) {
+          console.error(`Unknown message with id ${header.msgid} (magic number not found) - skipping`)
+        }
       }
     }
 
@@ -584,6 +598,34 @@ export class MavLinkPacketSplitter extends Transform {
       const flags = buffer.readUInt8(2)
       return !!(flags & MavLinkProtocolV2.IFLAG_SIGNED)
     }
+  }
+
+  /**
+   * Number of invalid packages
+   */
+   get invalidPackages() {
+    return this._invalidPackagesCount
+  }
+
+  /**
+   * Reset the number of invalid packages
+   */
+  resetInvalidPackagesCount() {
+    this,this._invalidPackagesCount = 0
+  }
+
+  /**
+   * Number of invalid packages
+   */
+   get unknownPackagesCount() {
+    return this._unknownPackagesCount
+  }
+
+  /**
+   * Reset the number of invalid packages
+   */
+  resetUnknownPackagesCount() {
+    this,this._unknownPackagesCount = 0
   }
 }
 

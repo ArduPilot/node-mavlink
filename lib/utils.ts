@@ -26,12 +26,12 @@ export function dump(buffer: Buffer, lineWidth = 28) {
   for (let i = 0; i < buffer.length; i++) {
     line.push(buffer[i].toString(16).padStart(2, '0') + ' ')
     if (line.length === lineWidth) {
-      console.error(line.join(' '))
+      console.log(line.join(' '))
       line.length = 0
     }
   }
   if (line.length > 0) {
-    console.error(line.join(' '))
+    console.log(line.join(' '))
   }
 }
 

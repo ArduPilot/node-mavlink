@@ -30,7 +30,7 @@ export const SERIALIZERS = {
   'uint64_t': (value: uint64_t, buffer: Buffer, offset: number) => buffer.writeBigUInt64LE(value, offset),
   'float'   : (value: float, buffer: Buffer, offset: number) => buffer.writeFloatLE(value, offset),
   'double'  : (value: double, buffer: Buffer, offset: number) => buffer.writeDoubleLE(value, offset),
-  
+
   // array types
   'char[]': (value: string, buffer: Buffer, offset: number, maxLen: number) => {
     for (let i = 0; i < value.length && i < maxLen; i++) {
