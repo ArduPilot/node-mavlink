@@ -212,7 +212,7 @@ export class MavLinkProtocolV1 extends MavLinkProtocol {
 
   payload(buffer: Buffer): Buffer {
     const plen = buffer.readUInt8(1)
-    const payload = buffer.slice(MavLinkProtocolV1.PAYLOAD_OFFSET, plen)
+    const payload = buffer.slice(MavLinkProtocolV1.PAYLOAD_OFFSET, MavLinkProtocolV1.PAYLOAD_OFFSET + plen)
     const padding = Buffer.from(new Uint8Array(255 - payload.length))
     return Buffer.concat([ payload, padding ])
   }
@@ -336,7 +336,7 @@ export class MavLinkProtocolV2 extends MavLinkProtocol {
 
   payload(buffer: Buffer): Buffer {
     const plen = buffer.readUInt8(1)
-    const payload = buffer.slice(MavLinkProtocolV2.PAYLOAD_OFFSET, plen)
+    const payload = buffer.slice(MavLinkProtocolV2.PAYLOAD_OFFSET, MavLinkProtocolV2.PAYLOAD_OFFSET + plen)
     const padding = Buffer.from(new Uint8Array(255 - payload.length))
     return Buffer.concat([ payload, padding ])
   }
