@@ -3,9 +3,8 @@ import { EventEmitter } from 'events'
 import { Socket, createSocket } from 'dgram'
 import { Writable, PassThrough } from 'stream'
 import { MavLinkPacketSplitter, MavLinkPacketParser, MavLinkPacketSignature } from './mavlink'
-import { MavLinkProtocol, MavLinkProtocolV2, MavLinkData } from './mavlink'
-import { waitFor } from './utils'
-import { uint8_t } from './types'
+import { MavLinkProtocol, MavLinkProtocolV2 } from './mavlink'
+import { uint8_t, waitFor, MavLinkData } from 'mavlink-mappings'
 
 /**
  * Encapsulation of communication with MavEsp8266
