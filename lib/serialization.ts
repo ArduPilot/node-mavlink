@@ -20,11 +20,11 @@ export const SERIALIZERS = {
 
   // singular types
   'char'    : (value: int8_t, buffer: Buffer, offset: number) => buffer.writeUInt8(value, offset),
-  'int8_t'  : (value: int8_t, buffer: Buffer, offset: number) => buffer.writeUInt8(value, offset),
+  'int8_t'  : (value: int8_t, buffer: Buffer, offset: number) => buffer.writeInt8(value, offset),
   'uint8_t' : (value: uint8_t, buffer: Buffer, offset: number) => buffer.writeUInt8(value, offset),
-  'int16_t' : (value: int16_t, buffer: Buffer, offset: number) => buffer.writeUInt16LE(value, offset),
+  'int16_t' : (value: int16_t, buffer: Buffer, offset: number) => buffer.writeInt16LE(value, offset),
   'uint16_t': (value: uint16_t, buffer: Buffer, offset: number) => buffer.writeUInt16LE(value, offset),
-  'int32_t' : (value: int32_t, buffer: Buffer, offset: number) => buffer.writeUInt32LE(value, offset),
+  'int32_t' : (value: int32_t, buffer: Buffer, offset: number) => buffer.writeInt32LE(value, offset),
   'uint32_t': (value: uint32_t, buffer: Buffer, offset: number) => buffer.writeUInt32LE(value, offset),
   'int64_t' : (value: int64_t, buffer: Buffer, offset: number) => buffer.writeBigInt64LE(value, offset),
   'uint64_t': (value: uint64_t, buffer: Buffer, offset: number) => buffer.writeBigUInt64LE(value, offset),
