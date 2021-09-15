@@ -9,7 +9,7 @@ import {
   uint64_t,
   float,
   double,
-} from './types'
+} from 'mavlink-mappings'
 
 /**
  * A dictionary containing functions that serialize a certain value based on the field type

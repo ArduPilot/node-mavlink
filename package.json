@@ -1,6 +1,6 @@
 {
   "name": "node-mavlink",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "author": "Matthias Hryniszak <padcom@gmail.com>",
   "license": "LGPL",
   "description": "MavLink definitions and parsing library",
@@ -24,12 +24,16 @@
   "dependencies": {
     "mavlink-mappings": "^1.0.0"
   },
+  "scripts": {
+    "build": "tsc"
+  },
   "devDependencies": {
     "@types/node": "^15.0.1",
     "@types/serialport": "^8.0.1",
     "@types/xml2js": "^0.4.8",
     "serialport": "^9.0.7",
     "ts-node": "^9.1.1",
+    "typescript": "^4.4.3",
     "wget-improved": "^3.2.1",
     "xml2js": "^0.4.23"
   }
