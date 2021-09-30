@@ -6,6 +6,7 @@ import { MSG_ID_MAGIC_NUMBER } from 'mavlink-mappings'
 import { MavLinkData, MavLinkDataConstructor } from 'mavlink-mappings'
 
 import { SERIALIZERS, DESERIALIZERS } from './serialization'
+import { start } from 'repl'
 
 /**
  * Header definition of the MavLink packet
@@ -453,33 +454,10 @@ export class MavLinkPacketSplitter extends Transform {
     this.buffer = Buffer.concat([ this.buffer, chunk ])
 
     while (true) {
-      let Protocol: MavLinkProtocolConstructor = null
+      const { startByteFirstOffset, Protocol } = this.findStartOfMessage(this.buffer)
 
-      // check for start byte
-      let startByteFirstOffset
-
-      const stxv1 = this.buffer.indexOf(MavLinkProtocolV1.START_BYTE)
-      const stxv2 = this.buffer.indexOf(MavLinkProtocolV2.START_BYTE)
-
-      if (stxv1 >= 0 && stxv2 >= 0) {
-        // in the current buffer both STX v1 and v2 are found - get the first one
-        if (stxv1 < stxv2) {
-          Protocol = MavLinkProtocolV1
-          startByteFirstOffset = stxv1
-        } else {
-          Protocol = MavLinkProtocolV2
-          startByteFirstOffset = stxv2
-        }
-      } else if (stxv1 >= 0) {
-        // in the current buffer both STX v1 is found
-        Protocol = MavLinkProtocolV1
-        startByteFirstOffset = stxv1
-      } else if (stxv2 >= 0) {
-        // in the current buffer both STX v2 is found
-        Protocol = MavLinkProtocolV2
-        startByteFirstOffset = stxv2
-      } else {
-        // no STX found - continue gathering the data
+      if (Protocol === null || startByteFirstOffset === null) {
+        // start of the package was not found - need more data
         break
       }
 
@@ -554,6 +532,37 @@ export class MavLinkPacketSplitter extends Transform {
     callback(null)
   }
 
+  private findStartOfMessage(buffer: Buffer) {
+    let Protocol: MavLinkProtocolConstructor = null
+    let offset: number = null
+
+    const stxv1 = this.buffer.indexOf(MavLinkProtocolV1.START_BYTE)
+    const stxv2 = this.buffer.indexOf(MavLinkProtocolV2.START_BYTE)
+
+    if (stxv1 >= 0 && stxv2 >= 0) {
+      // in the current buffer both STX v1 and v2 are found - get the first one
+      if (stxv1 < stxv2) {
+        Protocol = MavLinkProtocolV1
+        offset = stxv1
+      } else {
+        Protocol = MavLinkProtocolV2
+        offset = stxv2
+      }
+    } else if (stxv1 >= 0) {
+      // in the current buffer both STX v1 is found
+      Protocol = MavLinkProtocolV1
+      offset = stxv1
+    } else if (stxv2 >= 0) {
+      // in the current buffer both STX v2 is found
+      Protocol = MavLinkProtocolV2
+      offset = stxv2
+    } else {
+      // no STX found - continue gathering the data
+    }
+
+    return { startByteFirstOffset: offset, Protocol }
+  }
+
   /**
    * Checks if the buffer contains the entire message with signature
    *
@@ -572,6 +581,13 @@ export class MavLinkPacketSplitter extends Transform {
    */
   get validPackages() {
     return this._validPackagesCount
+  }
+
+  /**
+   * Reset the number of valid packages
+   */
+  resetValidPackagesCount() {
+    this,this._validPackagesCount = 0
   }
 
   /**
