@@ -466,7 +466,7 @@ export class MavLinkPacketSplitter extends Transform {
         if (stxv1 < stxv2) {
           Protocol = MavLinkProtocolV1
           startByteFirstOffset = stxv1
-        } else if (stxv2 < stxv1) {
+        } else {
           Protocol = MavLinkProtocolV2
           startByteFirstOffset = stxv2
         }
@@ -536,7 +536,7 @@ export class MavLinkPacketSplitter extends Transform {
             )
             dump(buffer)
           }
-          // truncate the buffer to remove the current message
+          // truncate the buffer to remove bad data up until the STX
           this.buffer = this.buffer.slice(1)
         }
       } else {
