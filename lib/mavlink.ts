@@ -6,7 +6,6 @@ import { MSG_ID_MAGIC_NUMBER } from 'mavlink-mappings'
 import { MavLinkData, MavLinkDataConstructor } from 'mavlink-mappings'
 
 import { SERIALIZERS, DESERIALIZERS } from './serialization'
-import { start } from 'repl'
 
 /**
  * Header definition of the MavLink packet
