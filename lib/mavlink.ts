@@ -299,6 +299,14 @@ export class MavLinkProtocolV2 extends MavLinkProtocol {
 }
 
 /**
+ * Registry of known protocols by STX
+ */
+const KNOWN_PROTOCOLS_BY_STX = {
+  [MavLinkProtocolV1.START_BYTE]: MavLinkProtocolV1,
+  [MavLinkProtocolV2.START_BYTE]: MavLinkProtocolV2,
+}
+
+/**
  * MavLink packet signature definition
  */
 export class MavLinkPacketSignature {
@@ -436,6 +444,11 @@ export class MavLinkPacket {
 }
 
 /**
+ * This enum describes the different ways validation of a buffer can end
+ */
+enum PacketValidationResult { VALID, INVALID, UNKNOWN }
+
+/**
  * A transform stream that splits the incomming data stream into chunks containing full MavLink messages
  */
 export class MavLinkPacketSplitter extends Transform {
@@ -453,18 +466,20 @@ export class MavLinkPacketSplitter extends Transform {
   _transform(chunk: Buffer, encoding, callback: TransformCallback) {
     this.buffer = Buffer.concat([ this.buffer, chunk ])
 
-    while (true) {
-      const { startByteFirstOffset, Protocol } = this.findStartOfMessage(this.buffer)
-
-      if (Protocol === null || startByteFirstOffset === null) {
+    while (this.buffer.byteLength > 0) {
+      const offset = this.findStartOfPacket(this.buffer)
+      if (offset === null) {
         // start of the package was not found - need more data
         break
       }
 
       // fast-forward the buffer to the first start byte
-      if (startByteFirstOffset > 0) {
-        this.buffer = this.buffer.slice(startByteFirstOffset)
+      if (offset > 0) {
+        this.buffer = this.buffer.slice(offset)
       }
+
+      // get protocol this buffer is encoded with
+      const Protocol = this.getPacketProtocol(this.buffer)
 
       // check if the buffer contains at least the minumum size of data
       if (this.buffer.length < Protocol.PAYLOAD_OFFSET + MavLinkProtocol.CHECKSUM_LENGTH) {
@@ -473,12 +488,7 @@ export class MavLinkPacketSplitter extends Transform {
       }
 
       // check if the current buffer contains the entire message
-      const payloadLength = this.buffer.readUInt8(1)
-      const expectedBufferLength = Protocol.PAYLOAD_OFFSET
-        + payloadLength
-        + MavLinkProtocol.CHECKSUM_LENGTH
-        + (this.isV2Signed(this.buffer) ? MavLinkPacketSignature.SIGNATURE_LENGTH : 0)
-
+      const expectedBufferLength = this.readPacketLength(this.buffer, Protocol)
       if (this.buffer.length < expectedBufferLength) {
         // current buffer is not fully retrieved yet - skipping
         break
@@ -487,80 +497,97 @@ export class MavLinkPacketSplitter extends Transform {
       // retrieve the buffer based on payload size
       const buffer = this.buffer.slice(0, expectedBufferLength)
 
-      // validate message checksum including the magic byte
-      const protocol = new Protocol()
-      const header = protocol.header(buffer)
-      const magic = MSG_ID_MAGIC_NUMBER[header.msgid]
-      if (magic) {
-        const crc = protocol.crc(buffer)
-        const trim = this.isV2Signed(buffer)
-          ? MavLinkPacketSignature.SIGNATURE_LENGTH + MavLinkProtocol.CHECKSUM_LENGTH
-          : MavLinkProtocol.CHECKSUM_LENGTH
-        const crc2 = x25crc(buffer, 1, trim, magic)
-        if (crc === crc2) {
-          // CRC matches - accept this packet
+      switch (this.validatePacket(buffer, Protocol)) {
+        case PacketValidationResult.VALID:
           this._validPackagesCount++
           this.push(buffer)
           // truncate the buffer to remove the current message
           this.buffer = this.buffer.slice(expectedBufferLength)
-        } else {
-          // CRC mismatch - skip packet
+          break
+        case PacketValidationResult.INVALID:
           this._invalidPackagesCount++
-          if (this.verbose) {
-            console.error(
-              'CRC error; expected', crc2, `(0x${crc2.toString(16).padStart(4, '0')})`,
-              'got', crc, `(0x${crc.toString(16).padStart(4, '0')})`,
-              '; msgid:', header.msgid, ', magic:', magic
-            )
-            dump(buffer)
-          }
-          // truncate the buffer to remove bad data up until the STX
+          // truncate the buffer to remove the wrongly identified STX
           this.buffer = this.buffer.slice(1)
-        }
-      } else {
-        // this meessage has not been generated - ignoring
-        this._unknownPackagesCount++
-        // truncate the buffer to remove the current message
-        this.buffer = this.buffer.slice(expectedBufferLength)
-
-        if (this.verbose) {
-          console.error(`Unknown message with id ${header.msgid} (magic number not found) - skipping`)
-        }
+          break
+        case PacketValidationResult.UNKNOWN:
+          this._unknownPackagesCount++
+          // truncate the buffer to remove the current message
+          this.buffer = this.buffer.slice(expectedBufferLength)
+          break
       }
     }
 
     callback(null)
   }
 
-  private findStartOfMessage(buffer: Buffer) {
-    let Protocol: MavLinkProtocolConstructor = null
-    let offset: number = null
-
-    const stxv1 = this.buffer.indexOf(MavLinkProtocolV1.START_BYTE)
-    const stxv2 = this.buffer.indexOf(MavLinkProtocolV2.START_BYTE)
+  private findStartOfPacket(buffer: Buffer) {
+    const stxv1 = buffer.indexOf(MavLinkProtocolV1.START_BYTE)
+    const stxv2 = buffer.indexOf(MavLinkProtocolV2.START_BYTE)
 
     if (stxv1 >= 0 && stxv2 >= 0) {
       // in the current buffer both STX v1 and v2 are found - get the first one
       if (stxv1 < stxv2) {
-        Protocol = MavLinkProtocolV1
-        offset = stxv1
+        return stxv1
       } else {
-        Protocol = MavLinkProtocolV2
-        offset = stxv2
+        return stxv2
       }
     } else if (stxv1 >= 0) {
-      // in the current buffer both STX v1 is found
-      Protocol = MavLinkProtocolV1
-      offset = stxv1
+      // in the current buffer STX v1 is found
+      return stxv1
     } else if (stxv2 >= 0) {
-      // in the current buffer both STX v2 is found
-      Protocol = MavLinkProtocolV2
-      offset = stxv2
+      // in the current buffer STX v2 is found
+      return stxv2
     } else {
-      // no STX found - continue gathering the data
+      // no STX found
+      return null
     }
+  }
 
-    return { startByteFirstOffset: offset, Protocol }
+  private getPacketProtocol(buffer: Buffer) {
+    return KNOWN_PROTOCOLS_BY_STX[buffer.readUInt8(0)] || null
+  }
+
+  private readPacketLength(buffer: Buffer, Protocol: MavLinkProtocolConstructor) {
+    // check if the current buffer contains the entire message
+    const payloadLength = buffer.readUInt8(1)
+    return Protocol.PAYLOAD_OFFSET
+      + payloadLength
+      + MavLinkProtocol.CHECKSUM_LENGTH
+      + (this.isV2Signed(buffer) ? MavLinkPacketSignature.SIGNATURE_LENGTH : 0)
+  }
+
+  private validatePacket(buffer: Buffer, Protocol: MavLinkProtocolConstructor) {
+    const protocol = new Protocol()
+    const header = protocol.header(buffer)
+    const magic = MSG_ID_MAGIC_NUMBER[header.msgid]
+    if (magic) {
+      const crc = protocol.crc(buffer)
+      const trim = this.isV2Signed(buffer)
+        ? MavLinkPacketSignature.SIGNATURE_LENGTH + MavLinkProtocol.CHECKSUM_LENGTH
+        : MavLinkProtocol.CHECKSUM_LENGTH
+      const crc2 = x25crc(buffer, 1, trim, magic)
+      if (crc === crc2) {
+        // this is a proper message that is known and has been validated for corrupted data
+        return PacketValidationResult.VALID
+      } else {
+        // CRC mismatch
+        if (this.verbose) {
+          console.error(
+            'CRC error; expected', crc2, `(0x${crc2.toString(16).padStart(4, '0')})`,
+            'got', crc, `(0x${crc.toString(16).padStart(4, '0')})`,
+            '; msgid:', header.msgid, ', magic:', magic
+          )
+          dump(buffer)
+        }
+        return PacketValidationResult.INVALID
+      }
+    } else {
+      // unknown message (as in not generated from the XML sources)
+      if (this.verbose) {
+        console.error(`Unknown message with id ${header.msgid} (magic number not found) - skipping`)
+      }
+      return PacketValidationResult.UNKNOWN
+    }
   }
 
   /**
