@@ -28,7 +28,7 @@
     "build": "tsc"
   },
   "devDependencies": {
-    "@types/node": "^15.0.1",
+    "@types/node": "^15.14.9",
     "@types/serialport": "^8.0.1",
     "@types/xml2js": "^0.4.8",
     "serialport": "^9.0.7",

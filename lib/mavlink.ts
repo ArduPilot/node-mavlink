@@ -440,6 +440,7 @@ export class MavLinkPacket {
 export class MavLinkPacketSplitter extends Transform {
   private buffer = Buffer.from([])
   private verbose = false
+  private _validPackagesCount = 0
   private _unknownPackagesCount = 0
   private _invalidPackagesCount = 0
 
@@ -455,17 +456,31 @@ export class MavLinkPacketSplitter extends Transform {
       let Protocol: MavLinkProtocolConstructor = null
 
       // check for start byte
-      let startByteFirstOffset = this.buffer.indexOf(MavLinkProtocolV1.START_BYTE)
-      if (startByteFirstOffset >= 0) {
-        Protocol = MavLinkProtocolV1
-      } else {
-        startByteFirstOffset = this.buffer.indexOf(MavLinkProtocolV2.START_BYTE)
-        if (startByteFirstOffset >= 0) {
+      let startByteFirstOffset
+
+      const stxv1 = this.buffer.indexOf(MavLinkProtocolV1.START_BYTE)
+      const stxv2 = this.buffer.indexOf(MavLinkProtocolV2.START_BYTE)
+
+      if (stxv1 >= 0 && stxv2 >= 0) {
+        // in the current buffer both STX v1 and v2 are found - get the first one
+        if (stxv1 < stxv2) {
+          Protocol = MavLinkProtocolV1
+          startByteFirstOffset = stxv1
+        } else if (stxv2 < stxv1) {
           Protocol = MavLinkProtocolV2
-        } else {
-          // start byte not found - skipping
-          break
+          startByteFirstOffset = stxv2
         }
+      } else if (stxv1 >= 0) {
+        // in the current buffer both STX v1 is found
+        Protocol = MavLinkProtocolV1
+        startByteFirstOffset = stxv1
+      } else if (stxv2 >= 0) {
+        // in the current buffer both STX v2 is found
+        Protocol = MavLinkProtocolV2
+        startByteFirstOffset = stxv2
+      } else {
+        // no STX found - continue gathering the data
+        break
       }
 
       // fast-forward the buffer to the first start byte
@@ -494,9 +509,6 @@ export class MavLinkPacketSplitter extends Transform {
       // retrieve the buffer based on payload size
       const buffer = this.buffer.slice(0, expectedBufferLength)
 
-      // truncate the buffer to remove the current message
-      this.buffer = this.buffer.slice(expectedBufferLength)
-
       // validate message checksum including the magic byte
       const protocol = new Protocol()
       const header = protocol.header(buffer)
@@ -509,7 +521,10 @@ export class MavLinkPacketSplitter extends Transform {
         const crc2 = x25crc(buffer, 1, trim, magic)
         if (crc === crc2) {
           // CRC matches - accept this packet
+          this._validPackagesCount++
           this.push(buffer)
+          // truncate the buffer to remove the current message
+          this.buffer = this.buffer.slice(expectedBufferLength)
         } else {
           // CRC mismatch - skip packet
           this._invalidPackagesCount++
@@ -521,10 +536,15 @@ export class MavLinkPacketSplitter extends Transform {
             )
             dump(buffer)
           }
+          // truncate the buffer to remove the current message
+          this.buffer = this.buffer.slice(1)
         }
       } else {
         // this meessage has not been generated - ignoring
         this._unknownPackagesCount++
+        // truncate the buffer to remove the current message
+        this.buffer = this.buffer.slice(expectedBufferLength)
+
         if (this.verbose) {
           console.error(`Unknown message with id ${header.msgid} (magic number not found) - skipping`)
         }
@@ -550,7 +570,14 @@ export class MavLinkPacketSplitter extends Transform {
   /**
    * Number of invalid packages
    */
-   get invalidPackages() {
+  get validPackages() {
+    return this._validPackagesCount
+  }
+
+  /**
+   * Number of invalid packages
+   */
+  get invalidPackages() {
     return this._invalidPackagesCount
   }
 
@@ -564,7 +591,7 @@ export class MavLinkPacketSplitter extends Transform {
   /**
    * Number of invalid packages
    */
-   get unknownPackagesCount() {
+  get unknownPackagesCount() {
     return this._unknownPackagesCount
   }
 
