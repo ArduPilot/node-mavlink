@@ -35,3 +35,4 @@ file.on('close', () => {
   console.log('Number of unknown packages:', splitter.unknownPackagesCount)
   console.log('\nTotal number of consumed packets:', splitter.validPackages)
 })
+
