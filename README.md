@@ -38,7 +38,10 @@ That's it! That is all it takes to read the raw data. But it doesn't end there -
 Each message consists of multiple fields that contain specific data. Parsing the data is also very easy.
 
 ```javascript
-import { minimal, common, ardupilotmega, uavionix, icarous } from 'node-mavlink'
+import {
+  minimal, common, ardupilotmega, uavionix, icarous,
+  asluav, development, matrixpilot, paparazzi, ualberta,
+} from 'node-mavlink'
 
 // create a registry of mappings between a message id and a data class
 const REGISTRY = {
@@ -47,6 +50,11 @@ const REGISTRY = {
   ...ardupilotmega.REGISTRY,
   ...uavionix.REGISTRY,
   ...icarous.REGISTRY,
+  ...asluav.REGISTRY,
+  ...development.REGISTRY,
+  ...matrixpilot.REGISTRY,
+  ...paparazzi.REGISTRY,
+  ...ualberta.REGISTRY,
 }
 
 reader.on('data', packet => {
