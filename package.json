@@ -1,6 +1,6 @@
 {
   "name": "node-mavlink",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "author": "Matthias Hryniszak <padcom@gmail.com>",
   "license": "LGPL",
   "description": "MavLink definitions and parsing library",
@@ -22,7 +22,7 @@
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "dependencies": {
-    "mavlink-mappings": "^1.0.1-20210930"
+    "mavlink-mappings": "^1.0.6-20220104"
   },
   "scripts": {
     "build": "tsc"
