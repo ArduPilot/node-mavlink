@@ -26,7 +26,7 @@
   },
   "scripts": {
     "build": "tsc",
-    "test": "cd tests && ./main.ts e2e --input /dev/ttyACM0"
+    "test": "cd tests && ./main.ts e2e --input data.mavlink"
   },
   "devDependencies": {
     "@types/node": "^15.14.9",
