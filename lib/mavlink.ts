@@ -1,16 +1,17 @@
-import { Transform, TransformCallback, Writable } from 'stream'
+import { Transform, TransformCallback, Readable, Writable } from 'stream'
 import { createHash } from 'crypto'
-import { uint8_t, uint16_t } from 'mavlink-mappings'
+import { uint8_t, uint16_t, hex } from 'mavlink-mappings'
 import { x25crc, dump } from 'mavlink-mappings'
 import { MSG_ID_MAGIC_NUMBER } from 'mavlink-mappings'
 import { MavLinkData, MavLinkDataConstructor } from 'mavlink-mappings'
 
 import { SERIALIZERS, DESERIALIZERS } from './serialization'
+import { Logger } from './logger'
 
 /**
  * Header definition of the MavLink packet
  */
- export class MavLinkPacketHeader {
+export class MavLinkPacketHeader {
   magic: number = 0
   payloadLength: uint8_t = 0
   incompatibilityFlags: uint8_t = 0
@@ -28,6 +29,8 @@ import { SERIALIZERS, DESERIALIZERS } from './serialization'
  * data classes from the given payload buffer
  */
 export abstract class MavLinkProtocol {
+  protected readonly log = Logger.getLogger(this)
+
   static NAME = 'unknown'
   static START_BYTE = 0
   static PAYLOAD_OFFSET = 0
@@ -64,6 +67,8 @@ export abstract class MavLinkProtocol {
    * Deserialize payload into actual data class
    */
   data<T extends MavLinkData>(payload: Buffer, clazz: MavLinkDataConstructor<T>): T {
+    this.log.trace('Deserializing', clazz.MSG_NAME, 'with payload of size', payload.length)
+
     const instance = new clazz()
     clazz.FIELDS.forEach(field => {
       const deserialize = DESERIALIZERS[field.type]
@@ -107,6 +112,8 @@ export class MavLinkProtocolV1 extends MavLinkProtocol {
   }
 
   serialize(message: MavLinkData, seq: number): Buffer {
+    this.log.trace('Serializing message (seq:', seq, ')')
+
     const definition: MavLinkDataConstructor<MavLinkData> = <any>message.constructor
     const buffer = Buffer.from(new Uint8Array(MavLinkProtocolV1.PAYLOAD_OFFSET + definition.PAYLOAD_LENGTH + MavLinkProtocol.CHECKSUM_LENGTH))
 
@@ -133,6 +140,8 @@ export class MavLinkProtocolV1 extends MavLinkProtocol {
   }
 
   header(buffer: Buffer): MavLinkPacketHeader {
+    this.log.trace('Reading header from buffer (len:', buffer.length, ')')
+
     const startByte = buffer.readUInt8(0)
     if (startByte !== MavLinkProtocolV1.START_BYTE) {
       throw new Error(`Invalid start byte (expected: ${MavLinkProtocolV1.START_BYTE}, got ${startByte})`)
@@ -152,12 +161,16 @@ export class MavLinkProtocolV1 extends MavLinkProtocol {
   /**
    * Deserialize packet checksum
    */
-   crc(buffer: Buffer): uint16_t {
+  crc(buffer: Buffer): uint16_t {
+    this.log.trace('Reading crc from buffer (len:', buffer.length, ')')
+
     const plen = buffer.readUInt8(1)
     return buffer.readUInt16LE(MavLinkProtocolV1.PAYLOAD_OFFSET + plen)
   }
 
   payload(buffer: Buffer): Buffer {
+    this.log.trace('Reading payload from buffer (len:', buffer.length, ')')
+
     const plen = buffer.readUInt8(1)
     const payload = buffer.slice(MavLinkProtocolV1.PAYLOAD_OFFSET, MavLinkProtocolV1.PAYLOAD_OFFSET + plen)
     const padding = Buffer.from(new Uint8Array(255 - payload.length))
@@ -188,6 +201,8 @@ export class MavLinkProtocolV2 extends MavLinkProtocol {
   }
 
   serialize(message: MavLinkData, seq: number): Buffer {
+    this.log.trace('Serializing message (seq:', seq, ')')
+
     const definition: MavLinkDataConstructor<MavLinkData> = <any>message.constructor
     const buffer = Buffer.from(new Uint8Array(MavLinkProtocolV2.PAYLOAD_OFFSET + definition.PAYLOAD_LENGTH + MavLinkProtocol.CHECKSUM_LENGTH))
 
@@ -224,9 +239,12 @@ export class MavLinkProtocolV2 extends MavLinkProtocol {
    * @param buffer buffer with the original, unsigned package
    * @param linkId id of the link
    * @param key key to sign the package with
+   * @param timestamp optional timestamp for packet signing (default: Date.now())
    * @returns signed package
    */
-  sign(buffer: Buffer, linkId: number, key: Buffer) {
+  sign(buffer: Buffer, linkId: number, key: Buffer, timestamp = Date.now()) {
+    this.log.trace('Signing message')
+
     const result = Buffer.concat([
       buffer,
       Buffer.from(new Uint8Array(MavLinkPacketSignature.SIGNATURE_LENGTH))
@@ -234,7 +252,7 @@ export class MavLinkProtocolV2 extends MavLinkProtocol {
 
     const signer = new MavLinkPacketSignature(result)
     signer.linkId = linkId
-    signer.timestamp = Date.now()
+    signer.timestamp = timestamp
     signer.signature = signer.calculate(key)
 
     return result
@@ -255,6 +273,8 @@ export class MavLinkProtocolV2 extends MavLinkProtocol {
   }
 
   header(buffer: Buffer): MavLinkPacketHeader {
+    this.log.trace('Reading header from buffer (len:', buffer.length, ')')
+
     const startByte = buffer.readUInt8(0)
     if (startByte !== MavLinkProtocolV2.START_BYTE) {
       throw new Error(`Invalid start byte (expected: ${MavLinkProtocolV2.START_BYTE}, got ${startByte})`)
@@ -277,11 +297,15 @@ export class MavLinkProtocolV2 extends MavLinkProtocol {
    * Deserialize packet checksum
    */
   crc(buffer: Buffer): uint16_t {
+    this.log.trace('Reading crc from buffer (len:', buffer.length, ')')
+
     const plen = buffer.readUInt8(1)
     return buffer.readUInt16LE(MavLinkProtocolV2.PAYLOAD_OFFSET + plen)
   }
 
   payload(buffer: Buffer): Buffer {
+    this.log.trace('Reading payload from buffer (len:', buffer.length, ')')
+
     const plen = buffer.readUInt8(1)
     const payload = buffer.slice(MavLinkProtocolV2.PAYLOAD_OFFSET, MavLinkProtocolV2.PAYLOAD_OFFSET + plen)
     const padding = Buffer.from(new Uint8Array(255 - payload.length))
@@ -289,6 +313,8 @@ export class MavLinkProtocolV2 extends MavLinkProtocol {
   }
 
   signature(buffer: Buffer, header: MavLinkPacketHeader): MavLinkPacketSignature {
+    this.log.trace('Reading signature from buffer (len:', buffer.length, ')')
+
     if (header.incompatibilityFlags & MavLinkProtocolV2.IFLAG_SIGNED) {
       return new MavLinkPacketSignature(buffer)
     } else {
@@ -432,7 +458,7 @@ export class MavLinkPacket {
       + `msgid: ${this.header.msgid}, `
       + `seq: ${this.header.seq}, `
       + `plen: ${this.header.payloadLength}, `
-      + `crc: ${this.crc.toString(16).padStart(2, '0')}`
+      + `crc: ${hex(this.crc, 4)}`
       + this.signatureToString(this.signature)
       + ')'
   }
@@ -447,19 +473,28 @@ export class MavLinkPacket {
  */
 enum PacketValidationResult { VALID, INVALID, UNKNOWN }
 
+type BufferCallback = (buffer: Buffer) => void
+
 /**
  * A transform stream that splits the incomming data stream into chunks containing full MavLink messages
  */
 export class MavLinkPacketSplitter extends Transform {
+  protected readonly log = Logger.getLogger(this)
+
   private buffer = Buffer.from([])
-  private verbose = false
+  private onCrcError = null
   private _validPackagesCount = 0
   private _unknownPackagesCount = 0
   private _invalidPackagesCount = 0
 
-  constructor(opts = {}, verbose = false) {
+  /**
+   * @param opts options to pass on to the Transform constructor
+   * @param verbose print diagnostic information
+   * @param onCrcError callback executed if there is a CRC error (mostly for debugging)
+   */
+  constructor(opts = {}, onCrcError: BufferCallback = () => {}) {
     super(opts)
-    this.verbose = verbose
+    this.onCrcError = onCrcError
   }
 
   _transform(chunk: Buffer, encoding, callback: TransformCallback) {
@@ -477,38 +512,51 @@ export class MavLinkPacketSplitter extends Transform {
         this.buffer = this.buffer.slice(offset)
       }
 
+      this.log.debug('Found potential packet start at', offset)
+
       // get protocol this buffer is encoded with
       const Protocol = this.getPacketProtocol(this.buffer)
+
+      this.log.debug('Packet protocol is', Protocol.NAME)
 
       // check if the buffer contains at least the minumum size of data
       if (this.buffer.length < Protocol.PAYLOAD_OFFSET + MavLinkProtocol.CHECKSUM_LENGTH) {
         // current buffer shorter than the shortest message - skipping
+        this.log.debug('Current buffer shorter than the shortest message - skipping')
         break
       }
 
       // check if the current buffer contains the entire message
       const expectedBufferLength = this.readPacketLength(this.buffer, Protocol)
+      this.log.debug('Expected buffer length:', expectedBufferLength, `(${hex(expectedBufferLength)})`)
       if (this.buffer.length < expectedBufferLength) {
         // current buffer is not fully retrieved yet - skipping
+        this.log.debug('Current buffer is not fully retrieved yet - skipping')
         break
+      } else {
+        this.log.debug('Current buffer length:', this.buffer.length, `(${hex(this.buffer.length, 4)})`)
       }
 
       // retrieve the buffer based on payload size
       const buffer = this.buffer.slice(0, expectedBufferLength)
+      this.log.debug('Recognized buffer length:', buffer.length, `(${hex(buffer.length, 2)})`)
 
       switch (this.validatePacket(buffer, Protocol)) {
         case PacketValidationResult.VALID:
+          this.log.debug('Found a valid packet')
           this._validPackagesCount++
           this.push(buffer)
           // truncate the buffer to remove the current message
           this.buffer = this.buffer.slice(expectedBufferLength)
           break
         case PacketValidationResult.INVALID:
+          this.log.debug('Found an invalid packet - skipping')
           this._invalidPackagesCount++
           // truncate the buffer to remove the wrongly identified STX
           this.buffer = this.buffer.slice(1)
           break
         case PacketValidationResult.UNKNOWN:
+          this.log.debug('Found an unknown packet - skipping')
           this._unknownPackagesCount++
           // truncate the buffer to remove the current message
           this.buffer = this.buffer.slice(expectedBufferLength)
@@ -570,21 +618,22 @@ export class MavLinkPacketSplitter extends Transform {
         return PacketValidationResult.VALID
       } else {
         // CRC mismatch
-        if (this.verbose) {
-          console.error(
-            'CRC error; expected', crc2, `(0x${crc2.toString(16).padStart(4, '0')})`,
-            'got', crc, `(0x${crc.toString(16).padStart(4, '0')})`,
-            '; msgid:', header.msgid, ', magic:', magic
-          )
-          dump(buffer)
-        }
+        const message = [
+          `CRC error; expected: ${crc2} (${hex(crc2, 4)}), got ${crc} (${hex(crc, 4)});`,
+          `msgid: ${header.msgid} (${hex(header.msgid)}),`,
+          `seq: ${header.seq} (${hex(header.seq)}),`,
+          `plen: ${header.payloadLength} (${hex(header.payloadLength)}),`,
+          `magic: ${magic} (${hex(magic)})`,
+        ]
+        this.log.warn(message.join(' '))
+        this.onCrcError(buffer)
+
         return PacketValidationResult.INVALID
       }
     } else {
       // unknown message (as in not generated from the XML sources)
-      if (this.verbose) {
-        console.error(`Unknown message with id ${header.msgid} (magic number not found) - skipping`)
-      }
+      this.log.debug(`Unknown message with id ${header.msgid} (magic number not found) - skipping`)
+
       return PacketValidationResult.UNKNOWN
     }
   }
@@ -613,7 +662,7 @@ export class MavLinkPacketSplitter extends Transform {
    * Reset the number of valid packages
    */
   resetValidPackagesCount() {
-    this,this._validPackagesCount = 0
+    this._validPackagesCount = 0
   }
 
   /**
@@ -627,7 +676,7 @@ export class MavLinkPacketSplitter extends Transform {
    * Reset the number of invalid packages
    */
   resetInvalidPackagesCount() {
-    this,this._invalidPackagesCount = 0
+    this._invalidPackagesCount = 0
   }
 
   /**
@@ -641,7 +690,7 @@ export class MavLinkPacketSplitter extends Transform {
    * Reset the number of invalid packages
    */
   resetUnknownPackagesCount() {
-    this,this._unknownPackagesCount = 0
+    this._unknownPackagesCount = 0
   }
 }
 
@@ -649,6 +698,8 @@ export class MavLinkPacketSplitter extends Transform {
  * A transform stream that takes a buffer with data and converts it to MavLinkPacket object
  */
 export class MavLinkPacketParser extends Transform {
+  protected readonly log = Logger.getLogger(this)
+
   constructor(opts = {}) {
     super({ ...opts, objectMode: true })
   }
@@ -661,7 +712,7 @@ export class MavLinkPacketParser extends Transform {
       case MavLinkProtocolV2.START_BYTE:
         return new MavLinkProtocolV2()
       default:
-        throw new Error(`Unknown protocol '${startByte.toString(16).padStart(2, '0')}'`)
+        throw new Error(`Unknown protocol '${hex(startByte)}'`)
     }
   }
 
@@ -678,6 +729,17 @@ export class MavLinkPacketParser extends Transform {
 
     callback(null, packet)
   }
+}
+
+/**
+ * Creates a MavLink packet stream reader that is reading packets from the given input
+ *
+ * @param input input stream to read from
+ */
+export function createMavLinkStream(input: Readable, onCrcError: BufferCallback) {
+  return input
+    .pipe(new MavLinkPacketSplitter({}, onCrcError))
+    .pipe(new MavLinkPacketParser())
 }
 
 let seq = 0
@@ -710,14 +772,21 @@ export async function send(stream: Writable, msg: MavLinkData, protocol: MavLink
  * @param linkId link id for the signature
  * @param sysid system id
  * @param compid component id
+ * @param timestamp optional timestamp for packet signing (default: Date.now())
  * @returns number of bytes sent
  */
-export async function sendSigned(stream: Writable, msg: MavLinkData, key: Buffer, linkId: uint8_t = 1, sysid: uint8_t = MavLinkProtocol.SYS_ID, compid: uint8_t = MavLinkProtocol.COMP_ID) {
+export async function sendSigned(
+  stream: Writable,
+  msg: MavLinkData,
+  key: Buffer,
+  linkId: uint8_t = 1, sysid: uint8_t = MavLinkProtocol.SYS_ID, compid: uint8_t = MavLinkProtocol.COMP_ID,
+  timestamp = Date.now()
+) {
   return new Promise((resolve, reject) => {
     const protocol = new MavLinkProtocolV2(sysid, compid, MavLinkProtocolV2.IFLAG_SIGNED)
     const b1 = protocol.serialize(msg, seq++)
     seq &= 255
-    const b2 = protocol.sign(b1, linkId, key)
+    const b2 = protocol.sign(b1, linkId, key, timestamp)
     stream.write(b2, err => {
       if (err) reject(err)
       else resolve(b2.length)

@@ -25,16 +25,19 @@
     "mavlink-mappings": "^1.0.6-20220104"
   },
   "scripts": {
-    "build": "tsc"
+    "build": "tsc",
+    "test": "cd tests && ./main.ts e2e --input /dev/ttyACM0"
   },
   "devDependencies": {
     "@types/node": "^15.14.9",
     "@types/serialport": "^8.0.1",
     "@types/xml2js": "^0.4.8",
+    "@types/yargs": "^17.0.8",
     "serialport": "^9.0.7",
     "ts-node": "^9.1.1",
     "typescript": "^4.4.3",
     "wget-improved": "^3.2.1",
-    "xml2js": "^0.4.23"
+    "xml2js": "^0.4.23",
+    "yargs": "^17.3.1"
   }
 }
