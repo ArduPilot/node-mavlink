@@ -1,12 +1,12 @@
 import { Transform, TransformCallback, Readable, Writable } from 'stream'
 import { createHash } from 'crypto'
-import { uint8_t, uint16_t, hex } from 'mavlink-mappings'
-import { x25crc, dump } from 'mavlink-mappings'
+import { uint8_t, uint16_t } from 'mavlink-mappings'
 import { MSG_ID_MAGIC_NUMBER } from 'mavlink-mappings'
 import { MavLinkData, MavLinkDataConstructor } from 'mavlink-mappings'
 
-import { SERIALIZERS, DESERIALIZERS } from './serialization'
+import { hex, x25crc } from './utils'
 import { Logger } from './logger'
+import { SERIALIZERS, DESERIALIZERS } from './serialization'
 
 /**
  * Header definition of the MavLink packet
@@ -458,6 +458,7 @@ export class MavLinkPacket {
       + `msgid: ${this.header.msgid}, `
       + `seq: ${this.header.seq}, `
       + `plen: ${this.header.payloadLength}, `
+      + `magic: ${MSG_ID_MAGIC_NUMBER[this.header.msgid]} (${hex(MSG_ID_MAGIC_NUMBER[this.header.msgid])}), `
       + `crc: ${hex(this.crc, 4)}`
       + this.signatureToString(this.signature)
       + ')'

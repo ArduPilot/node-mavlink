@@ -2,11 +2,12 @@
 
 import yargs from 'yargs'
 import { existsSync, createReadStream } from 'fs'
-import { minimal, common, ardupilotmega, hex, dump } from 'mavlink-mappings'
+import { minimal, common, ardupilotmega } from 'mavlink-mappings'
 import { createMavLinkStream, MavLinkPacket, Logger, LogLevel } from '..'
+import { hex, dump } from '..'
 
 Logger.on('log', ({ context, level, message }) => {
-  if (level <= LogLevel.debug) {
+  if (level <= LogLevel.error) {
     console.log(`${new Date().toISOString()} ${context} [${LogLevel[level]}]`, ...message)
   }
 })
@@ -48,7 +49,10 @@ async function main() {
       const clazz = REGISTRY[packet.header.msgid]
       if (clazz) {
         const message = packet.protocol.data(packet.payload, clazz)
-        console.log('<', packet.debug(), message)
+        console.log('<', packet.debug())
+        clazz.FIELDS.forEach(field => {
+          console.log(clazz.MSG_NAME + '.' + field.source + ' = ' + message[field.name])
+        })
       } else {
         console.log('< (unknown)', packet.debug())
       }
