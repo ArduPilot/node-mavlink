@@ -1,3 +1,5 @@
+### This is a work in progress and above all misses a comprehensive test suite against another set of bindings! If you're looking for the officially supported bindings for JavaScript see the [pymavlink](https://github.com/ArduPilot/pymavlink/tree/master/generator/javascript) project.
+
 # Node.js MavLink library
 
 This package is the implementation of serialization and parsing of MavLink messages for v1 and v2 protocols.
