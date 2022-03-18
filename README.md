@@ -1,4 +1,4 @@
-If you're looking for the officially supported bindings for JavaScript see the [pymavlink](https://github.com/ArduPilot/pymavlink/tree/master/generator/javascript) project.
+<sup>If you're looking for the officially supported bindings for JavaScript see the [pymavlink](https://github.com/ArduPilot/pymavlink/tree/master/generator/javascript) project.</sup>
 
 # Node.js MavLink library
 
@@ -41,8 +41,7 @@ Each message consists of multiple fields that contain specific data. Parsing the
 
 ```javascript
 import {
-  minimal, common, ardupilotmega, uavionix, icarous,
-  asluav, development, matrixpilot, paparazzi, ualberta,
+  minimal, common, ardupilotmega, uavionix, icarous, asluav, ualberta
 } from 'node-mavlink'
 
 // create a registry of mappings between a message id and a data class
@@ -53,9 +52,6 @@ const REGISTRY = {
   ...uavionix.REGISTRY,
   ...icarous.REGISTRY,
   ...asluav.REGISTRY,
-  ...development.REGISTRY,
-  ...matrixpilot.REGISTRY,
-  ...paparazzi.REGISTRY,
   ...ualberta.REGISTRY,
 }
 

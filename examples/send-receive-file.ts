@@ -2,7 +2,10 @@
 
 import { createReadStream } from 'fs'
 import { MavLinkPacketSplitter, MavLinkPacketParser } from '..'
-import { minimal, common, ardupilotmega, uavionix, icarous } from '..'
+import {
+  minimal, common, ardupilotmega, uavionix, icarous,
+  asluav, development, ualberta,
+} from '..'
 
 const file = createReadStream('./GH-5.bin')
 
@@ -20,6 +23,9 @@ const REGISTRY = {
   ...ardupilotmega.REGISTRY,
   ...uavionix.REGISTRY,
   ...icarous.REGISTRY,
+  ...asluav.REGISTRY,
+  ...development.REGISTRY,
+  ...ualberta.REGISTRY,
 }
 
 reader.on('data', packet => {
