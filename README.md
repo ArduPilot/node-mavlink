@@ -1,4 +1,4 @@
-This is a work in progress and above all misses a comprehensive test suite against another set of bindings! If you're looking for the officially supported bindings for JavaScript see the [pymavlink](https://github.com/ArduPilot/pymavlink/tree/master/generator/javascript) project.
+If you're looking for the officially supported bindings for JavaScript see the [pymavlink](https://github.com/ArduPilot/pymavlink/tree/master/generator/javascript) project.
 
 # Node.js MavLink library
 
