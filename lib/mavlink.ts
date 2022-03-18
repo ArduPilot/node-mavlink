@@ -1,10 +1,10 @@
 import { Transform, TransformCallback, Readable, Writable } from 'stream'
 import { createHash } from 'crypto'
-import { uint8_t, uint16_t } from 'mavlink-mappings'
+import { uint8_t, uint16_t, x25crc } from 'mavlink-mappings'
 import { MSG_ID_MAGIC_NUMBER } from 'mavlink-mappings'
 import { MavLinkData, MavLinkDataConstructor } from 'mavlink-mappings'
 
-import { hex, x25crc } from './utils'
+import { hex } from './utils'
 import { Logger } from './logger'
 import { SERIALIZERS, DESERIALIZERS } from './serialization'
 

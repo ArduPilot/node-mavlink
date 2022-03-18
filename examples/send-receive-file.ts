@@ -1,12 +1,12 @@
 #!/usr/bin/env -S npx ts-node
 
 import { createReadStream } from 'fs'
-import { MavLinkPacketSplitter, MavLinkPacketParser, MavLinkPacket } from '..'
+import { MavLinkPacketSplitter, MavLinkPacketParser } from '..'
 import { minimal, common, ardupilotmega, uavionix, icarous } from '..'
 
-const file = createReadStream('./mavlink-v2-3412-packets.bin')
+const file = createReadStream('./GH-5.bin')
 
-const splitter = new MavLinkPacketSplitter({}, true)
+const splitter = new MavLinkPacketSplitter()
 
 const reader = file
   .pipe(splitter)
