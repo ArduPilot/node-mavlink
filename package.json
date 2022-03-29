@@ -1,6 +1,6 @@
 {
   "name": "node-mavlink",
-  "version": "1.0.11",
+  "version": "1.0.12",
   "author": "Matthias Hryniszak <padcom@gmail.com>",
   "license": "LGPL",
   "description": "MavLink definitions and parsing library",
@@ -29,7 +29,7 @@
     "test": "jest",
     "dev": "jest --watch",
     "test:e2e": "cd tests && ./main.ts e2e --input data.mavlink",
-    "prepublishOnly": "rm -rf dist && npm install && npm test && npm run build"
+    "prepublishOnly": "rm -rf dist && npm install && npm test && npm run test:e2e && npm run build"
   },
   "devDependencies": {
     "@types/jest": "^27.4.1",
