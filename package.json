@@ -26,15 +26,20 @@
   },
   "scripts": {
     "build": "tsc",
-    "test": "cd tests && ./main.ts e2e --input data.mavlink",
+    "test": "jest",
+    "dev": "jest --watch",
+    "test:e2e": "cd tests && ./main.ts e2e --input data.mavlink",
     "prepublishOnly": "rm -rf dist && npm install && npm test && npm run build"
   },
   "devDependencies": {
+    "@types/jest": "^27.4.1",
     "@types/node": "^15.14.9",
     "@types/serialport": "^8.0.1",
     "@types/xml2js": "^0.4.8",
     "@types/yargs": "^17.0.8",
+    "jest": "^27.5.1",
     "serialport": "^9.0.7",
+    "ts-jest": "^27.1.4",
     "ts-node": "^9.1.1",
     "typescript": "^4.4.3",
     "wget-improved": "^3.2.1",
