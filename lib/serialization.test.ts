@@ -162,6 +162,52 @@ describe('serialization', () => {
     })
   })
 
+  describe('uint64_t', () => {
+    it('will serialize 64-bit unsigned int', () => {
+      const b = Buffer.from([0, -1, -2, -3, -4, -5, -6, -7])
+      SERIALIZERS['uint64_t'](2n, b, 0)
+      expect(b).toStrictEqual(Buffer.from([2, 0, 0, 0, 0, 0, 0, 0]))
+    })
+    it('will deserialize 64-bit unsigned int', () => {
+      const b = Buffer.from([2, 0, 0, 0, 0, 0, 0, 0])
+      const result = DESERIALIZERS['uint64_t'](b, 0)
+      expect(result).toBe(2n)
+    })
+    it('will serialize array of 64-bit unsigned int', () => {
+      const b = Buffer.from(new Array(24))
+      SERIALIZERS['uint64_t[]']([ 1n, 2n, 4n ], b, 0, 3)
+      expect(b).toStrictEqual(Buffer.from([1, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 4, 0, 0, 0, 0, 0, 0, 0]))
+    })
+    it('will deserialize array of 64-bit unsigned int', () => {
+      const b = Buffer.from([1, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 5, 0, 0, 0, 0, 0, 0, 0, 0])
+      const result = DESERIALIZERS['uint64_t[]'](b, 0, 3)
+      expect(result).toEqual([1n, 2n, 5n])
+    })
+  })
+
+  describe('int64_t', () => {
+    it('will serialize 64-bit signed int', () => {
+      const b = Buffer.from([0, 0, 0, 0, 0, 0, 0, 0])
+      SERIALIZERS['int64_t'](-2n, b, 0)
+      expect(b).toStrictEqual(Buffer.from([254, 255, 255, 255, 255, 255, 255, 255]))
+    })
+    it('will deserialize 64-bit signed int', () => {
+      const b = Buffer.from([254, 255, 255, 255, 255, 255, 255, 255])
+      const result = DESERIALIZERS['int64_t'](b, 0)
+      expect(result).toBe(-2n)
+    })
+    it('will serialize array of 64-bit signed int', () => {
+      const b = Buffer.from(new Array(24))
+      SERIALIZERS['int64_t[]']([ 1n, -2n, -5n ], b, 0, 3)
+      expect(b).toStrictEqual(Buffer.from([1, 0, 0, 0, 0, 0, 0, 0, 254, 255, 255, 255, 255, 255, 255, 255, 251, 255, 255, 255, 255, 255, 255, 255]))
+    })
+    it('will deserialize array of 64-bit signed int', () => {
+      const b = Buffer.from([1, 0, 0, 0, 0, 0, 0, 0, 254, 255, 255, 255, 255, 255, 255, 255, 250, 255, 255, 255, 255, 255, 255, 255])
+      const result = DESERIALIZERS['int64_t[]'](b, 0, 3)
+      expect(result).toEqual([1n, -2n, -6n])
+    })
+  })
+
   describe('float', () => {
     it('will serialize float', () => {
       const b = Buffer.from([0, -1, -2, -3])
