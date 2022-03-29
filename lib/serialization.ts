@@ -170,7 +170,7 @@ export const DESERIALIZERS = {
   },
   'double[]': (buffer: Buffer, offset: number, length: number) => {
     const result = new Array<number>(length)
-    for (let i = 0; i < length; i++) result[i] = buffer.readFloatLE(offset + i * 8)
+    for (let i = 0; i < length; i++) result[i] = buffer.readDoubleLE(offset + i * 8)
     return result
   },
 }
