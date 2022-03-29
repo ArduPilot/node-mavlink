@@ -38,42 +38,42 @@ export const SERIALIZERS = {
       buffer.writeUInt8(code, offset + i)
     }
   },
-  'int8[]': (value: uint8_t[], buffer: Buffer, offset: number, maxLen: number) => {
+  'int8_t[]': (value: uint8_t[], buffer: Buffer, offset: number, maxLen: number) => {
     for (let i = 0; i < value.length && i < maxLen; i++) {
       buffer.writeInt8(value[i], offset + i)
     }
   },
-  'uint8[]': (value: uint8_t[], buffer: Buffer, offset: number, maxLen: number) => {
+  'uint8_t[]': (value: uint8_t[], buffer: Buffer, offset: number, maxLen: number) => {
     for (let i = 0; i < value.length && i < maxLen; i++) {
       buffer.writeUInt8(value[i], offset + i)
     }
   },
-  'int16[]': (value: uint16_t[], buffer: Buffer, offset: number, maxLen: number) => {
+  'int16_t[]': (value: uint16_t[], buffer: Buffer, offset: number, maxLen: number) => {
     for (let i = 0; i < value.length && i < maxLen; i++) {
       buffer.writeInt16LE(value[i], offset + i * 2)
     }
   },
-  'uint16[]': (value: uint16_t[], buffer: Buffer, offset: number, maxLen: number) => {
+  'uint16_t[]': (value: uint16_t[], buffer: Buffer, offset: number, maxLen: number) => {
     for (let i = 0; i < value.length && i < maxLen; i++) {
       buffer.writeUInt16LE(value[i], offset + i * 2)
     }
   },
-  'int32[]': (value: uint32_t[], buffer: Buffer, offset: number, maxLen: number) => {
+  'int32_t[]': (value: uint32_t[], buffer: Buffer, offset: number, maxLen: number) => {
     for (let i = 0; i < value.length && i < maxLen; i++) {
       buffer.writeInt32LE(value[i], offset + i * 4)
     }
   },
-  'uint32[]': (value: uint32_t[], buffer: Buffer, offset: number, maxLen: number) => {
+  'uint32_t[]': (value: uint32_t[], buffer: Buffer, offset: number, maxLen: number) => {
     for (let i = 0; i < value.length && i < maxLen; i++) {
       buffer.writeUInt32LE(value[i], offset + i * 4)
     }
   },
-  'int64[]': (value: uint64_t[], buffer: Buffer, offset: number, maxLen: number) => {
+  'int64_t[]': (value: uint64_t[], buffer: Buffer, offset: number, maxLen: number) => {
     for (let i = 0; i < value.length && i < maxLen; i++) {
       buffer.writeBigInt64LE(value[i], offset + i * 8)
     }
   },
-  'uint64[]': (value: uint64_t[], buffer: Buffer, offset: number, maxLen: number) => {
+  'uint64_t[]': (value: uint64_t[], buffer: Buffer, offset: number, maxLen: number) => {
     for (let i = 0; i < value.length && i < maxLen; i++) {
       buffer.writeBigUInt64LE(value[i], offset + i * 8)
     }
