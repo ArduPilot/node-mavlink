@@ -3,8 +3,8 @@
 import yargs from 'yargs'
 import { existsSync, createReadStream } from 'fs'
 import { minimal, common, ardupilotmega } from 'mavlink-mappings'
-import { createMavLinkStream, MavLinkPacket, Logger, LogLevel } from '..'
-import { hex, dump } from '..'
+import { createMavLinkStream, MavLinkPacket, Logger, LogLevel, MavLinkPacketRegistry } from '..'
+import { dump } from '..'
 
 Logger.on('log', ({ context, level, message }) => {
   if (level <= LogLevel.error) {
@@ -36,7 +36,7 @@ async function main() {
 
   const command = config._[0]
   if (command === 'e2e') {
-    const REGISTRY = {
+    const REGISTRY: MavLinkPacketRegistry = {
       ...minimal.REGISTRY,
       ...common.REGISTRY,
       ...ardupilotmega.REGISTRY,
@@ -48,11 +48,7 @@ async function main() {
     reader.on('data', (packet: MavLinkPacket) => {
       const clazz = REGISTRY[packet.header.msgid]
       if (clazz) {
-        const message = packet.protocol.data(packet.payload, clazz)
-        console.log('<', packet.debug())
-        clazz.FIELDS.forEach(field => {
-          console.log(clazz.MSG_NAME + '.' + field.source + ' = ' + message[field.name])
-        })
+        packet.protocol.data(packet.payload, clazz)
       } else {
         console.log('< (unknown)', packet.debug())
       }

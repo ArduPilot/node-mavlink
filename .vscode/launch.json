@@ -2,17 +2,18 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "name": "Example",
       "type": "node",
       "request": "launch",
-      "runtimeExecutable": "node",
-      "runtimeArgs": ["--nolazy", "-r", "ts-node/register/transpile-only"],
-
-      "args": ["send-receive-file.ts", "--example", "hello"],
-
-      "cwd": "${workspaceRoot}/examples",
-      "internalConsoleOptions": "openOnSessionStart",
-      "skipFiles": ["<node_internals>/**", "node_modules/**"],
+      "name": "Launch Program",
+      "runtimeArgs": [
+        "-r",
+        "ts-node/register"
+      ],
+      "args": [
+        "${workspaceFolder}/tests/main.ts",
+        "e2e",
+        "--input=tests/data.mavlink"
+      ]
     }
-  ]
+  ],
 }
