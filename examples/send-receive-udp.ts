@@ -1,7 +1,13 @@
 #!/usr/bin/env -S npx ts-node
 
-import { MavEsp8266, common } from '..'
-import { MavLinkPacket } from '..'
+import { MavEsp8266, minimal, common, ardupilotmega } from '..'
+import { MavLinkPacket, MavLinkPacketRegistry } from '..'
+
+const REGISTRY: MavLinkPacketRegistry = {
+  ...minimal.REGISTRY,
+  ...common.REGISTRY,
+  ...ardupilotmega.REGISTRY,
+}
 
 async function main() {
   const port = new MavEsp8266()
@@ -13,7 +19,13 @@ async function main() {
 
   // log incomming messages
   port.on('data', (packet: MavLinkPacket) => {
-    console.log(packet.debug())
+    const clazz = REGISTRY[packet.header.msgid]
+    if (clazz) {
+      const data = packet.protocol.data(packet.payload, clazz)
+      console.log('>', data)
+    } else {
+      console.log('!', packet.debug())
+    }
   })
 
   // You're now ready to send messages to the controller using the socket

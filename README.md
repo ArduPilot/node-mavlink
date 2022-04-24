@@ -19,11 +19,11 @@ $ npm install --save node-mavlink serialport
 Once you've done it you can start using it. First you'll need a serial port that can parse messages one by one. Please note that since we're using ECMAScript modules the file name should end with `.mjs` extension (e.g. `test.mjs`)
 
 ```javascript
-import SerialPort from 'serialport'
+import { SerialPort } from 'serialport'
 import { MavLinkPacketSplitter, MavLinkPacketParser } from 'node-mavlink'
 
 // substitute /dev/ttyACM0 with your serial port!
-const port = new SerialPort('/dev/ttyACM0')
+const port = new SerialPort({ path: '/dev/ttyACM0', baudRate: 115200 })
 
 // constructing a reader that will emit each packet separately
 const reader = port
@@ -41,18 +41,15 @@ Each message consists of multiple fields that contain specific data. Parsing the
 
 ```javascript
 import {
-  minimal, common, ardupilotmega, uavionix, icarous, asluav, ualberta
+  MavLinkPacketRegistry,
+  minimal, common, ardupilotmega
 } from 'node-mavlink'
 
 // create a registry of mappings between a message id and a data class
-const REGISTRY = {
+const REGISTRY: MavLinkPacketRegistry = {
   ...minimal.REGISTRY,
   ...common.REGISTRY,
   ...ardupilotmega.REGISTRY,
-  ...uavionix.REGISTRY,
-  ...icarous.REGISTRY,
-  ...asluav.REGISTRY,
-  ...ualberta.REGISTRY,
 }
 
 reader.on('data', packet => {

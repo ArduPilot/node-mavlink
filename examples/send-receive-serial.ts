@@ -1,12 +1,18 @@
 #!/usr/bin/env -S npx ts-node
 
-import * as SerialPort from 'serialport'
-import { MavLinkPacketSplitter, MavLinkPacketParser, MavLinkPacket } from '..'
-import { common, waitFor, send } from '..'
+import { SerialPort } from 'serialport'
+import { MavLinkPacketRegistry, MavLinkPacketSplitter, MavLinkPacketParser, MavLinkPacket } from '..'
+import { minimal, common, ardupilotmega, waitFor, send } from '..'
+
+const REGISTRY: MavLinkPacketRegistry = {
+  ...minimal.REGISTRY,
+  ...common.REGISTRY,
+  ...ardupilotmega.REGISTRY,
+}
 
 async function main() {
   // Create an output stream to write data to the controller
-  const port = new SerialPort('/dev/ttyACM0')
+  const port = new SerialPort({ path: '/dev/ttyACM0', baudRate: 115200 })
 
   // Create the reader as usual by piping the source stream through the splitter
   // and packet parser
@@ -21,7 +27,13 @@ async function main() {
   // This is the place where all your application-level logic will exist
   reader.on('data', (packet: MavLinkPacket) => {
     online = true
-    console.log(packet.debug())
+    const clazz = REGISTRY[packet.header.msgid]
+    if (clazz) {
+      const data = packet.protocol.data(packet.payload, clazz)
+      console.log('>', data)
+    } else {
+      console.log('!', packet.debug())
+    }
   })
 
   // Wait for the remote system to be available

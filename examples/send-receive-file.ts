@@ -7,14 +7,10 @@ import {
   asluav, development, ualberta,
 } from '..'
 
-const file = createReadStream('./GH-5.bin')
-
 const splitter = new MavLinkPacketSplitter()
-
-const reader = file
-  .pipe(splitter)
-  .pipe(new MavLinkPacketParser())
-
+const parser = new MavLinkPacketParser()
+const file = createReadStream('./GH-5.bin')
+const reader = file.pipe(splitter).pipe(parser)
 
 // create a registry of mappings between a message id and a data class
 const REGISTRY = {
@@ -41,4 +37,3 @@ file.on('close', () => {
   console.log('Number of unknown packages:', splitter.unknownPackagesCount)
   console.log('\nTotal number of consumed packets:', splitter.validPackages)
 })
-

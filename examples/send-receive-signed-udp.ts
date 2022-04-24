@@ -1,7 +1,13 @@
 #!/usr/bin/env -S npx ts-node
 
-import { MavEsp8266, common } from '../dist'
-import { MavLinkPacket, MavLinkPacketSignature } from '../dist'
+import { MavEsp8266, minimal, common, ardupilotmega } from '..'
+import { MavLinkPacketSignature, MavLinkPacket, MavLinkPacketRegistry } from '..'
+
+const REGISTRY: MavLinkPacketRegistry = {
+  ...minimal.REGISTRY,
+  ...common.REGISTRY,
+  ...ardupilotmega.REGISTRY,
+}
 
 // Use your own secret passphrase in place of 'qwerty'
 const key = MavLinkPacketSignature.key('qwerty')
@@ -14,8 +20,6 @@ async function main() {
 
   // log incomming messages
   port.on('data', (packet: MavLinkPacket) => {
-    console.log(packet.debug())
-    console.log(packet.debug())
     if (packet.signature) {
       if (packet.signature.matches(key)) {
         console.log('Signature check OK')
@@ -24,6 +28,13 @@ async function main() {
       }
     } else {
       console.log('Packet not signed')
+    }
+    const clazz = REGISTRY[packet.header.msgid]
+    if (clazz) {
+      const data = packet.protocol.data(packet.payload, clazz)
+      console.log('>', data)
+    } else {
+      console.log('!', packet.debug())
     }
   })
 
