@@ -12,6 +12,7 @@ import { SERIALIZERS, DESERIALIZERS } from './serialization'
  * Header definition of the MavLink packet
  */
 export class MavLinkPacketHeader {
+  timestamp: BigInt = null
   magic: number = 0
   payloadLength: uint8_t = 0
   incompatibilityFlags: uint8_t = 0
@@ -47,7 +48,7 @@ export abstract class MavLinkProtocol {
   /**
    * Deserialize packet header
    */
-  abstract header(buffer): MavLinkPacketHeader
+  abstract header(buffer, timestamp?): MavLinkPacketHeader
 
   /**
    * Deserialize packet checksum
@@ -139,7 +140,7 @@ export class MavLinkProtocolV1 extends MavLinkProtocol {
     return buffer
   }
 
-  header(buffer: Buffer): MavLinkPacketHeader {
+  header(buffer: Buffer, timestamp = null): MavLinkPacketHeader {
     this.log.trace('Reading header from buffer (len:', buffer.length, ')')
 
     const startByte = buffer.readUInt8(0)
@@ -148,6 +149,7 @@ export class MavLinkProtocolV1 extends MavLinkProtocol {
     }
 
     const result = new MavLinkPacketHeader()
+    result.timestamp = timestamp
     result.magic = startByte
     result.payloadLength = buffer.readUInt8(1)
     result.seq = buffer.readUInt8(2)
@@ -272,7 +274,7 @@ export class MavLinkProtocolV2 extends MavLinkProtocol {
     return result - MavLinkProtocolV2.PAYLOAD_OFFSET
   }
 
-  header(buffer: Buffer): MavLinkPacketHeader {
+  header(buffer: Buffer, timestamp = null): MavLinkPacketHeader {
     this.log.trace('Reading header from buffer (len:', buffer.length, ')')
 
     const startByte = buffer.readUInt8(0)
@@ -281,6 +283,7 @@ export class MavLinkProtocolV2 extends MavLinkProtocol {
     }
 
     const result = new MavLinkPacketHeader()
+    result.timestamp = timestamp
     result.magic = startByte
     result.payloadLength = buffer.readUInt8(1)
     result.incompatibilityFlags = buffer.readUInt8(2)
@@ -484,6 +487,7 @@ export class MavLinkPacketSplitter extends Transform {
 
   private buffer = Buffer.from([])
   private onCrcError = null
+  private timestamp = null
   private _validPackagesCount = 0
   private _unknownPackagesCount = 0
   private _invalidPackagesCount = 0
@@ -494,7 +498,7 @@ export class MavLinkPacketSplitter extends Transform {
    * @param onCrcError callback executed if there is a CRC error (mostly for debugging)
    */
   constructor(opts = {}, onCrcError: BufferCallback = () => {}) {
-    super(opts)
+    super({ ...opts, objectMode: true })
     this.onCrcError = onCrcError
   }
 
@@ -508,6 +512,12 @@ export class MavLinkPacketSplitter extends Transform {
         break
       }
 
+      // if the current offset is exactly the size of the timestamp field from tlog then read it.
+      if (offset === 8) {
+        this.timestamp = Buffer.from(this.buffer, 0, 8).readBigUInt64BE() / 1000n
+      } else {
+        this.timestamp = null
+      }
       // fast-forward the buffer to the first start byte
       if (offset > 0) {
         this.buffer = this.buffer.slice(offset)
@@ -546,7 +556,7 @@ export class MavLinkPacketSplitter extends Transform {
         case PacketValidationResult.VALID:
           this.log.debug('Found a valid packet')
           this._validPackagesCount++
-          this.push(buffer)
+          this.push({ buffer, timestamp: this.timestamp })
           // truncate the buffer to remove the current message
           this.buffer = this.buffer.slice(expectedBufferLength)
           break
@@ -717,16 +727,16 @@ export class MavLinkPacketParser extends Transform {
     }
   }
 
-  _transform(chunk: Buffer, encoding, callback: TransformCallback) {
-    const protocol = this.getProtocol(chunk)
-    const header = protocol.header(chunk)
-    const payload = protocol.payload(chunk)
-    const crc = protocol.crc(chunk)
+  _transform({ buffer = Buffer.from([]), timestamp = null, ...rest } = {}, encoding, callback: TransformCallback) {
+    const protocol = this.getProtocol(buffer)
+    const header = protocol.header(buffer, timestamp)
+    const payload = protocol.payload(buffer)
+    const crc = protocol.crc(buffer)
     const signature = protocol instanceof MavLinkProtocolV2
-      ? protocol.signature(chunk, header)
+      ? protocol.signature(buffer, header)
       : null
 
-    const packet = new MavLinkPacket(chunk, header, payload, crc, protocol, signature)
+    const packet = new MavLinkPacket(buffer, header, payload, crc, protocol, signature)
 
     callback(null, packet)
   }
