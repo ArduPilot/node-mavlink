@@ -9,7 +9,7 @@ import {
 
 const splitter = new MavLinkPacketSplitter()
 const parser = new MavLinkPacketParser()
-const file = createReadStream('./GH-5.bin')
+const file = createReadStream(__dirname + '/GH-5.bin')
 const reader = file.pipe(splitter).pipe(parser)
 
 // create a registry of mappings between a message id and a data class
@@ -28,7 +28,11 @@ reader.on('data', packet => {
   const clazz = REGISTRY[packet.header.msgid]
   if (clazz) {
     const data = packet.protocol.data(packet.payload, clazz)
-    console.log(data)
+    if (packet.header.timestamp) {
+      console.log(new Date(Number(packet.header.timestamp)).toISOString(), data)
+    } else {
+      console.log(data)
+    }
   }
 })
 
