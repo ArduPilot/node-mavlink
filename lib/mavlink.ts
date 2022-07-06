@@ -513,8 +513,8 @@ export class MavLinkPacketSplitter extends Transform {
       }
 
       // if the current offset is exactly the size of the timestamp field from tlog then read it.
-      if (offset === 8) {
-        this.timestamp = this.buffer.readBigUInt64BE() / 1000n
+      if (offset >= 8) {
+        this.timestamp = this.buffer.readBigUInt64BE(offset - 8) / 1000n
       } else {
         this.timestamp = null
       }
