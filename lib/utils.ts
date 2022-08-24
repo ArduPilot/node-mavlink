@@ -35,9 +35,9 @@ export function dump(buffer: Buffer, lineWidth = 16) {
 /**
  * Sleep for a given number of miliseconds
  *
- * @param ms number of miliseconds to sleep
+ * @param {number} ms of miliseconds to sleep
  */
-export function sleep(ms) {
+export function sleep(ms: number) {
   return new Promise(resolve => setTimeout(resolve, ms))
 }
 
@@ -48,11 +48,11 @@ export function sleep(ms) {
  * a particular expression should be evaluated and how long will it take to end
  * the execution without success. Great for time-sensitive operations.
  *
- * @param cb callback to call every <code>interval</code>ms
+ * @param cb callback to call every <code>interval</code>ms. Waiting stops if the callback returns a truthy value.
  * @param timeout number of miliseconds that need to pass before the Timeout exception is thrown
  * @param interval number of miliseconds before re-running the callback
  */
-export async function waitFor(cb, timeout = 10000, interval = 100) {
+export async function waitFor<T>(cb: () => T, timeout = 10000, interval = 100): Promise<T> {
   return new Promise((resolve, reject) => {
     const timeoutTimer = setTimeout(() => {
       cleanup()

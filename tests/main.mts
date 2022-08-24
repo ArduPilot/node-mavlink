@@ -1,4 +1,4 @@
-#!/usr/bin/env ts-node
+#!/usr/bin/env -S npx ts-node
 
 import yargs from 'yargs'
 import { existsSync, createReadStream } from 'fs'

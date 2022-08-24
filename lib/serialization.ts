@@ -11,14 +11,17 @@ import {
   double,
 } from 'mavlink-mappings'
 
-/**
- * A dictionary containing functions that serialize a certain value based on the field type
- */
-export const SERIALIZERS = {
-  // special types
-  'uint8_t_mavlink_version': (value: uint8_t, buffer: Buffer, offset: number) => buffer.writeUInt8(value, offset),
+type Serializer =
+ ((value: any, buffer: Buffer, offset: number) => void) |
+ ((value: any, buffer: Buffer, offset: number, maxLen: number) => void)
 
-  // singular types
+type Serializers = { [key: string]: Serializer }
+
+const SPECIAL_TYPES_SERIALIZERS: Serializers = {
+  'uint8_t_mavlink_version': (value: uint8_t, buffer: Buffer, offset: number) => buffer.writeUInt8(value, offset),
+}
+
+const SINGULAR_TYPES_SERIALIZERS: Serializers = {
   'char'    : (value: int8_t, buffer: Buffer, offset: number) => buffer.writeUInt8(value, offset),
   'int8_t'  : (value: int8_t, buffer: Buffer, offset: number) => buffer.writeInt8(value, offset),
   'uint8_t' : (value: uint8_t, buffer: Buffer, offset: number) => buffer.writeUInt8(value, offset),
@@ -30,8 +33,9 @@ export const SERIALIZERS = {
   'uint64_t': (value: uint64_t, buffer: Buffer, offset: number) => buffer.writeBigUInt64LE(value, offset),
   'float'   : (value: float, buffer: Buffer, offset: number) => buffer.writeFloatLE(value, offset),
   'double'  : (value: double, buffer: Buffer, offset: number) => buffer.writeDoubleLE(value, offset),
+}
 
-  // array types
+const ARRAY_TYPES_SERIALIZERS: Serializers = {
   'char[]': (value: string, buffer: Buffer, offset: number, maxLen: number) => {
     for (let i = 0; i < value.length && i < maxLen; i++) {
       const code = value.charCodeAt(i)
@@ -91,13 +95,22 @@ export const SERIALIZERS = {
 }
 
 /**
- * A dictionary containing functions that deserialize a certain value based on the field type
+ * A dictionary containing functions that serialize a certain value based on the field type
  */
-export const DESERIALIZERS = {
-  // special types
-  'uint8_t_mavlink_version': (buffer: Buffer, offset: number) => buffer.readUInt8(offset),
+export const SERIALIZERS = {
+  ...SPECIAL_TYPES_SERIALIZERS,
+  ...SINGULAR_TYPES_SERIALIZERS,
+  ...ARRAY_TYPES_SERIALIZERS,
+}
 
-  // singular types
+type Deserializer = ((buffer: Buffer, offset: number) => any) | ((buffer: Buffer, offset: number, length: number) => any)
+type Deserializers = { [key: string]: Deserializer }
+
+const SPECIAL_DESERIALIZERS: Deserializers = {
+  'uint8_t_mavlink_version': (buffer: Buffer, offset: number) => buffer.readUInt8(offset),
+}
+
+const SINGULAR_TYPES_DESERIALIZERS: Deserializers = {
   'char'    : (buffer: Buffer, offset: number) => String.fromCharCode(buffer.readUInt8(offset)),
   'int8_t'  : (buffer: Buffer, offset: number) => buffer.readInt8(offset),
   'uint8_t' : (buffer: Buffer, offset: number) => buffer.readUInt8(offset),
@@ -109,8 +122,9 @@ export const DESERIALIZERS = {
   'uint64_t': (buffer: Buffer, offset: number) => buffer.readBigUInt64LE(offset),
   'float'   : (buffer: Buffer, offset: number) => buffer.readFloatLE(offset),
   'double'  : (buffer: Buffer, offset: number) => buffer.readDoubleLE(offset),
+}
 
-  // array types
+const ARRAY_TYPES_DESERIALIZERS: Deserializers = {
   'char[]': (buffer: Buffer, offset: number, length: number) => {
     let result = ''
     for (let i = 0; i < length; i++) {
@@ -173,4 +187,13 @@ export const DESERIALIZERS = {
     for (let i = 0; i < length; i++) result[i] = buffer.readDoubleLE(offset + i * 8)
     return result
   },
+}
+
+/**
+ * A dictionary containing functions that deserialize a certain value based on the field type
+ */
+export const DESERIALIZERS: Deserializers = {
+  ...SPECIAL_DESERIALIZERS,
+  ...SINGULAR_TYPES_DESERIALIZERS,
+  ...ARRAY_TYPES_DESERIALIZERS,
 }

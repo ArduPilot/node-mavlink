@@ -1,6 +1,6 @@
 import { EventEmitter } from 'events'
 
-import { Socket, createSocket } from 'dgram'
+import { Socket, createSocket, RemoteInfo } from 'dgram'
 import { Writable, PassThrough } from 'stream'
 import { MavLinkPacketSplitter, MavLinkPacketParser, MavLinkPacketSignature } from './mavlink'
 import { MavLinkProtocol, MavLinkProtocolV2 } from './mavlink'
@@ -12,7 +12,7 @@ import { uint8_t, MavLinkData } from 'mavlink-mappings'
  */
 export class MavEsp8266 extends EventEmitter {
   private input: Writable
-  private socket: Socket
+  private socket?: Socket
   private ip: string = ''
   private sendPort: number = 14555
   private seq: number = 0
@@ -49,7 +49,7 @@ export class MavEsp8266 extends EventEmitter {
 
     // Start listening on the socket
     return new Promise((resolve, reject) => {
-      this.socket.bind(receivePort, () => {
+      this.socket?.bind(receivePort, () => {
         // Wait for the first package to be returned to read the ip address
         // of the controller
         waitFor(() => this.ip !== '')
@@ -95,17 +95,17 @@ export class MavEsp8266 extends EventEmitter {
    * @param buffer buffer to send
    */
   sendBuffer(buffer: Buffer) {
-    this.socket.send(buffer, this.sendPort, this.ip)
+    this.socket?.send(buffer, this.sendPort, this.ip)
   }
 
-  private processIncommingUDPData(buffer, metadata) {
+  private processIncommingUDPData(buffer: Buffer, metadata: RemoteInfo) {
     // store the remote ip address
     if (this.ip === '') this.ip = metadata.address
     // pass on the data to the input stream
     this.input.write(buffer)
   }
 
-  private processIncommingPacket(packet) {
+  private processIncommingPacket(packet: any) {
     // let the user know we received the packet
     this.emit('data', packet)
   }

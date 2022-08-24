@@ -12,7 +12,7 @@ import { SERIALIZERS, DESERIALIZERS } from './serialization'
  * Header definition of the MavLink packet
  */
 export class MavLinkPacketHeader {
-  timestamp: BigInt = null
+  timestamp: bigint | null = null
   magic: number = 0
   payloadLength: uint8_t = 0
   incompatibilityFlags: uint8_t = 0
@@ -48,12 +48,12 @@ export abstract class MavLinkProtocol {
   /**
    * Deserialize packet header
    */
-  abstract header(buffer, timestamp?): MavLinkPacketHeader
+  abstract header(buffer: Buffer, timestamp?: bigint): MavLinkPacketHeader
 
   /**
    * Deserialize packet checksum
    */
-  abstract crc(buffer): uint16_t;
+  abstract crc(buffer: Buffer): uint16_t;
 
   /**
    * Extract payload buffer
@@ -71,13 +71,14 @@ export abstract class MavLinkProtocol {
     this.log.trace('Deserializing', clazz.MSG_NAME, 'with payload of size', payload.length)
 
     const instance = new clazz()
-    clazz.FIELDS.forEach(field => {
+    for (const field of clazz.FIELDS) {
       const deserialize = DESERIALIZERS[field.type]
       if (!deserialize) {
         throw new Error(`Unknown field type ${field.type}`)
       }
+      // @ts-ignore
       instance[field.name] = deserialize(payload, field.offset, field.length)
-    })
+    }
 
     return instance
   }
@@ -130,6 +131,7 @@ export class MavLinkProtocolV1 extends MavLinkProtocol {
     definition.FIELDS.forEach(field => {
       const serialize = SERIALIZERS[field.type]
       if (!serialize) throw new Error(`Unknown field type ${field.type}: serializer not found`)
+      // @ts-ignore
       serialize(message[field.name], buffer, field.offset + MavLinkProtocolV1.PAYLOAD_OFFSET, field.length)
     })
 
@@ -140,7 +142,7 @@ export class MavLinkProtocolV1 extends MavLinkProtocol {
     return buffer
   }
 
-  header(buffer: Buffer, timestamp = null): MavLinkPacketHeader {
+  header(buffer: Buffer, timestamp?: bigint): MavLinkPacketHeader {
     this.log.trace('Reading header from buffer (len:', buffer.length, ')')
 
     const startByte = buffer.readUInt8(0)
@@ -149,7 +151,7 @@ export class MavLinkProtocolV1 extends MavLinkProtocol {
     }
 
     const result = new MavLinkPacketHeader()
-    result.timestamp = timestamp
+    result.timestamp = timestamp || null
     result.magic = startByte
     result.payloadLength = buffer.readUInt8(1)
     result.seq = buffer.readUInt8(2)
@@ -219,6 +221,7 @@ export class MavLinkProtocolV2 extends MavLinkProtocol {
     definition.FIELDS.forEach(field => {
       const serialize = SERIALIZERS[field.type]
       if (!serialize) throw new Error(`Unknown field type ${field.type}: serializer not found`)
+      // @ts-ignore
       serialize(message[field.name], buffer, field.offset + MavLinkProtocolV2.PAYLOAD_OFFSET, field.length)
     })
 
@@ -274,7 +277,7 @@ export class MavLinkProtocolV2 extends MavLinkProtocol {
     return result - MavLinkProtocolV2.PAYLOAD_OFFSET
   }
 
-  header(buffer: Buffer, timestamp = null): MavLinkPacketHeader {
+  header(buffer: Buffer, timestamp?: bigint): MavLinkPacketHeader {
     this.log.trace('Reading header from buffer (len:', buffer.length, ')')
 
     const startByte = buffer.readUInt8(0)
@@ -283,7 +286,7 @@ export class MavLinkProtocolV2 extends MavLinkProtocol {
     }
 
     const result = new MavLinkPacketHeader()
-    result.timestamp = timestamp
+    result.timestamp = timestamp || null
     result.magic = startByte
     result.payloadLength = buffer.readUInt8(1)
     result.incompatibilityFlags = buffer.readUInt8(2)
@@ -315,7 +318,7 @@ export class MavLinkProtocolV2 extends MavLinkProtocol {
     return Buffer.concat([ payload, padding ])
   }
 
-  signature(buffer: Buffer, header: MavLinkPacketHeader): MavLinkPacketSignature {
+  signature(buffer: Buffer, header: MavLinkPacketHeader): MavLinkPacketSignature | null {
     this.log.trace('Reading signature from buffer (len:', buffer.length, ')')
 
     if (header.incompatibilityFlags & MavLinkProtocolV2.IFLAG_SIGNED) {
@@ -445,7 +448,7 @@ export class MavLinkPacket {
     readonly payload: Buffer = Buffer.from(new Uint8Array(255)),
     readonly crc: uint16_t = 0,
     readonly protocol: MavLinkProtocol = new MavLinkProtocolV1(),
-    readonly signature: MavLinkPacketSignature = null,
+    readonly signature: MavLinkPacketSignature | null = null,
   ) {}
 
   /**
@@ -455,15 +458,18 @@ export class MavLinkPacket {
    */
   debug() {
     return 'Packet ('
-      + `proto: ${this.protocol.constructor['NAME']}, `
+    // @ts-ignore
+    + `proto: ${this.protocol.constructor['NAME']}, `
       + `sysid: ${this.header.sysid}, `
       + `compid: ${this.header.compid}, `
       + `msgid: ${this.header.msgid}, `
       + `seq: ${this.header.seq}, `
       + `plen: ${this.header.payloadLength}, `
-      + `magic: ${MSG_ID_MAGIC_NUMBER[this.header.msgid]} (${hex(MSG_ID_MAGIC_NUMBER[this.header.msgid])}), `
+    // @ts-ignore
+    + `magic: ${this.constructor['MAGIC_NUMBER']} (${hex(this.constructor['MAGIC_NUMBER'])}), `
       + `crc: ${hex(this.crc, 4)}`
-      + this.signatureToString(this.signature)
+    // @ts-ignore
+    + this.signatureToString(this.signature)
       + ')'
   }
 
@@ -486,8 +492,8 @@ export class MavLinkPacketSplitter extends Transform {
   protected readonly log = Logger.getLogger(this)
 
   private buffer = Buffer.from([])
-  private onCrcError = null
-  private timestamp = null
+  private onCrcError: BufferCallback | null = null
+  private timestamp: bigint | null = null
   private _validPackagesCount = 0
   private _unknownPackagesCount = 0
   private _invalidPackagesCount = 0
@@ -502,7 +508,7 @@ export class MavLinkPacketSplitter extends Transform {
     this.onCrcError = onCrcError
   }
 
-  _transform(chunk: Buffer, encoding, callback: TransformCallback) {
+  _transform(chunk: Buffer, encoding: string, callback: TransformCallback) {
     this.buffer = Buffer.concat([ this.buffer, chunk ])
 
     while (this.buffer.byteLength > 0) {
@@ -617,6 +623,7 @@ export class MavLinkPacketSplitter extends Transform {
   private validatePacket(buffer: Buffer, Protocol: MavLinkProtocolConstructor) {
     const protocol = new Protocol()
     const header = protocol.header(buffer)
+    // @ts-ignore
     const magic = MSG_ID_MAGIC_NUMBER[header.msgid]
     if (magic) {
       const crc = protocol.crc(buffer)
@@ -637,7 +644,7 @@ export class MavLinkPacketSplitter extends Transform {
           `magic: ${magic} (${hex(magic)})`,
         ]
         this.log.warn(message.join(' '))
-        this.onCrcError(buffer)
+        if (this.onCrcError) this.onCrcError(buffer)
 
         return PacketValidationResult.INVALID
       }
@@ -715,7 +722,7 @@ export class MavLinkPacketParser extends Transform {
     super({ ...opts, objectMode: true })
   }
 
-  private getProtocol(buffer): MavLinkProtocol {
+  private getProtocol(buffer: Buffer): MavLinkProtocol {
     const startByte = buffer.readUInt8(0)
     switch (startByte) {
       case MavLinkProtocolV1.START_BYTE:
@@ -727,9 +734,9 @@ export class MavLinkPacketParser extends Transform {
     }
   }
 
-  _transform({ buffer = Buffer.from([]), timestamp = null, ...rest } = {}, encoding, callback: TransformCallback) {
+  _transform({ buffer = Buffer.from([]), timestamp = null, ...rest } = {}, encoding: string, callback: TransformCallback) {
     const protocol = this.getProtocol(buffer)
-    const header = protocol.header(buffer, timestamp)
+    const header = protocol.header(buffer, timestamp || undefined)
     const payload = protocol.payload(buffer)
     const crc = protocol.crc(buffer)
     const signature = protocol instanceof MavLinkProtocolV2

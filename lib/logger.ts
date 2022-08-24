@@ -1,4 +1,4 @@
-import EventEmitter = require('events')
+import { EventEmitter } from 'events'
 
 /**
  * Level of the log entry
@@ -28,7 +28,7 @@ export class Logger {
    *
    * @param context logger context
    */
-  static getLogger(context) {
+  static getLogger(context: any) {
     let name = ''
     if (typeof context === 'function') name = context.name
     else if (typeof context === 'object') name = (<any>context).constructor.name
@@ -46,7 +46,7 @@ export class Logger {
    * @param event event to react to
    * @param handler event handler
    */
-  static on(event: LoggerEvents, handler: (context, level, message) => void) {
+  static on(event: LoggerEvents, handler: (context: any, level: LogLevel, message: string) => void) {
     this.events.on(event, handler)
   }
 

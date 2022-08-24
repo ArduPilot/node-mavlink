@@ -4,11 +4,13 @@ describe('serialization', () => {
   describe('char', () => {
     it('will serialize char', () => {
       const b = Buffer.from([0])
+      // @ts-ignore
       SERIALIZERS['char'](42, b, 0)
       expect(b).toStrictEqual(Buffer.from([42]))
     })
     it('will deserialize char', () => {
       const b = Buffer.from([42])
+      // @ts-ignore
       const result = DESERIALIZERS['char'](b, 0)
       expect(result).toBe('*')
     })
@@ -27,11 +29,13 @@ describe('serialization', () => {
   describe('uint8_t', () => {
     it('will serialize 8-bit unsigned int', () => {
       const b = Buffer.from([0])
+      // @ts-ignore
       SERIALIZERS['uint8_t'](2, b, 0)
       expect(b).toStrictEqual(Buffer.from([2]))
     })
     it('will deserialize 8-bit unsigned int', () => {
       const b = Buffer.from([2])
+      // @ts-ignore
       const result = DESERIALIZERS['uint8_t'](b, 0)
       expect(result).toBe(2)
     })
@@ -50,11 +54,13 @@ describe('serialization', () => {
   describe('int8_t', () => {
     it('will serialize 8-bit signed int', () => {
       const b = Buffer.from([0])
+      // @ts-ignore
       SERIALIZERS['int8_t'](-2, b, 0)
       expect(b).toStrictEqual(Buffer.from([-2]))
     })
     it('will deserialize 8-bit signed int', () => {
       const b = Buffer.from([-2])
+      // @ts-ignore
       const result = DESERIALIZERS['int8_t'](b, 0)
       expect(result).toBe(-2)
     })
@@ -73,11 +79,13 @@ describe('serialization', () => {
   describe('uint16_t', () => {
     it('will serialize 16-bit unsigned int', () => {
       const b = Buffer.from([0, 0])
+      // @ts-ignore
       SERIALIZERS['uint16_t'](2, b, 0)
       expect(b).toStrictEqual(Buffer.from([2, 0]))
     })
     it('will deserialize 16-bit unsigned int', () => {
       const b = Buffer.from([2, 0])
+      // @ts-ignore
       const result = DESERIALIZERS['uint16_t'](b, 0)
       expect(result).toBe(2)
     })
@@ -96,11 +104,13 @@ describe('serialization', () => {
   describe('int16_t', () => {
     it('will serialize 16-bit signed int', () => {
       const b = Buffer.from([0, 0])
+      // @ts-ignore
       SERIALIZERS['int16_t'](-2, b, 0)
       expect(b).toStrictEqual(Buffer.from([254, 255]))
     })
     it('will deserialize 16-bit signed int', () => {
       const b = Buffer.from([254, 255])
+      // @ts-ignore
       const result = DESERIALIZERS['int16_t'](b, 0)
       expect(result).toBe(-2)
     })
@@ -119,11 +129,13 @@ describe('serialization', () => {
   describe('uint32_t', () => {
     it('will serialize 32-bit unsigned int', () => {
       const b = Buffer.from([0, -1, -2, -3])
+      // @ts-ignore
       SERIALIZERS['uint32_t'](2, b, 0)
       expect(b).toStrictEqual(Buffer.from([2, 0, 0, 0]))
     })
     it('will deserialize 32-bit unsigned int', () => {
       const b = Buffer.from([2, 0, 0, 0])
+      // @ts-ignore
       const result = DESERIALIZERS['uint32_t'](b, 0)
       expect(result).toBe(2)
     })
@@ -142,11 +154,13 @@ describe('serialization', () => {
   describe('int32_t', () => {
     it('will serialize 32-bit signed int', () => {
       const b = Buffer.from([0, 0, 0, 0])
+      // @ts-ignore
       SERIALIZERS['int32_t'](-2, b, 0)
       expect(b).toStrictEqual(Buffer.from([254, 255, 255, 255]))
     })
     it('will deserialize 32-bit signed int', () => {
       const b = Buffer.from([254, 255, 255, 255])
+      // @ts-ignore
       const result = DESERIALIZERS['int32_t'](b, 0)
       expect(result).toBe(-2)
     })
@@ -165,11 +179,13 @@ describe('serialization', () => {
   describe('uint64_t', () => {
     it('will serialize 64-bit unsigned int', () => {
       const b = Buffer.from([0, -1, -2, -3, -4, -5, -6, -7])
+      // @ts-ignore
       SERIALIZERS['uint64_t'](2n, b, 0)
       expect(b).toStrictEqual(Buffer.from([2, 0, 0, 0, 0, 0, 0, 0]))
     })
     it('will deserialize 64-bit unsigned int', () => {
       const b = Buffer.from([2, 0, 0, 0, 0, 0, 0, 0])
+      // @ts-ignore
       const result = DESERIALIZERS['uint64_t'](b, 0)
       expect(result).toBe(2n)
     })
@@ -188,11 +204,13 @@ describe('serialization', () => {
   describe('int64_t', () => {
     it('will serialize 64-bit signed int', () => {
       const b = Buffer.from([0, 0, 0, 0, 0, 0, 0, 0])
+      // @ts-ignore
       SERIALIZERS['int64_t'](-2n, b, 0)
       expect(b).toStrictEqual(Buffer.from([254, 255, 255, 255, 255, 255, 255, 255]))
     })
     it('will deserialize 64-bit signed int', () => {
       const b = Buffer.from([254, 255, 255, 255, 255, 255, 255, 255])
+      // @ts-ignore
       const result = DESERIALIZERS['int64_t'](b, 0)
       expect(result).toBe(-2n)
     })
@@ -211,11 +229,13 @@ describe('serialization', () => {
   describe('float', () => {
     it('will serialize float', () => {
       const b = Buffer.from([0, -1, -2, -3])
+      // @ts-ignore
       SERIALIZERS['float'](2.5, b, 0)
       expect(b).toStrictEqual(Buffer.from([0, 0, 32, 64]))
     })
     it('will deserialize float', () => {
       const b = Buffer.from([0, 0, 32, 192])
+      // @ts-ignore
       const result = DESERIALIZERS['float'](b, 0)
       expect(result).toBe(-2.5)
     })
@@ -234,11 +254,13 @@ describe('serialization', () => {
   describe('double', () => {
     it('will serialize double', () => {
       const b = Buffer.from([0, -1, -2, -3, -4, -5, -6, -7])
+      // @ts-ignore
       SERIALIZERS['double'](2.34, b, 0)
       expect(b).toStrictEqual(Buffer.from([184, 30, 133, 235, 81, 184, 2, 64]))
     })
     it('will deserialize double', () => {
       const b = Buffer.from([184, 30, 133, 235, 81, 184, 2, 64])
+      // @ts-ignore
       const result = DESERIALIZERS['double'](b, 0)
       expect(result).toBe(2.34)
     })
