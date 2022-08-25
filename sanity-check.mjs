@@ -1,8 +1,8 @@
 #!/usr/bin/env node
 
-import { SerialPort } from 'serialport'
+import { createReadStream } from 'node:fs'
 import { createMavLinkStream } from './dist/index.js'
 
-const port = new SerialPort({ path: '/dev/ttyACM0', baudRate: 57600, autoOpen: true })
+const port = createReadStream('./examples/GH-5.bin')
 const parser = createMavLinkStream(port)
 parser.on('data', packet => console.log(packet.debug()))

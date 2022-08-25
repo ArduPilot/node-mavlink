@@ -27,11 +27,12 @@
   "scripts": {
     "clean": "rm -rf dist lib/*.js",
     "build": "tsc",
-    "test": "jest && npm run test:batch",
+    "test": "jest",
     "test:batch": "tests/main.js e2e --input tests/data.mavlink",
     "dev": "jest --watch",
     "test:e2e": "./main.js e2e --input data.mavlink",
-    "prepublishOnly": "npm run clean && npm install && npm test && npm run build"
+    "sanity-check": "./sanity-check.cjs && ./sanity-check.mjs",
+    "prepublishOnly": "npm run clean && npm install && npm test && npm run build && npm run sanity-check"
   },
   "devDependencies": {
     "@types/jest": "^27.4.1",
