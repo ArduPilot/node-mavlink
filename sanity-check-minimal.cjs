@@ -2,7 +2,7 @@
 
 const { join } = require('node:path')
 const { createReadStream } = require('node:fs')
-const { createMavLinkStream } = require('./dist')
+const { createMavLinkStream } = require('.')
 
 const port = createReadStream(join(__dirname, 'examples/GH-5.bin'))
 const parser = createMavLinkStream(port)
