@@ -1,10 +1,10 @@
-#!/usr/bin/env -S npx ts-node
+#!/usr/bin/env -S node
 
-import yargs from 'yargs'
-import { existsSync, createReadStream } from 'fs'
-import { minimal, common, ardupilotmega } from 'mavlink-mappings'
-import { createMavLinkStream, MavLinkPacket, Logger, LogLevel, MavLinkPacketRegistry } from '..'
-import { dump } from '..'
+const yargs = require('yargs')
+const { existsSync, createReadStream } = require('fs')
+const { minimal, common, ardupilotmega } = require('mavlink-mappings')
+const { createMavLinkStream, Logger, LogLevel } = require('..')
+const { dump } = require('..')
 
 Logger.on('log', ({ context, level, message }) => {
   if (level <= LogLevel.error) {
@@ -36,7 +36,7 @@ async function main() {
 
   const command = config._[0]
   if (command === 'e2e') {
-    const REGISTRY: MavLinkPacketRegistry = {
+    const REGISTRY = {
       ...minimal.REGISTRY,
       ...common.REGISTRY,
       ...ardupilotmega.REGISTRY,
@@ -45,7 +45,7 @@ async function main() {
     const input = config.input === '-' ? process.stdin : createReadStream(config.input)
     const reader = createMavLinkStream(input, dump)
 
-    reader.on('data', (packet: MavLinkPacket) => {
+    reader.on('data', packet => {
       const clazz = REGISTRY[packet.header.msgid]
       if (clazz) {
         packet.protocol.data(packet.payload, clazz)

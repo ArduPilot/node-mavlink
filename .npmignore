@@ -1,5 +1,13 @@
 node_modules
+.vscode
 *.xml
-test.ts
+*.test.ts
 code-generator.ts
-./lib
+lib
+!dist/lib
+jest.config.js
+*.tgz
+index.ts
+sanity-check.js
+tests
+tsconfig.json

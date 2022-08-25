@@ -22,15 +22,15 @@
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "dependencies": {
-    "mavlink-mappings": "^1.0.11-20220706"
+    "mavlink-mappings": "^1.0.12-20220825"
   },
   "scripts": {
     "clean": "rm -rf dist lib/*.js",
     "build": "tsc",
     "test": "jest && npm run test:batch",
-    "test:batch": "npx ts-node tests/main.mts e2e --input tests/data.mavlink",
+    "test:batch": "tests/main.js e2e --input tests/data.mavlink",
     "dev": "jest --watch",
-    "test:e2e": "cd tests && ./main.mts e2e --input data.mavlink",
+    "test:e2e": "./main.js e2e --input data.mavlink",
     "prepublishOnly": "npm run clean && npm install && npm test && npm run build"
   },
   "devDependencies": {
@@ -42,8 +42,8 @@
     "minimize-js": "^1.3.0",
     "serialport": "^10.0.0",
     "ts-jest": "^27.1.4",
-    "ts-node": "^9.1.1",
-    "typescript": "^4.4.3",
+    "ts-node": "^10.6.0",
+    "typescript": "^4.7.4",
     "wget-improved": "^3.2.1",
     "xml2js": "^0.4.23",
     "yargs": "^17.3.1"
