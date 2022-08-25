@@ -1,6 +1,6 @@
 {
   "name": "node-mavlink",
-  "version": "1.3.0",
+  "version": "1.3.1",
   "author": "Matthias Hryniszak <padcom@gmail.com>",
   "license": "LGPL",
   "description": "MavLink definitions and parsing library",
