@@ -466,7 +466,7 @@ export class MavLinkPacket {
       + `seq: ${this.header.seq}, `
       + `plen: ${this.header.payloadLength}, `
     // @ts-ignore
-    + `magic: ${this.constructor['MAGIC_NUMBER']} (${hex(this.constructor['MAGIC_NUMBER'])}), `
+    + `magic: ${MSG_ID_MAGIC_NUMBER[this.header.msgid]} (${hex(MSG_ID_MAGIC_NUMBER[this.header.msgid])}), `
       + `crc: ${hex(this.crc, 4)}`
     // @ts-ignore
     + this.signatureToString(this.signature)
