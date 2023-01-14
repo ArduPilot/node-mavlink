@@ -60,17 +60,32 @@ export class MavEsp8266 extends EventEmitter {
   }
 
   /**
+   * Closes the client stopping any message handlers
+   */
+  async close(): Promise<void> {
+    if (!this.socket) throw new Error('Not connected')
+
+    // Unregister event handlers
+    this.socket.off('message', this.processIncommingUDPData)
+
+    // Close the socket
+    return new Promise(resolve => {
+      this.socket?.close(resolve)
+    })
+  }
+
+  /**
    * Send a packet
    *
    * @param msg message to send
    * @param sysid system id
    * @param compid component id
    */
-  send(msg: MavLinkData, sysid: uint8_t = MavLinkProtocol.SYS_ID, compid: uint8_t = MavLinkProtocol.COMP_ID) {
+  async send(msg: MavLinkData, sysid: uint8_t = MavLinkProtocol.SYS_ID, compid: uint8_t = MavLinkProtocol.COMP_ID): Promise<number> {
     const protocol = new MavLinkProtocolV2(sysid, compid)
     const buffer = protocol.serialize(msg, this.seq++)
     this.seq &= 255
-    this.sendBuffer(buffer)
+    return this.sendBuffer(buffer)
   }
 
   /**
@@ -81,12 +96,12 @@ export class MavEsp8266 extends EventEmitter {
    * @param compid component id
    * @param linkId link id for the signature
    */
-  sendSigned(msg: MavLinkData, key: Buffer, linkId: uint8_t = 1, sysid: uint8_t = MavLinkProtocol.SYS_ID, compid: uint8_t = MavLinkProtocol.COMP_ID) {
+  async sendSigned(msg: MavLinkData, key: Buffer, linkId: uint8_t = 1, sysid: uint8_t = MavLinkProtocol.SYS_ID, compid: uint8_t = MavLinkProtocol.COMP_ID): Promise<number> {
     const protocol = new MavLinkProtocolV2(sysid, compid, MavLinkProtocolV2.IFLAG_SIGNED)
     const b1 = protocol.serialize(msg, this.seq++)
     this.seq &= 255
     const b2 = protocol.sign(b1, linkId, key)
-    this.sendBuffer(b2)
+    return this.sendBuffer(b2)
   }
 
   /**
@@ -94,8 +109,13 @@ export class MavEsp8266 extends EventEmitter {
    *
    * @param buffer buffer to send
    */
-  sendBuffer(buffer: Buffer) {
-    this.socket?.send(buffer, this.sendPort, this.ip)
+  async sendBuffer(buffer: Buffer): Promise<number> {
+    return new Promise((resolve, reject) => {
+      this.socket?.send(buffer, this.sendPort, this.ip, (err, bytes) => {
+        if (err) reject(err)
+        else resolve(bytes)
+      })
+    })
   }
 
   private processIncommingUDPData(buffer: Buffer, metadata: RemoteInfo) {
