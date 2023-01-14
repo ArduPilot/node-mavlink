@@ -16,7 +16,8 @@ async function main() {
   const port = new MavEsp8266()
 
   // start the communication
-  await port.start()
+  const { ip, sendPort, receivePort } = await port.start()
+  console.log(`Connected to: ${ip}, send port: ${sendPort}, receive port ${receivePort}`)
 
   // log incomming messages
   port.on('data', (packet: MavLinkPacket) => {

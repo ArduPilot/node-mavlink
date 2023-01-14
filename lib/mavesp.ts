@@ -7,6 +7,12 @@ import { MavLinkProtocol, MavLinkProtocolV2 } from './mavlink'
 import { waitFor } from './utils'
 import { uint8_t, MavLinkData } from 'mavlink-mappings'
 
+export interface ConnectionInfo {
+  ip: string
+  sendPort: number
+  receivePort: number
+}
+
 /**
  * Encapsulation of communication with MavEsp8266
  */
@@ -40,7 +46,7 @@ export class MavEsp8266 extends EventEmitter {
    * @param receivePort port to receive messages on (default: 14550)
    * @param sendPort port to send messages to (default: 14555)
    */
-  async start(receivePort: number = 14550, sendPort: number = 14555) {
+  async start(receivePort: number = 14550, sendPort: number = 14555): Promise<ConnectionInfo> {
     this.sendPort = sendPort
 
     // Create a UDP socket
@@ -53,7 +59,7 @@ export class MavEsp8266 extends EventEmitter {
         // Wait for the first package to be returned to read the ip address
         // of the controller
         waitFor(() => this.ip !== '')
-          .then(() => { resolve(this.ip) })
+          .then(() => { resolve({ ip: this.ip, sendPort, receivePort }) })
           .catch(e => { reject(e) })
       })
     })
