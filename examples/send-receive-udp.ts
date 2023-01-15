@@ -10,10 +10,10 @@ const REGISTRY: MavLinkPacketRegistry = {
 }
 
 // This is how you could build a registry of all commands from different packages
-// const COMMANDS: Record<number, MavLinkDataConstructor<common.CommandLong>> = {
-//   ...common.COMMANDS,
-//   ...ardupilotmega.COMMANDS,
-// }
+const COMMANDS: common.MavLinkCommandRegistry = {
+  ...common.COMMANDS,
+  ...ardupilotmega.COMMANDS,
+}
 
 async function main() {
   const port = new MavEsp8266()
