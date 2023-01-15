@@ -226,6 +226,16 @@ The default values for some parameters are as follows:
 
 This is a very handy utility function that asynchronously pauses for a given time (ms).
 
+## Running sim_vehicle.py
+
+The easiest way to start playing around with this package is to use `sim_vehicle.py`. You can use the default parameters forthe MavEsp8266 if you'll make the simulator compatible with it:
+
+```
+$ Tools/autotest/sim_vehicle.py -v ArduCopter -f quad --console --map --out udpin:127.0.0.1:14555
+```
+
+That last parameter (`--out udpin:127.0.0.1:14555`) opens up for incoming messages in port 14555, which is the default send port for MavEsp8266 and its default firmware.
+
 ## Closing thoughts
 
 The original generated sources lack one very important aspect of a reusable library: documentation. Also, most of the time the names are more C-like than JavaScript-like.
