@@ -15,7 +15,7 @@ async function main() {
   // start the communication
   // After this line we have received at least one heartbeat message so we
   // know what is the remote IP address to send the messages to
-  const { ip, sendPort, receivePort } = await port.start()
+  const { ip, sendPort, receivePort } = await port.start(14551)
   console.log(`Connected to: ${ip}, send port: ${sendPort}, receive port ${receivePort}`)
 
   // log incomming messages
@@ -33,21 +33,18 @@ async function main() {
 
   // You're now ready to send messages to the controller using the socket
   // let's request the list of parameters
+  const cmdSetMode = new common.DoSetModeCommand()
+  cmdSetMode.mode = 1
+  cmdSetMode.customMode = ardupilotmega.CopterMode.DRIFT
 
-  const cmdParamList = new common.ParamRequestList()
-  cmdParamList.targetSystem = 1
-  cmdParamList.targetComponent = 1
+  await port.send(cmdSetMode)
 
-  // The send method is another utility method, very handy to have it provided
-  // by the library. It takes care of the sequence number and data serialization.
-  await port.send(cmdParamList)
+  // Give the system time to process any incoming acknowledges
+  const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms))
+  await sleep(1000)
 
-  // Here's another example of sending commands
-  const cmdSetRelay = new common.DoSetRelayCommand()
-  cmdSetRelay.instance = 0
-  cmdSetRelay.setting = 1
-
-  await port.send(cmdSetRelay)
+  // Close communication
+  port.close()
 }
 
 main()
