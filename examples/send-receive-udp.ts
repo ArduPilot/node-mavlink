@@ -22,8 +22,10 @@ async function main() {
   port.on('data', (packet: MavLinkPacket) => {
     const clazz = REGISTRY[packet.header.msgid]
     if (clazz) {
-      const data = packet.protocol.data(packet.payload, clazz)
-      console.log('>', data)
+      if (packet.header.msgid === common.CommandAck.MSG_ID) {
+        const data = packet.protocol.data(packet.payload, clazz)
+        console.log('>', data)
+      }
     } else {
       console.log('!', packet.debug())
     }
@@ -31,13 +33,21 @@ async function main() {
 
   // You're now ready to send messages to the controller using the socket
   // let's request the list of parameters
-  const message = new common.ParamRequestList()
-  message.targetSystem = 1
-  message.targetComponent = 1
+
+  const cmdParamList = new common.ParamRequestList()
+  cmdParamList.targetSystem = 1
+  cmdParamList.targetComponent = 1
 
   // The send method is another utility method, very handy to have it provided
   // by the library. It takes care of the sequence number and data serialization.
-  await port.send(message)
+  await port.send(cmdParamList)
+
+  // Here's another example of sending commands
+  const cmdSetRelay = new common.DoSetRelayCommand()
+  cmdSetRelay.instance = 0
+  cmdSetRelay.setting = 1
+
+  await port.send(cmdSetRelay)
 }
 
 main()
