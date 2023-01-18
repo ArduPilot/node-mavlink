@@ -68,15 +68,22 @@ Sending messages is also very easy. One example that is very useful is to send t
 ```javascript
 import { MavLinkProtocolV2, send } from 'node-mavlink'
 
-// Create an instance of of the `CommandInt` class that will be the vessel
-// for containing the command data
-const msg = new common.CommandInt()
-msg.command = common.MavCmd.REQUEST_PROTOCOL_VERSION
-msg.param1 = 1
+// Create an instance of of the `RequestProtocolVersionCommand`
+// class that will be the vessel for containing the command data.
+// Underneath the cover it uses CommandLong to convert the data.
+//
+// By convention the intermediate fields that are then serialized
+// are named with `_` (underscore) prefix and should not be used
+// directly. That doesn't mean you can't use them, but if there
+// is a equivalend Command class it is just a lot easier and every
+// parameter not only has a more descriptive names but also in-line
+// documentation.
+const command = new common.RequestProtocolVersionCommand()
+command.confirmation = 1
 
 port.on('open', async () => {
   // the port is open - we're ready to send data
-  await send(port, msg, new MavLinkProtocolV2())
+  await send(port, command, new MavLinkProtocolV2())
 })
 ```
 

@@ -37,13 +37,20 @@ async function main() {
     }
   })
 
-  // You're now ready to send messages to the controller using the socket
-  // let's request the list of parameters
-  const cmdSetMode = new common.DoSetModeCommand()
-  cmdSetMode.mode = 1
-  cmdSetMode.customMode = ardupilotmega.CopterMode.DRIFT
+  // Create an instance of of the `RequestProtocolVersionCommand`
+  // class that will be the vessel for containing the command data.
+  // Underneath the cover it uses CommandLong to convert the data.
+  //
+  // By convention the intermediate fields that are then serialized
+  // are named with `_` (underscore) prefix and should not be used
+  // directly. That doesn't mean you can't use them, but if there
+  // is a equivalend Command class it is just a lot easier and every
+  // parameter not only has a more descriptive names but also in-line
+  // documentation.
+  const command = new common.RequestProtocolVersionCommand()
+  command.confirmation = 1
 
-  await port.send(cmdSetMode)
+  await port.send(command)
 
   // Give the system time to process any incoming acknowledges
   const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms))
