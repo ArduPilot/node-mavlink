@@ -584,9 +584,9 @@ export class MavLinkPacketSplitter extends Transform {
     callback(null)
   }
 
-  private findStartOfPacket(buffer: Buffer) {
-    const stxv1 = buffer.indexOf(MavLinkProtocolV1.START_BYTE)
-    const stxv2 = buffer.indexOf(MavLinkProtocolV2.START_BYTE)
+  protected findStartOfPacket(buffer: Buffer, offset: number = 0) {
+    const stxv1 = buffer.indexOf(MavLinkProtocolV1.START_BYTE, offset)
+    const stxv2 = buffer.indexOf(MavLinkProtocolV2.START_BYTE, offset)
 
     if (stxv1 >= 0 && stxv2 >= 0) {
       // in the current buffer both STX v1 and v2 are found - get the first one
@@ -709,6 +709,25 @@ export class MavLinkPacketSplitter extends Transform {
    */
   resetUnknownPackagesCount() {
     this._unknownPackagesCount = 0
+  }
+}
+
+export class MavLinkTLogPacketSplitter extends MavLinkPacketSplitter {
+  _transform(chunk: Buffer, encoding: string, callback: TransformCallback) {
+    return super._transform(chunk, encoding, callback)
+  }
+
+  protected findStartOfPacket(buffer: Buffer, offset: number = 0) {
+    // Finding the start of packet in TLog requires locating the start byte
+    // at an offset greater than
+    let offset1 = offset
+    while (true) {
+      const start = super.findStartOfPacket(buffer, offset1)
+      if (start === null) return null
+      if (start < 8) offset1 = start + 1
+      else if (offset1 >= buffer.length - 1) return null
+      else return start
+    }
   }
 }
 
