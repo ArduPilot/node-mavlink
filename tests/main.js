@@ -43,7 +43,7 @@ async function main() {
     }
 
     const input = config.input === '-' ? process.stdin : createReadStream(config.input)
-    const reader = createMavLinkStream(input, dump)
+    const reader = createMavLinkStream(REGISTRY, input, dump)
 
     reader.on('data', packet => {
       const clazz = REGISTRY[packet.header.msgid]

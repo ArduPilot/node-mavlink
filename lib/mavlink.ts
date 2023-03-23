@@ -1,6 +1,6 @@
 import { Transform, TransformCallback, Readable, Writable } from 'stream'
 import { createHash } from 'crypto'
-import { uint8_t, uint16_t, x25crc } from 'mavlink-mappings'
+import {uint8_t, uint16_t, x25crc, MavLinkPacketRegistry, minimal, common, ardupilotmega} from 'mavlink-mappings'
 import { MSG_ID_MAGIC_NUMBER } from 'mavlink-mappings'
 import { MavLinkData, MavLinkDataConstructor } from 'mavlink-mappings'
 
@@ -491,6 +491,7 @@ type BufferCallback = (buffer: Buffer) => void
 export class MavLinkPacketSplitter extends Transform {
   protected readonly log = Logger.getLogger(this)
 
+  private readonly registry: MavLinkPacketRegistry;
   private buffer = Buffer.from([])
   private onCrcError: BufferCallback | null = null
   private timestamp: bigint | null = null
@@ -499,12 +500,21 @@ export class MavLinkPacketSplitter extends Transform {
   private _invalidPackagesCount = 0
 
   /**
+   * @param registry
    * @param opts options to pass on to the Transform constructor
-   * @param verbose print diagnostic information
    * @param onCrcError callback executed if there is a CRC error (mostly for debugging)
    */
-  constructor(opts = {}, onCrcError: BufferCallback = () => {}) {
+  constructor(
+      opts = {},
+      onCrcError: BufferCallback = () => {},
+      registry: MavLinkPacketRegistry = {
+        ...minimal.REGISTRY,
+        ...common.REGISTRY,
+        ...ardupilotmega.REGISTRY
+      }
+  ) {
     super({ ...opts, objectMode: true })
+    this.registry = registry
     this.onCrcError = onCrcError
   }
 
@@ -624,7 +634,8 @@ export class MavLinkPacketSplitter extends Transform {
     const protocol = new Protocol()
     const header = protocol.header(buffer)
     // @ts-ignore
-    const magic = MSG_ID_MAGIC_NUMBER[header.msgid]
+    const packetConstructor = this.registry[header.msgid]
+    const magic = packetConstructor?.MAGIC_NUMBER
     if (magic) {
       const crc = protocol.crc(buffer)
       const trim = this.isV2Signed(buffer)
@@ -771,11 +782,21 @@ export class MavLinkPacketParser extends Transform {
 /**
  * Creates a MavLink packet stream reader that is reading packets from the given input
  *
+ * @param registry Packets registry
  * @param input input stream to read from
+ * @param onCrcError CRC error callback
  */
-export function createMavLinkStream(input: Readable, onCrcError: BufferCallback) {
+export function createMavLinkStream(
+    input: Readable,
+    onCrcError: BufferCallback,
+    registry: MavLinkPacketRegistry = {
+      ...minimal.REGISTRY,
+      ...common.REGISTRY,
+      ...ardupilotmega.REGISTRY
+    }
+) {
   return input
-    .pipe(new MavLinkPacketSplitter({}, onCrcError))
+    .pipe(new MavLinkPacketSplitter({}, onCrcError, registry))
     .pipe(new MavLinkPacketParser())
 }
 
