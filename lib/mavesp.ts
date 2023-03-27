@@ -28,8 +28,8 @@ export class MavEsp8266 extends EventEmitter {
 
     this.input = new PassThrough()
 
-    this.processIncommingUDPData = this.processIncommingUDPData.bind(this)
-    this.processIncommingPacket = this.processIncommingPacket.bind(this)
+    this.processIncomingUDPData = this.processIncomingUDPData.bind(this)
+    this.processIncomingPacket = this.processIncomingPacket.bind(this)
 
     // Create the reader as usual by piping the source stream through the splitter
     // and packet parser
@@ -37,11 +37,11 @@ export class MavEsp8266 extends EventEmitter {
       .pipe(new MavLinkPacketSplitter())
       .pipe(new MavLinkPacketParser())
 
-    reader.on('data', this.processIncommingPacket)
+    reader.on('data', this.processIncomingPacket)
   }
 
   /**
-   * Start communication with the controller via MAVESP2866
+   * Start communication with the controller via MAVESP8266
    *
    * @param receivePort port to receive messages on (default: 14550)
    * @param sendPort port to send messages to (default: 14555)
@@ -51,7 +51,7 @@ export class MavEsp8266 extends EventEmitter {
 
     // Create a UDP socket
     this.socket = createSocket({ type: 'udp4', reuseAddr: true })
-    this.socket.on('message', this.processIncommingUDPData)
+    this.socket.on('message', this.processIncomingUDPData)
 
     // Start listening on the socket
     return new Promise((resolve, reject) => {
@@ -72,7 +72,7 @@ export class MavEsp8266 extends EventEmitter {
     if (!this.socket) throw new Error('Not connected')
 
     // Unregister event handlers
-    this.socket.off('message', this.processIncommingUDPData)
+    this.socket.off('message', this.processIncomingUDPData)
 
     // Close the socket
     return new Promise(resolve => {
@@ -124,14 +124,14 @@ export class MavEsp8266 extends EventEmitter {
     })
   }
 
-  private processIncommingUDPData(buffer: Buffer, metadata: RemoteInfo) {
+  private processIncomingUDPData(buffer: Buffer, metadata: RemoteInfo) {
     // store the remote ip address
     if (this.ip === '') this.ip = metadata.address
     // pass on the data to the input stream
     this.input.write(buffer)
   }
 
-  private processIncommingPacket(packet: any) {
+  private processIncomingPacket(packet: any) {
     // let the user know we received the packet
     this.emit('data', packet)
   }

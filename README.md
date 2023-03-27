@@ -75,7 +75,7 @@ import { MavLinkProtocolV2, send } from 'node-mavlink'
 // By convention the intermediate fields that are then serialized
 // are named with `_` (underscore) prefix and should not be used
 // directly. That doesn't mean you can't use them, but if there
-// is a equivalend Command class it is just a lot easier and every
+// is an equivalent Command class it is just a lot easier and every
 // parameter not only has a more descriptive names but also in-line
 // documentation.
 const command = new common.RequestProtocolVersionCommand()
@@ -128,7 +128,7 @@ async function main() {
   // start the communication
   await port.start()
 
-  // log incomming packets
+  // log incoming packets
   port.on('data', packet => {
     console.log(packet.debug())
   })
@@ -151,7 +151,7 @@ That's it! Easy as a lion :)
 
 ## Signed packages
 
-MavLink v2 introduces package signing. The way it currently works with Mission planner is you give it a pass phrase, Mission Planner encodes it using sha256 hashing algorithm and uses it as part of the signature calculation. Therefore if someone does not know the secret passphrase they won't be able to create packets that would seem to be comming from a source. It's a kind of security thing.
+MavLink v2 introduces package signing. The way it currently works with Mission planner is you give it a pass phrase, Mission Planner encodes it using sha256 hashing algorithm and uses it as part of the signature calculation. Therefore if someone does not know the secret passphrase they won't be able to create packets that would seem to be coming from a source. It's a kind of security thing.
 
 ### Reading signature
 
@@ -163,7 +163,7 @@ import { MavLinkPacketSignature } from 'node-mavlink'
 // calculate secret key (change 'qwerty' to your secret phrase)
 const key = MavLinkPacketSignature.key('qwerty')
 
-// log incomming messages
+// log incoming messages
 port.on('data', packet => {
   console.log(packet.debug())
   if (packet.signature) {
@@ -218,7 +218,7 @@ This function calls the `cb` callback periodically at the `interval` (default: 1
 
 #### `async send(stream: Writable, msg: MavLinkData, protocol: MavLinkProtocol)`
 
-This function serializes the `msg` message using the provided `protocol` (default: `MavLinkProtocolV1`) and sends it to the `stream`. If the process is successful the method returns with the length of written data denoting that no error occured. However, if the process was not successful it will error out with the underlying error object returned on by the stream.
+This function serializes the `msg` message using the provided `protocol` (default: `MavLinkProtocolV1`) and sends it to the `stream`. If the process is successful the method returns with the length of written data denoting that no error occurred. However, if the process was not successful it will error out with the underlying error object returned on by the stream.
 
 #### `async sendSigned(stream: Writable, msg: MavLinkData, key: Buffer, linkId: uint8_t, sysid: uint8_t, compid: uint8_t)`
 
@@ -235,7 +235,7 @@ This is a very handy utility function that asynchronously pauses for a given tim
 
 ## Running sim_vehicle.py
 
-The easiest way to start playing around with this package is to use `sim_vehicle.py`. You can use the default parameters forthe MavEsp8266 if you'll make the simulator compatible with it:
+The easiest way to start playing around with this package is to use `sim_vehicle.py`. You can use the default parameters for the MavEsp8266 if you'll make the simulator compatible with it:
 
 ```
 $ Tools/autotest/sim_vehicle.py -v ArduCopter -f quad --console --map --out udpin:127.0.0.1:14555
@@ -249,7 +249,7 @@ The original generated sources lack one very important aspect of a reusable libr
 
 When generating sources for data classes a number of things happen:
 
-- `enum` values are trimmed from common prefix; duplicating enum name in its value when its value cannot be spelled without the enum name is pointless and leads to unnecessairly vebose code
+- `enum` values are trimmed from common prefix; duplicating enum name in its value when its value cannot be spelled without the enum name is pointless and leads to unnecessarily verbose code
 - enum values, whenever available, contain JSDoc describing their purpose
 - data classes are properly named (PascalCase)
 - data classes fields are properly named (camelCase)
@@ -259,6 +259,6 @@ When generating sources for data classes a number of things happen:
 
 This leads to generated code that contains not only raw types but also documentation where it is mostly useful: right at your fingertips.
 
-I hope you'll enjoy using this library! If you have any comments, find a bug or just generally want to share your thoughts you can reach me via emial: padcom@gmail.com
+I hope you'll enjoy using this library! If you have any comments, find a bug or just generally want to share your thoughts you can reach me via email: padcom@gmail.com
 
 Peace!

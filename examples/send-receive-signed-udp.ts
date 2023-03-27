@@ -19,7 +19,7 @@ async function main() {
   const { ip, sendPort, receivePort } = await port.start()
   console.log(`Connected to: ${ip}, send port: ${sendPort}, receive port ${receivePort}`)
 
-  // log incomming messages
+  // log incoming messages
   port.on('data', (packet: MavLinkPacket) => {
     if (packet.signature) {
       if (packet.signature.matches(key)) {

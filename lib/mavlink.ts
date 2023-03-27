@@ -53,7 +53,7 @@ export abstract class MavLinkProtocol {
   /**
    * Deserialize packet checksum
    */
-  abstract crc(buffer: Buffer): uint16_t;
+  abstract crc(buffer: Buffer): uint16_t
 
   /**
    * Extract payload buffer
@@ -95,7 +95,7 @@ interface MavLinkProtocolConstructor {
   SYS_ID: uint8_t
   COMP_ID: uint8_t
 
-  new (): MavLinkProtocol
+  new(): MavLinkProtocol
 }
 
 /**
@@ -178,7 +178,7 @@ export class MavLinkProtocolV1 extends MavLinkProtocol {
     const plen = buffer.readUInt8(1)
     const payload = buffer.slice(MavLinkProtocolV1.PAYLOAD_OFFSET, MavLinkProtocolV1.PAYLOAD_OFFSET + plen)
     const padding = Buffer.from(new Uint8Array(255 - payload.length))
-    return Buffer.concat([ payload, padding ])
+    return Buffer.concat([payload, padding])
   }
 }
 
@@ -315,7 +315,7 @@ export class MavLinkProtocolV2 extends MavLinkProtocol {
     const plen = buffer.readUInt8(1)
     const payload = buffer.slice(MavLinkProtocolV2.PAYLOAD_OFFSET, MavLinkProtocolV2.PAYLOAD_OFFSET + plen)
     const padding = Buffer.from(new Uint8Array(255 - payload.length))
-    return Buffer.concat([ payload, padding ])
+    return Buffer.concat([payload, padding])
   }
 
   signature(buffer: Buffer, header: MavLinkPacketHeader): MavLinkPacketSignature | null {
@@ -355,7 +355,7 @@ export class MavLinkPacketSignature {
       .digest()
   }
 
-  constructor(private readonly buffer: Buffer) {}
+  constructor(private readonly buffer: Buffer) { }
 
   private get offset() {
     return this.buffer.length - MavLinkPacketSignature.SIGNATURE_LENGTH
@@ -449,7 +449,7 @@ export class MavLinkPacket {
     readonly crc: uint16_t = 0,
     readonly protocol: MavLinkProtocol = new MavLinkProtocolV1(),
     readonly signature: MavLinkPacketSignature | null = null,
-  ) {}
+  ) { }
 
   /**
    * Debug information about the packet
@@ -458,18 +458,18 @@ export class MavLinkPacket {
    */
   debug() {
     return 'Packet ('
-    // @ts-ignore
-    + `proto: ${this.protocol.constructor['NAME']}, `
+      // @ts-ignore
+      + `proto: ${this.protocol.constructor['NAME']}, `
       + `sysid: ${this.header.sysid}, `
       + `compid: ${this.header.compid}, `
       + `msgid: ${this.header.msgid}, `
       + `seq: ${this.header.seq}, `
       + `plen: ${this.header.payloadLength}, `
-    // @ts-ignore
-    + `magic: ${MSG_ID_MAGIC_NUMBER[this.header.msgid]} (${hex(MSG_ID_MAGIC_NUMBER[this.header.msgid])}), `
+      // @ts-ignore
+      + `magic: ${MSG_ID_MAGIC_NUMBER[this.header.msgid]} (${hex(MSG_ID_MAGIC_NUMBER[this.header.msgid])}), `
       + `crc: ${hex(this.crc, 4)}`
-    // @ts-ignore
-    + this.signatureToString(this.signature)
+      // @ts-ignore
+      + this.signatureToString(this.signature)
       + ')'
   }
 
@@ -486,7 +486,7 @@ enum PacketValidationResult { VALID, INVALID, UNKNOWN }
 type BufferCallback = (buffer: Buffer) => void
 
 /**
- * A transform stream that splits the incomming data stream into chunks containing full MavLink messages
+ * A transform stream that splits the incoming data stream into chunks containing full MavLink messages
  */
 export class MavLinkPacketSplitter extends Transform {
   protected readonly log = Logger.getLogger(this)
@@ -503,13 +503,13 @@ export class MavLinkPacketSplitter extends Transform {
    * @param verbose print diagnostic information
    * @param onCrcError callback executed if there is a CRC error (mostly for debugging)
    */
-  constructor(opts = {}, onCrcError: BufferCallback = () => {}) {
+  constructor(opts = {}, onCrcError: BufferCallback = () => { }) {
     super({ ...opts, objectMode: true })
     this.onCrcError = onCrcError
   }
 
   _transform(chunk: Buffer, encoding: string, callback: TransformCallback) {
-    this.buffer = Buffer.concat([ this.buffer, chunk ])
+    this.buffer = Buffer.concat([this.buffer, chunk])
 
     while (this.buffer.byteLength > 0) {
       const offset = this.findStartOfPacket(this.buffer)
@@ -536,7 +536,7 @@ export class MavLinkPacketSplitter extends Transform {
 
       this.log.debug('Packet protocol is', Protocol.NAME)
 
-      // check if the buffer contains at least the minumum size of data
+      // check if the buffer contains at least the minimum size of data
       if (this.buffer.length < Protocol.PAYLOAD_OFFSET + MavLinkProtocol.CHECKSUM_LENGTH) {
         // current buffer shorter than the shortest message - skipping
         this.log.debug('Current buffer shorter than the shortest message - skipping')

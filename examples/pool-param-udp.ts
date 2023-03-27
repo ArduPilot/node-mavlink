@@ -11,7 +11,7 @@ async function main() {
   // know what is the remote IP address to send the messages to
   await port.start()
 
-  // log incomming messages
+  // log incoming messages
   port.on('data', (packet: MavLinkPacket) => {
     if (packet.header.msgid === common.ParamValue.MSG_ID) {
       const value = packet.protocol.data(packet.payload, common.ParamValue)

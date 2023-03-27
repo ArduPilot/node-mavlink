@@ -1,5 +1,5 @@
 /**
- * Convert a number to hexadecimal representation with a minumum
+ * Convert a number to hexadecimal representation with a minimum
  * number of characters and optional prefix (0x by default)
  *
  * @param n value to convert
@@ -33,9 +33,9 @@ export function dump(buffer: Buffer, lineWidth = 16) {
 }
 
 /**
- * Sleep for a given number of miliseconds
+ * Sleep for a given number of milliseconds
  *
- * @param {number} ms of miliseconds to sleep
+ * @param {number} ms of milliseconds to sleep
  */
 export function sleep(ms: number) {
   return new Promise(resolve => setTimeout(resolve, ms))
@@ -49,8 +49,8 @@ export function sleep(ms: number) {
  * the execution without success. Great for time-sensitive operations.
  *
  * @param cb callback to call every <code>interval</code>ms. Waiting stops if the callback returns a truthy value.
- * @param timeout number of miliseconds that need to pass before the Timeout exception is thrown
- * @param interval number of miliseconds before re-running the callback
+ * @param timeout number of milliseconds that need to pass before the Timeout exception is thrown
+ * @param interval number of milliseconds before re-running the callback
  */
 export async function waitFor<T>(cb: () => T, timeout = 10000, interval = 100): Promise<T> {
   return new Promise((resolve, reject) => {

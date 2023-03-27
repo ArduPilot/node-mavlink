@@ -1,3 +1,32 @@
 {
-  "jest.jestCommandLine": "npx jest"
+  "jest.jestCommandLine": "npx jest",
+  "cSpell.words": [
+    "Ardu",
+    "Ardupilot",
+    "ardupilotmega",
+    "asluav",
+    "autotest",
+    "baudrate",
+    "baudrates",
+    "clazz",
+    "codepaths",
+    "compid",
+    "DESERIALIZERS",
+    "emirkartal",
+    "icarous",
+    "IFLAG",
+    "linkid",
+    "MAVESP",
+    "mavlink",
+    "msgid",
+    "plen",
+    "pymavlink",
+    "Statustext",
+    "stxv",
+    "sysid",
+    "tlog",
+    "ualberta",
+    "uavionix",
+    "udpin"
+  ]
 }

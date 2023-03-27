@@ -24,7 +24,7 @@ async function main() {
   const { ip, sendPort, receivePort } = await port.start(14551)
   console.log(`Connected to: ${ip}, send port: ${sendPort}, receive port ${receivePort}`)
 
-  // log incomming messages
+  // log incoming messages
   port.on('data', (packet: MavLinkPacket) => {
     const clazz = REGISTRY[packet.header.msgid]
     if (clazz) {
@@ -44,7 +44,7 @@ async function main() {
   // By convention the intermediate fields that are then serialized
   // are named with `_` (underscore) prefix and should not be used
   // directly. That doesn't mean you can't use them, but if there
-  // is a equivalend Command class it is just a lot easier and every
+  // is an equivalent Command class it is just a lot easier and every
   // parameter not only has a more descriptive names but also in-line
   // documentation.
   const command = new common.RequestProtocolVersionCommand()
