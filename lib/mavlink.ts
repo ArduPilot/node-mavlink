@@ -40,6 +40,10 @@ export abstract class MavLinkProtocol {
   static SYS_ID: uint8_t = 254
   static COMP_ID: uint8_t = 1
 
+  get name(): string {
+    return (this.constructor as unknown as { 'NAME': string }).NAME
+  }
+
   /**
    * Serialize a message to a buffer
    */
@@ -152,7 +156,6 @@ export class MavLinkProtocolV1 extends MavLinkProtocol {
 
     const result = new MavLinkPacketHeader()
     result.timestamp = timestamp || null
-    result.magic = startByte
     result.payloadLength = buffer.readUInt8(1)
     result.seq = buffer.readUInt8(2)
     result.sysid = buffer.readUInt8(3)
@@ -459,21 +462,18 @@ export class MavLinkPacket {
   debug() {
     return 'Packet ('
       // @ts-ignore
-      + `proto: ${this.protocol.constructor['NAME']}, `
+      + `proto: ${this.protocol.name}, `
       + `sysid: ${this.header.sysid}, `
       + `compid: ${this.header.compid}, `
       + `msgid: ${this.header.msgid}, `
       + `seq: ${this.header.seq}, `
       + `plen: ${this.header.payloadLength}, `
-      // @ts-ignore
-      + `magic: ${MSG_ID_MAGIC_NUMBER[this.header.msgid]} (${hex(MSG_ID_MAGIC_NUMBER[this.header.msgid])}), `
       + `crc: ${hex(this.crc, 4)}`
-      // @ts-ignore
       + this.signatureToString(this.signature)
       + ')'
   }
 
-  private signatureToString(signature: MavLinkPacketSignature) {
+  private signatureToString(signature?: MavLinkPacketSignature | null) {
     return signature ? `, ${signature.toString()}` : ''
   }
 }

@@ -26,6 +26,9 @@ async function main() {
   // React to packet being retrieved.
   // This is the place where all your application-level logic will exist
   reader.on('data', (packet: MavLinkPacket) => {
+    // Output generic debug information about this packet
+    console.log(packet.debug())
+
     online = true
     const clazz = REGISTRY[packet.header.msgid]
     if (clazz) {
