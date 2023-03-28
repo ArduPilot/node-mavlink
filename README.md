@@ -243,6 +243,51 @@ $ Tools/autotest/sim_vehicle.py -v ArduCopter -f quad --console --map --out udpi
 
 That last parameter (`--out udpin:127.0.0.1:14555`) opens up for incoming messages in port 14555, which is the default send port for MavEsp8266 and its default firmware.
 
+## Registering custom messages
+
+There are times when you want to have custom messages, for example when you're building a rocket and there is no target you can use out of the box. There are actually two scenarios:
+
+1. You have a few custom messages, but generally you're happy with the original set of messages
+2. You don't care about the original messages, maybe you do about the heartbeat, but nothing else
+
+### Registering a single command
+
+There are 3 steps to register a custom command:
+
+a) create a class that defines your custom command
+b) add it to your `REGISTRY`
+c) register your custom command's magic number
+
+The first two steps are pretty self explanatory and there is a plethora of examples in the mavlink-mappings project - use those to learn how to create your own message definitions.
+
+The last step is quite easy:
+
+```javascript
+import { registerCustomMessageMagicNumber } from 'node-mavlink'
+
+registerCustomMessageMagicNumber('999999': 42)
+```
+
+From now on the splitter will know how to properly calculate CRC for your packages and you're all good.
+
+### Replacing magic numbers registry all together
+
+Well, if all you care about is the ping, why parse anything else, right? And if on top of the ping command you've got a number of custom messages - all the better to not parse even the messages!
+
+```javascript
+import { MavLinkSplitter, MavLinkParser } from 'node-mavlink'
+
+const MY_MAGIC_NUMBERS = {
+  '0': 50, // Heartbeat
+  // ...other magic number definitions go here
+}
+
+const source = ... // obtain source stream
+const reader = source
+  .pipe(new MavLinkPacketSplitter({}, { magicNumbers: MY_MAGIC_NUMBERS }))
+  .pipe(new MavLinkPacketParser())
+```
+
 ## Closing thoughts
 
 The original generated sources lack one very important aspect of a reusable library: documentation. Also, most of the time the names are more C-like than JavaScript-like.
