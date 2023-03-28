@@ -21,7 +21,7 @@ async function main() {
   // start the communication
   // After this line we have received at least one heartbeat message so we
   // know what is the remote IP address to send the messages to
-  const { ip, sendPort, receivePort } = await port.start(14551)
+  const { ip, sendPort, receivePort } = await port.start()
   console.log(`Connected to: ${ip}, send port: ${sendPort}, receive port ${receivePort}`)
 
   // log incoming messages

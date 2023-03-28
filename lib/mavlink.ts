@@ -493,6 +493,7 @@ export class MavLinkPacketSplitter extends Transform {
 
   private buffer = Buffer.from([])
   private onCrcError: BufferCallback | null = null
+  private readonly magicNumbers: Record<string, number>
   private timestamp: bigint | null = null
   private _validPackagesCount = 0
   private _unknownPackagesCount = 0
@@ -503,9 +504,19 @@ export class MavLinkPacketSplitter extends Transform {
    * @param verbose print diagnostic information
    * @param onCrcError callback executed if there is a CRC error (mostly for debugging)
    */
-  constructor(opts = {}, onCrcError: BufferCallback = () => { }) {
+  constructor(
+    opts = {},
+    {
+      onCrcError = () => { },
+      magicNumbers = MSG_ID_MAGIC_NUMBER
+    }: {
+      onCrcError?: BufferCallback,
+      magicNumbers?: Record<string, number>
+    } = {}
+  ) {
     super({ ...opts, objectMode: true })
     this.onCrcError = onCrcError
+    this.magicNumbers = magicNumbers
   }
 
   _transform(chunk: Buffer, encoding: string, callback: TransformCallback) {
@@ -623,8 +634,7 @@ export class MavLinkPacketSplitter extends Transform {
   private validatePacket(buffer: Buffer, Protocol: MavLinkProtocolConstructor) {
     const protocol = new Protocol()
     const header = protocol.header(buffer)
-    // @ts-ignore
-    const magic = MSG_ID_MAGIC_NUMBER[header.msgid]
+    const magic = this.magicNumbers[header.msgid]
     if (magic) {
       const crc = protocol.crc(buffer)
       const trim = this.isV2Signed(buffer)
@@ -773,9 +783,15 @@ export class MavLinkPacketParser extends Transform {
  *
  * @param input input stream to read from
  */
-export function createMavLinkStream(input: Readable, onCrcError: BufferCallback) {
+export function createMavLinkStream(input: Readable, {
+  onCrcError,
+  magicNumbers
+}: {
+  onCrcError?: BufferCallback,
+  magicNumbers?: Record<string, number>
+} = {}) {
   return input
-    .pipe(new MavLinkPacketSplitter({}, onCrcError))
+    .pipe(new MavLinkPacketSplitter({}, { onCrcError, magicNumbers }))
     .pipe(new MavLinkPacketParser())
 }
 

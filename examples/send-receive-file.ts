@@ -7,6 +7,11 @@ import {
   asluav, development, ualberta,
 } from '..'
 
+//
+// Example how to register your own magic numbers:
+//
+// const splitter = new MavLinkPacketSplitter({}, { magicNumbers: { '0': 50 } })
+//
 const splitter = new MavLinkPacketSplitter()
 const parser = new MavLinkPacketParser()
 const file = createReadStream(__dirname + '/GH-5.bin')

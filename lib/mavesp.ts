@@ -23,7 +23,14 @@ export class MavEsp8266 extends EventEmitter {
   private sendPort: number = 14555
   private seq: number = 0
 
-  constructor() {
+  /**
+   * @param splitter packet splitter instance
+   * @param parser packet parser instance
+   */
+  constructor({
+    splitter = new MavLinkPacketSplitter(),
+    parser = new MavLinkPacketParser(),
+  } = {}) {
     super()
 
     this.input = new PassThrough()
@@ -34,8 +41,8 @@ export class MavEsp8266 extends EventEmitter {
     // Create the reader as usual by piping the source stream through the splitter
     // and packet parser
     const reader = this.input
-      .pipe(new MavLinkPacketSplitter())
-      .pipe(new MavLinkPacketParser())
+      .pipe(splitter)
+      .pipe(parser)
 
     reader.on('data', this.processIncomingPacket)
   }
