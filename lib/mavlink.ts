@@ -1,10 +1,44 @@
 import { Transform, TransformCallback, Readable, Writable } from 'stream'
 import { createHash } from 'crypto'
-import { uint8_t, uint16_t, x25crc, MavLinkPacketRegistry, minimal, common, ardupilotmega } from 'mavlink-mappings'
+import { uint8_t, uint16_t, x25crc, MSG_ID_MAGIC_NUMBER, MavLinkPacketRegistry } from 'mavlink-mappings'
 import { MavLinkData, MavLinkDataConstructor } from 'mavlink-mappings'
 import { hex } from './utils'
 import { Logger } from './logger'
 import { SERIALIZERS, DESERIALIZERS } from './serialization'
+
+/**
+ * Magic number mapping. Defaults to `MSG_ID_MAGIC_NUMBER`.
+ */
+let mavlinkMagicMap = new Map<number, number>();
+loadDefaultRegistry();
+
+/**
+ * Load the default mavlink registry. Done by default.
+ */
+export function loadDefaultRegistry() {
+  mavlinkMagicMap.clear()
+
+  Object.entries(MSG_ID_MAGIC_NUMBER)
+      .forEach(([msgId, magic]) => {
+        mavlinkMagicMap.set(Number(msgId), magic)
+      })
+}
+
+/**
+ * Load a custom mavlink registry. This will overwrite the current one.
+ * @param registry custom Mavlink packet registry
+ */
+export function loadCustomRegistry(registry: MavLinkPacketRegistry) {
+  mavlinkMagicMap.clear()
+
+  for (const key in registry) {
+    const data = registry[key]
+    const msgId = Number(key)
+    mavlinkMagicMap.set(msgId, data.MAGIC_NUMBER)
+  }
+}
+
+
 
 /**
  * Header definition of the MavLink packet
@@ -94,25 +128,6 @@ interface MavLinkProtocolConstructor {
   COMP_ID: uint8_t
 
   new (): MavLinkProtocol
-}
-
-/**
- * Default Mavlink packet register.
- */
-export const DEFAULT_REGISTER: MavLinkPacketRegistry = {
-  ...minimal.REGISTRY,
-  ...common.REGISTRY,
-  ...ardupilotmega.REGISTRY
-}
-
-/**
- * Get the magic for the packet with the provided id in the registry.
- * @param registry packet registry
- * @param id the id of the packet
- */
-function getMagic(registry: MavLinkPacketRegistry, id: number): number | undefined {
-  const packet = registry[id]
-  return packet?.MAGIC_NUMBER
 }
 
 /**
@@ -466,7 +481,6 @@ export class MavLinkPacket {
     readonly crc: uint16_t = 0,
     readonly protocol: MavLinkProtocol = new MavLinkProtocolV1(),
     readonly signature: MavLinkPacketSignature | null = null,
-    readonly magic: uint8_t = 0
   ) {}
 
   /**
@@ -484,7 +498,7 @@ export class MavLinkPacket {
       + `seq: ${this.header.seq}, `
       + `plen: ${this.header.payloadLength}, `
     // @ts-ignore
-    + `magic: ${this.magic} (${hex(this.magic)}), `
+    + `magic: ${mavlinkMagicMap.get(this.header.msgid)} (${hex(mavlinkMagicMap.get(this.header.msgid))}), `
       + `crc: ${hex(this.crc, 4)}`
     // @ts-ignore
     + this.signatureToString(this.signature)
@@ -509,7 +523,6 @@ type BufferCallback = (buffer: Buffer) => void
 export class MavLinkPacketSplitter extends Transform {
   protected readonly log = Logger.getLogger(this)
 
-  private readonly registry: MavLinkPacketRegistry;
   private buffer = Buffer.from([])
   private onCrcError: BufferCallback | null = null
   private timestamp: bigint | null = null
@@ -524,11 +537,9 @@ export class MavLinkPacketSplitter extends Transform {
    */
   constructor(
       opts = {},
-      onCrcError: BufferCallback = () => {},
-      registry: MavLinkPacketRegistry = DEFAULT_REGISTER
+      onCrcError: BufferCallback = () => {}
   ) {
     super({ ...opts, objectMode: true })
-    this.registry = registry
     this.onCrcError = onCrcError
   }
 
@@ -648,7 +659,7 @@ export class MavLinkPacketSplitter extends Transform {
     const protocol = new Protocol()
     const header = protocol.header(buffer)
     // @ts-ignore
-    const magic = getMagic(this.registry, header.msgid)
+    const magic = mavlinkMagicMap.get(header.msgid)
     if (magic) {
       const crc = protocol.crc(buffer)
       const trim = this.isV2Signed(buffer)
@@ -760,11 +771,9 @@ export class MavLinkTLogPacketSplitter extends MavLinkPacketSplitter {
  */
 export class MavLinkPacketParser extends Transform {
   protected readonly log = Logger.getLogger(this)
-  private readonly registry: MavLinkPacketRegistry
 
-  constructor(opts = {}, registry: MavLinkPacketRegistry = DEFAULT_REGISTER) {
+  constructor(opts = {}) {
     super({ ...opts, objectMode: true })
-    this.registry = registry
   }
 
   private getProtocol(buffer: Buffer): MavLinkProtocol {
@@ -787,9 +796,8 @@ export class MavLinkPacketParser extends Transform {
     const signature = protocol instanceof MavLinkProtocolV2
       ? protocol.signature(buffer, header)
       : null
-    const magic = getMagic(this.registry, header.msgid)
 
-    const packet = new MavLinkPacket(buffer, header, payload, crc, protocol, signature, magic)
+    const packet = new MavLinkPacket(buffer, header, payload, crc, protocol, signature)
 
     callback(null, packet)
   }
@@ -805,11 +813,10 @@ export class MavLinkPacketParser extends Transform {
 export function createMavLinkStream(
     input: Readable,
     onCrcError: BufferCallback,
-    registry: MavLinkPacketRegistry = DEFAULT_REGISTER
 ) {
   return input
-    .pipe(new MavLinkPacketSplitter({}, onCrcError, registry))
-    .pipe(new MavLinkPacketParser({}, registry))
+    .pipe(new MavLinkPacketSplitter({}, onCrcError))
+    .pipe(new MavLinkPacketParser({}))
 }
 
 let seq = 0
