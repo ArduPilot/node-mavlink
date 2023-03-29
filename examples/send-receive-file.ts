@@ -30,6 +30,8 @@ const REGISTRY = {
 }
 
 reader.on('data', packet => {
+  console.log(packet.debug())
+
   const clazz = REGISTRY[packet.header.msgid]
   if (clazz) {
     const data = packet.protocol.data(packet.payload, clazz)
