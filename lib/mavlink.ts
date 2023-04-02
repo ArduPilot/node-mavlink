@@ -635,7 +635,7 @@ export class MavLinkPacketSplitter extends Transform {
     const protocol = new Protocol()
     const header = protocol.header(buffer)
     const magic = this.magicNumbers[header.msgid]
-    if (magic) {
+    if (magic !== null) {
       const crc = protocol.crc(buffer)
       const trim = this.isV2Signed(buffer)
         ? MavLinkPacketSignature.SIGNATURE_LENGTH + MavLinkProtocol.CHECKSUM_LENGTH
