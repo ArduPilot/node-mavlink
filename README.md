@@ -265,7 +265,7 @@ The last step is quite easy:
 ```javascript
 import { registerCustomMessageMagicNumber } from 'node-mavlink'
 
-registerCustomMessageMagicNumber('999999': 42)
+registerCustomMessageMagicNumber('999999', 42)
 ```
 
 From now on the splitter will know how to properly calculate CRC for your packages and you're all good.
