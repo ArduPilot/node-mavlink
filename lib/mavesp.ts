@@ -52,9 +52,11 @@ export class MavEsp8266 extends EventEmitter {
    *
    * @param receivePort port to receive messages on (default: 14550)
    * @param sendPort port to send messages to (default: 14555)
+   * @param ip IP address to send to in case there is no broadcast (default: empty string)
    */
-  async start(receivePort: number = 14550, sendPort: number = 14555): Promise<ConnectionInfo> {
+  async start(receivePort: number = 14550, sendPort: number = 14555, ip: string = ''): Promise<ConnectionInfo> {
     this.sendPort = sendPort
+    this.ip = ip;
 
     // Create a UDP socket
     this.socket = createSocket({ type: 'udp4', reuseAddr: true })
