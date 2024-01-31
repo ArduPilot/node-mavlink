@@ -4,7 +4,7 @@
     {
       "type": "node",
       "request": "launch",
-      "name": "Launch Program",
+      "name": "Main tests",
       "runtimeArgs": [
         "-r",
         "ts-node/register"
@@ -13,6 +13,14 @@
         "${workspaceFolder}/tests/main.ts",
         "e2e",
         "--input=tests/data.mavlink"
+      ]
+    },
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "Sanity tests",
+      "args": [
+        "${workspaceFolder}/sanity-check.mjs",
       ]
     }
   ],
