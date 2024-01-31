@@ -17,7 +17,8 @@ parser.on('data', packet => {
   const clazz = REGISTRY[packet.header.msgid]
   if (clazz) {
     const data = packet.protocol.data(packet.payload, clazz)
-    console.log('Received packet:', data)
+    console.log(packet.header)
+    console.log(data)
   } else {
     console.log(packet.debug())
   }
