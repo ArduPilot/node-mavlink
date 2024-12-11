@@ -198,6 +198,8 @@ export class MavLinkProtocolV2 extends MavLinkProtocol {
 
   static readonly IFLAG_SIGNED = 0x01
 
+  static readonly SIGNATURE_START_TIME = Date.UTC(2015);
+
   constructor(
     public sysid: uint8_t = MavLinkProtocol.SYS_ID,
     public compid: uint8_t = MavLinkProtocol.COMP_ID,
@@ -260,7 +262,7 @@ export class MavLinkProtocolV2 extends MavLinkProtocol {
 
     const signer = new MavLinkPacketSignature(result)
     signer.linkId = linkId
-    signer.timestamp = timestamp
+    signer.timestamp = (timestamp - MavLinkProtocolV2.SIGNATURE_START_TIME) * 100
     signer.signature = signer.calculate(key)
 
     return result
@@ -375,7 +377,7 @@ export class MavLinkPacketSignature {
    * Set the linkId in signature
    */
   set linkId(value: uint8_t) {
-    this.buffer.writeUInt8(this.offset)
+    this.buffer.writeUInt8(value, this.offset)
   }
 
   /**
