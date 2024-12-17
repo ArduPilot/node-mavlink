@@ -198,7 +198,7 @@ export class MavLinkProtocolV2 extends MavLinkProtocol {
 
   static readonly IFLAG_SIGNED = 0x01
 
-  static readonly SIGNATURE_START_TIME = Date.UTC(2015);
+  static readonly SIGNATURE_START_TIME = Date.UTC(2015, 0, 1);
 
   constructor(
     public sysid: uint8_t = MavLinkProtocol.SYS_ID,
