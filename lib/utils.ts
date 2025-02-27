@@ -60,16 +60,21 @@ export async function waitFor<T>(cb: () => T, timeout = 10000, interval = 100): 
     }, timeout)
 
     const intervalTimer = setInterval(() => {
-      const result = cb()
-      if (result) {
+      try {
+        const result = cb()
+        if (result) {
+          cleanup()
+          resolve(result)
+        }
+      } catch (error) {
         cleanup()
-        resolve(result)
+        reject(error)
       }
-    })
+    }, interval)
 
     const cleanup = () => {
       clearTimeout(timeoutTimer)
-      clearTimeout(intervalTimer)
+      clearInterval(intervalTimer)
     }
   })
 }
