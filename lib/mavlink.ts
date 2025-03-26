@@ -75,13 +75,29 @@ export abstract class MavLinkProtocol {
     this.log.trace('Deserializing', clazz.MSG_NAME, 'with payload of size', payload.length)
 
     const instance = new clazz()
+    let payloadLength = payload.length
     for (const field of clazz.FIELDS) {
+      const fieldLength = field.length === 0 ? field.size : field.length * field.size
       const deserialize = DESERIALIZERS[field.type]
       if (!deserialize) {
         throw new Error(`Unknown field type ${field.type}`)
       }
+
+      // Pad the payload if it is trimmed
+      // https://mavlink.io/en/guide/serialization.html
+      // MAVLink 2 implementations must truncate any empty (zero-filled)
+      // bytes at the end of the serialized payload before it is sent.
+      if (fieldLength > payloadLength) {
+        const diff = fieldLength - payloadLength
+        const newPayloadLength = payload.length + diff
+        const newBuffer = Buffer.alloc(newPayloadLength)
+        payload.copy(newBuffer, 0, 0, payload.length)
+        payload = newBuffer
+      }
+
       // @ts-ignore
       instance[field.name] = deserialize(payload, field.offset, field.length)
+      payloadLength -= fieldLength
     }
 
     return instance
