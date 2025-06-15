@@ -9,11 +9,11 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/padcom/node-mavlink.git"
+    "url": "git+https://github.com/ArduPilot/node-mavlink.git"
   },
   "bugs": {
     "email": "padcom@gmail.com",
-    "url": "https://github.com/padcom/node-mavlink/issues"
+    "url": "https://github.com/ArduPilot/node-mavlink/issues"
   },
   "funding": {
     "type": "patreon",
