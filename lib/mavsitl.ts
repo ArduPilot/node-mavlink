@@ -1,26 +1,25 @@
 import { EventEmitter } from 'events'
 
-import { Socket, createSocket, RemoteInfo } from 'dgram'
+import { Socket } from 'net'
 import { Writable, PassThrough } from 'stream'
 import { MavLinkPacketSplitter, MavLinkPacketParser, MavLinkPacketSignature } from './mavlink'
 import { MavLinkProtocol, MavLinkProtocolV2 } from './mavlink'
 import { waitFor } from './utils'
 import { uint8_t, MavLinkData } from 'mavlink-mappings'
 
-export interface EspConnectionInfo {
+export interface SitlConnectionInfo {
   ip: string
-  sendPort: number
-  receivePort: number
+  port: number
 }
 
 /**
  * Encapsulation of communication with MavEsp8266
  */
-export class MavEsp8266 extends EventEmitter {
+export class MavSitl extends EventEmitter {
   private input: Writable
   private socket?: Socket
-  private ip: string = ''
-  private sendPort: number = 14555
+  private ip: string = '127.0.0.1'
+  private port: number = 5760
   private seq: number = 0
 
   /**
@@ -35,7 +34,7 @@ export class MavEsp8266 extends EventEmitter {
 
     this.input = new PassThrough()
 
-    this.processIncomingUDPData = this.processIncomingUDPData.bind(this)
+    this.processIncomingTCPData = this.processIncomingTCPData.bind(this)
     this.processIncomingPacket = this.processIncomingPacket.bind(this)
 
     // Create the reader as usual by piping the source stream through the splitter
@@ -54,22 +53,21 @@ export class MavEsp8266 extends EventEmitter {
    * @param sendPort port to send messages to (default: 14555)
    * @param ip IP address to send to in case there is no broadcast (default: empty string)
    */
-  async start(receivePort: number = 14550, sendPort: number = 14555, ip: string = ''): Promise<EspConnectionInfo> {
-    this.sendPort = sendPort
-    this.ip = ip;
+  async start(host: string = '127.0.0.1', port: number = 5760): Promise<SitlConnectionInfo> {
+    if (this.socket) throw new Error('Already connected')
 
-    // Create a UDP socket
-    this.socket = createSocket({ type: 'udp4', reuseAddr: true })
-    this.socket.on('message', this.processIncomingUDPData)
+    this.ip = host
+    this.port = port
+
+    // Create a TCP socket to connect to SITL
+    this.socket = new Socket()
+    this.socket.on('data', this.processIncomingTCPData)
+    this.socket.once('close', () => this.emit('close'))
 
     // Start listening on the socket
     return new Promise((resolve, reject) => {
-      this.socket?.bind(receivePort, () => {
-        // Wait for the first package to be returned to read the ip address
-        // of the controller
-        waitFor(() => this.ip !== '')
-          .then(() => { resolve({ ip: this.ip, sendPort, receivePort }) })
-          .catch(e => { reject(e) })
+      this.socket?.connect(5760, host, () => {
+        resolve({ ip: this.ip, port: this.port })
       })
     })
   }
@@ -81,11 +79,12 @@ export class MavEsp8266 extends EventEmitter {
     if (!this.socket) throw new Error('Not connected')
 
     // Unregister event handlers
-    this.socket.off('message', this.processIncomingUDPData)
+    this.socket.off('data', this.processIncomingTCPData)
 
     // Close the socket
     return new Promise(resolve => {
-      this.socket?.close(resolve)
+      this.socket?.end(resolve)
+      this.socket = undefined
     })
   }
 
@@ -126,16 +125,14 @@ export class MavEsp8266 extends EventEmitter {
    */
   async sendBuffer(buffer: Buffer): Promise<number> {
     return new Promise((resolve, reject) => {
-      this.socket?.send(buffer, this.sendPort, this.ip, (err, bytes) => {
+      this.socket?.write(buffer, (err) => {
         if (err) reject(err)
-        else resolve(bytes)
+        else resolve(buffer.length)
       })
     })
   }
 
-  private processIncomingUDPData(buffer: Buffer, metadata: RemoteInfo) {
-    // store the remote ip address
-    if (this.ip === '') this.ip = metadata.address
+  private processIncomingTCPData(buffer: Buffer) {
     // pass on the data to the input stream
     this.input.write(buffer)
   }

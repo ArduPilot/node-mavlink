@@ -1,7 +1,12 @@
 #!/usr/bin/env -S npx ts-node
 
-import { MavEsp8266, minimal, common, ardupilotmega } from '..'
+import { MavParamType } from 'mavlink-mappings/dist/lib/common'
+import { MavSitl, minimal, common, ardupilotmega } from '..'
 import { MavLinkPacket, MavLinkPacketRegistry } from '..'
+
+// start the simulator as follows:
+//
+// ./sim_vehicle.py -v ArduCopter -f quad --no-mavproxy
 
 const REGISTRY: MavLinkPacketRegistry = {
   ...minimal.REGISTRY,
@@ -10,20 +15,18 @@ const REGISTRY: MavLinkPacketRegistry = {
 }
 
 async function main() {
-  const port = new MavEsp8266()
+  const port = new MavSitl()
 
   // start the communication
-  // After this line we have received at least one heartbeat message so we
-  // know what is the remote IP address to send the messages to
-  const { ip, sendPort, receivePort } = await port.start()
-  console.log(`Connected to: ${ip}, send port: ${sendPort}, receive port ${receivePort}`)
+  const { ip } = await port.start()
+  console.log(`Connected to: ${ip}`)
 
   // log incoming messages
   port.on('data', (packet: MavLinkPacket) => {
     const clazz = REGISTRY[packet.header.msgid]
     if (clazz) {
-      if (packet.header.msgid === common.CommandAck.MSG_ID) {
-        const data = packet.protocol.data(packet.payload, clazz)
+      if (packet.header.msgid === common.ParamValue.MSG_ID) {
+        const data = packet.protocol.data(packet.payload, clazz) as common.ParamValue
         console.log('>', data)
       }
     } else {
@@ -31,8 +34,8 @@ async function main() {
     }
   })
 
-  // Create an instance of of the `RequestProtocolVersionCommand`
-  // class that will be the vessel for containing the command data.
+  // Create an instance of of the `ParamRequestList`
+  // class that will be the vessel for coRequestProtocolVersionCommandntaining the command data.
   // Underneath the cover it uses CommandLong to convert the data.
   //
   // By convention the intermediate fields that are then serialized
@@ -41,17 +44,9 @@ async function main() {
   // is an equivalent Command class it is just a lot easier and every
   // parameter not only has a more descriptive names but also in-line
   // documentation.
-  const command = new common.RequestProtocolVersionCommand()
-  command.confirmation = 1
+  const command = new common.ParamRequestList()
 
   await port.send(command)
-
-  // Give the system time to process any incoming acknowledges
-  const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms))
-  await sleep(1000)
-
-  // Close communication
-  port.close()
 }
 
 main()
