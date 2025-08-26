@@ -1,6 +1,6 @@
 #!/usr/bin/env -S npx ts-node
 
-import { MavEsp8266, minimal, common, ardupilotmega } from '..'
+import { MavEsp8266, minimal, common, ardupilotmega, reserialize, sleep } from '..'
 import { MavLinkPacket, MavLinkPacketRegistry } from '..'
 
 const REGISTRY: MavLinkPacketRegistry = {
@@ -22,12 +22,18 @@ async function main() {
   port.on('data', (packet: MavLinkPacket) => {
     const clazz = REGISTRY[packet.header.msgid]
     if (clazz) {
+      const data = packet.protocol.data(packet.payload, clazz)
       if (packet.header.msgid === common.CommandAck.MSG_ID) {
-        const data = packet.protocol.data(packet.payload, clazz)
-        console.log('>', data)
+        console.log(packet.debug())
+        console.log('ACKNOWLEDGED>', data)
+        port.close()
+        process.exit(0)
+      } else {
+        console.log(packet.debug())
+        console.log(data)
       }
     } else {
-      console.log('!', packet.debug())
+      console.log('<UNKNOWN>', packet.debug())
     }
   })
 
@@ -42,16 +48,21 @@ async function main() {
   // parameter not only has a more descriptive names but also in-line
   // documentation.
   const command = new common.RequestProtocolVersionCommand()
+  command.targetSystem = 1
+  command.targetComponent = 1
   command.confirmation = 1
 
   await port.send(command)
 
-  // Give the system time to process any incoming acknowledges
-  const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms))
-  await sleep(1000)
+  const { header, data } = reserialize(command)
+  console.log(`Packet (proto: MAV_V2, sysid: ${header.sysid}, compid: ${header.compid}, msgid: ${header.msgid}, seq: ${header.seq}, plen: ${header.payloadLength})`)
+  console.log('SENT>', data)
+
+  await sleep(5000)
 
   // Close communication
   port.close()
+  process.exit(1)
 }
 
 main()

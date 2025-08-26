@@ -1,11 +1,12 @@
 #!/usr/bin/env -S npx ts-node
 
-import { MavSitl, minimal, common, ardupilotmega } from '..'
-import { MavLinkPacket, MavLinkPacketRegistry } from '..'
-
 // start the simulator as follows:
 //
-// ./sim_vehicle.py -v ArduCopter -f quad --no-mavproxy
+// ./sim_vehicle.py -v ArduCopter -f quad --no-mavlink
+
+import { MavBool } from 'mavlink-mappings/dist/lib/standard'
+import { MavTCP, minimal, common, ardupilotmega, reserialize, sleep } from '..'
+import { MavLinkPacket, MavLinkPacketRegistry } from '..'
 
 const REGISTRY: MavLinkPacketRegistry = {
   ...minimal.REGISTRY,
@@ -14,7 +15,7 @@ const REGISTRY: MavLinkPacketRegistry = {
 }
 
 async function main() {
-  const port = new MavSitl()
+  const port = new MavTCP()
 
   // start the communication
   const { ip } = await port.start()
@@ -24,12 +25,18 @@ async function main() {
   port.on('data', (packet: MavLinkPacket) => {
     const clazz = REGISTRY[packet.header.msgid]
     if (clazz) {
-      if (packet.header.msgid === common.ParamValue.MSG_ID) {
-        const data = packet.protocol.data(packet.payload, clazz)
-        console.log('>', data)
+      const data = packet.protocol.data(packet.payload, clazz)
+      if (packet.header.msgid === common.CommandAck.MSG_ID) {
+        console.log(packet.debug())
+        console.log('ACKNOWLEDGED>', data)
+        port.close()
+        process.exit(0)
+      } else {
+        console.log(packet.debug())
+        console.log(data)
       }
     } else {
-      console.log('!', packet.debug())
+      console.log('<UNKNOWN>', packet.debug())
     }
   })
 
@@ -44,9 +51,20 @@ async function main() {
   // parameter not only has a more descriptive names but also in-line
   // documentation.
   const command = new common.RequestProtocolVersionCommand()
-  command.confirmation = 1
+  command.protocol = MavBool.FALSE
 
   await port.send(command)
+
+  const { header, data } = reserialize(command)
+  console.log(`Packet (proto: MAV_V2, sysid: ${header.sysid}, compid: ${header.compid}, msgid: ${header.msgid}, seq: ${header.seq}, plen: ${header.payloadLength})`)
+  console.log('SENT>', data)
+
+  // Give the system time to process any incoming acknowledges
+  await sleep(500)
+
+  // Close communication
+  port.close()
+  process.exit(1)
 }
 
 main()

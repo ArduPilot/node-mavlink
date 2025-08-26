@@ -2,3 +2,4 @@ node_modules
 *.xml
 dist
 coverage
+examples/out.txt

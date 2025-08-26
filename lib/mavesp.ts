@@ -6,6 +6,7 @@ import { MavLinkPacketSplitter, MavLinkPacketParser, MavLinkPacketSignature } fr
 import { MavLinkProtocol, MavLinkProtocolV2 } from './mavlink'
 import { waitFor } from './utils'
 import { uint8_t, MavLinkData } from 'mavlink-mappings'
+import { Heartbeat } from 'mavlink-mappings/dist/lib/minimal'
 
 export interface EspConnectionInfo {
   ip: string
@@ -64,7 +65,7 @@ export class MavEsp8266 extends EventEmitter {
 
     // Start listening on the socket
     return new Promise((resolve, reject) => {
-      this.socket?.bind(receivePort, () => {
+      this.socket?.bind(receivePort, async () => {
         // Wait for the first package to be returned to read the ip address
         // of the controller
         waitFor(() => this.ip !== '')

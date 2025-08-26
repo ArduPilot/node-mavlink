@@ -4,18 +4,17 @@ import { Socket } from 'net'
 import { Writable, PassThrough } from 'stream'
 import { MavLinkPacketSplitter, MavLinkPacketParser, MavLinkPacketSignature } from './mavlink'
 import { MavLinkProtocol, MavLinkProtocolV2 } from './mavlink'
-import { waitFor } from './utils'
 import { uint8_t, MavLinkData } from 'mavlink-mappings'
 
-export interface SitlConnectionInfo {
+export interface TCPConnectionInfo {
   ip: string
   port: number
 }
 
 /**
- * Encapsulation of communication with MavEsp8266
+ * Encapsulation of communication over TCP
  */
-export class MavSitl extends EventEmitter {
+export class MavTCP extends EventEmitter {
   private input: Writable
   private socket?: Socket
   private ip: string = '127.0.0.1'
@@ -53,7 +52,7 @@ export class MavSitl extends EventEmitter {
    * @param sendPort port to send messages to (default: 14555)
    * @param ip IP address to send to in case there is no broadcast (default: empty string)
    */
-  async start(host: string = '127.0.0.1', port: number = 5760): Promise<SitlConnectionInfo> {
+  async start(host: string = '127.0.0.1', port: number = 5760): Promise<TCPConnectionInfo> {
     if (this.socket) throw new Error('Already connected')
 
     this.ip = host
@@ -66,7 +65,7 @@ export class MavSitl extends EventEmitter {
 
     // Start listening on the socket
     return new Promise((resolve, reject) => {
-      this.socket?.connect(5760, host, () => {
+      this.socket?.connect(this.port, host, async () => {
         resolve({ ip: this.ip, port: this.port })
       })
     })
